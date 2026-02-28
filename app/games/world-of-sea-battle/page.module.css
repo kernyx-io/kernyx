@@ -1,0 +1,211 @@
+/* World of Sea Battle — Hub Page
+   Matches the dark nautical theme of the calculator */
+
+.main {
+  min-height: 100vh;
+  background: #060b18;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(10, 50, 80, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(30, 20, 5, 0.5) 0%, transparent 50%);
+  color: #f0e6c8;
+  font-family: 'IM Fell English', Georgia, serif;
+  overflow-x: hidden;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  padding: 3rem 1rem 2rem;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+  background: linear-gradient(180deg, rgba(10, 15, 30, 0.95) 0%, transparent 100%);
+}
+
+.anchorRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.anchor {
+  font-size: 2rem;
+  filter: drop-shadow(0 0 8px #c9a84c);
+}
+
+.title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  color: #e8c96a;
+  text-shadow: 0 0 30px rgba(201, 168, 76, 0.4), 0 2px 4px rgba(0, 0, 0, 0.8);
+  margin: 0;
+}
+
+.subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  color: #cbbf9e;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-top: 0.3rem;
+}
+
+.divider {
+  width: 60%;
+  height: 2px;
+  margin: 1rem auto 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #7a6230,
+    #c9a84c,
+    #7a6230,
+    transparent
+  );
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c9a84c;
+  font-size: 0.7rem;
+}
+
+.divider::before { left: -1rem; }
+.divider::after  { right: -1rem; }
+
+/* ── Tool Grid ── */
+.grid {
+  max-width: 960px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ── Tool Card ── */
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.4rem 1.2rem;
+  background: linear-gradient(135deg, #111827 0%, #0a0f1e 100%);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(201, 168, 76, 0.1);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(201, 168, 76, 0.07);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.card:hover {
+  border-color: rgba(201, 168, 76, 0.55);
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.1), 0 4px 30px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(201, 168, 76, 0.15);
+  transform: translateY(-2px);
+}
+
+.cardIcon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  filter: drop-shadow(0 0 6px rgba(201, 168, 76, 0.3));
+}
+
+.cardBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #e8c96a;
+  margin-bottom: 0.45rem;
+}
+
+.cardDesc {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #cbbf9e;
+  font-style: italic;
+  margin: 0 0 0.75rem;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.28);
+  color: #c9a84c;
+}
+
+.cardArrow {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  color: rgba(201, 168, 76, 0.45);
+  flex-shrink: 0;
+  align-self: center;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.card:hover .cardArrow {
+  color: #c9a84c;
+  transform: translateX(3px);
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.82rem;
+  color: #cbbf9e;
+  font-style: italic;
+  opacity: 0.45;
+  border-top: 1px solid rgba(201, 168, 76, 0.25);
+  margin-top: 2rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    flex-direction: column;
+  }
+
+  .cardArrow {
+    display: none;
+  }
+}
