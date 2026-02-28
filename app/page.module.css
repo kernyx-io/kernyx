@@ -1,0 +1,313 @@
+/* ─────────────────────────────────────────────
+   Root Landing Page — Dark Nautical Theme
+   Matches the World of Sea Battle calculator
+   ───────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap');
+
+/* ── Page shell ── */
+.page {
+  min-height: 100vh;
+  background: #060b18;
+  background-image:
+    radial-gradient(ellipse at 15% 0%,   rgba(10, 50, 80, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 100%, rgba(30, 20, 5,  0.55) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%,  rgba(5,  10, 25, 0.3)  0%, transparent 70%);
+  color: #f0e6c8;
+  font-family: 'IM Fell English', Georgia, serif;
+  overflow-x: hidden;
+}
+
+/* ── Hero ── */
+.hero {
+  text-align: center;
+  padding: 5rem 1.5rem 3.5rem;
+  position: relative;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.18);
+  background: linear-gradient(180deg, rgba(10, 15, 30, 0.9) 0%, transparent 100%);
+}
+
+.heroEmblem {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1.2rem;
+  filter: drop-shadow(0 0 18px rgba(201, 168, 76, 0.5));
+  animation: emblemPulse 4s ease-in-out infinite;
+}
+
+@keyframes emblemPulse {
+  0%, 100% { filter: drop-shadow(0 0 18px rgba(201, 168, 76, 0.5)); }
+  50%       { filter: drop-shadow(0 0 32px rgba(201, 168, 76, 0.85)); }
+}
+
+.heroTitle {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  color: #e8c96a;
+  text-shadow:
+    0 0 40px rgba(201, 168, 76, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.9);
+  margin: 0 0 0.6rem;
+  line-height: 1.2;
+}
+
+.heroSubtitle {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+  color: #cbbf9e;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  margin: 0 0 1.5rem;
+}
+
+.heroDivider {
+  width: 55%;
+  max-width: 480px;
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.6), transparent);
+  position: relative;
+}
+
+.heroDivider::before,
+.heroDivider::after {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c9a84c;
+  font-size: 0.65rem;
+}
+.heroDivider::before { left: -1.2rem; }
+.heroDivider::after  { right: -1.2rem; }
+
+/* ── Main content ── */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+/* ── Section ── */
+.section {}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.18);
+}
+
+.sectionIcon {
+  font-size: 1.3rem;
+  filter: drop-shadow(0 0 6px rgba(201, 168, 76, 0.4));
+}
+
+.sectionTitle {
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #c9a84c;
+  margin: 0;
+}
+
+.sectionCount {
+  margin-left: auto;
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(201, 168, 76, 0.4);
+  background: rgba(201, 168, 76, 0.06);
+  border: 1px solid rgba(201, 168, 76, 0.14);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+}
+
+/* ── Card grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* ── Card ── */
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.3rem 1.2rem;
+  background: linear-gradient(145deg, #111827 0%, #0a0f1e 100%);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 5px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  box-shadow:
+    0 4px 28px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(201, 168, 76, 0.08);
+  transition: border-color 0.2s, box-shadow 0.22s, transform 0.2s;
+  overflow: hidden;
+}
+
+/* Corner accents */
+.card::before,
+.card::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: rgba(201, 168, 76, 0.35);
+  border-style: solid;
+  transition: border-color 0.2s;
+}
+.card::before { top: 5px; left: 5px;  border-width: 1px 0 0 1px; }
+.card::after  { bottom: 5px; right: 5px; border-width: 0 1px 1px 0; }
+
+.card:hover {
+  border-color: rgba(201, 168, 76, 0.5);
+  box-shadow:
+    0 0 28px rgba(201, 168, 76, 0.1),
+    0 6px 32px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(201, 168, 76, 0.12);
+  transform: translateY(-3px);
+}
+
+.card:hover::before,
+.card:hover::after {
+  border-color: rgba(201, 168, 76, 0.65);
+}
+
+/* Card glow on hover */
+.card::after {
+  /* override corner with glow layer — use a pseudo differently */
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.cardIcon {
+  font-size: 1.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 5px rgba(201, 168, 76, 0.25));
+}
+
+.cardBadge {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  background: rgba(201, 168, 76, 0.08);
+  color: rgba(201, 168, 76, 0.7);
+  white-space: nowrap;
+}
+
+.cardBadge.new {
+  border-color: rgba(42, 157, 157, 0.4);
+  background: rgba(42, 157, 157, 0.1);
+  color: #2a9d9d;
+}
+
+.cardTitle {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  color: #e8c96a;
+  margin-bottom: 0.5rem;
+}
+
+.cardDesc {
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: #cbbf9e;
+  font-style: italic;
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(201, 168, 76, 0.1);
+}
+
+.cardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.tag {
+  font-family: 'Cinzel', serif;
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  color: rgba(201, 168, 76, 0.65);
+}
+
+.cardArrow {
+  font-size: 1rem;
+  color: rgba(201, 168, 76, 0.3);
+  transition: color 0.18s, transform 0.18s;
+  flex-shrink: 0;
+}
+
+.card:hover .cardArrow {
+  color: #c9a84c;
+  transform: translateX(4px);
+}
+
+/* ── Coming soon card variant ── */
+.cardComingSoon {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: default;
+}
+
+.cardComingSoon .cardBadge {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(203, 191, 158, 0.5);
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 2rem 1rem 2.5rem;
+  font-size: 0.8rem;
+  color: #cbbf9e;
+  font-style: italic;
+  opacity: 0.4;
+  border-top: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding: 3.5rem 1rem 2.5rem;
+  }
+}
