@@ -43,7 +43,18 @@ const calculators: CardItem[] = [
   },
 ];
 
-const guides: CardItem[] = [];
+const guides: CardItem[] = [
+  {
+    href: '#',
+    icon: '📖',
+    title: 'World of Sea Battle Strategy Guide',
+    desc:
+      'Advanced fleet composition theory, broadside positioning tactics, and competitive naval meta breakdowns.',
+    tags: ['WoSB', 'Strategy', 'Meta'],
+    badge: 'Coming Soon',
+    comingSoon: true,
+  },
+];
 
 /* ───────────────── Card Component ───────────────── */
 
@@ -108,7 +119,7 @@ function Section({
 
       <div className={styles.grid}>
         {items.map((item) => (
-          <Card key={item.href} item={item} />
+          <Card key={item.title} item={item} />
         ))}
       </div>
     </section>
@@ -138,7 +149,7 @@ export default function HomePage() {
       <main className={styles.content}>
         <Section icon="🎮" title="Games" items={games} />
         <Section icon="🧮" title="Calculators" items={calculators} />
-        <Section icon="📖" title="Guides" items={guides} />
+        <Section icon="📚" title="Guides" items={guides} />
       </main>
 
       {/* FOOTER */}
