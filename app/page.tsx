@@ -71,11 +71,11 @@ const TOOLS = [
     href: '/games/world-of-sea-battle/calculator',
   },
   // Add tools here as you build them:
-  // { gameId: 'gw2',      label: '🛡️ Build Planner',     href: '/games/guild-wars-2/build-planner' },
-  // { gameId: 'lostark',  label: '⚙️ Engravings Calc',   href: '/games/lost-ark/engravings' },
-  // { gameId: 'destiny2', label: '🔫 DPS Calc',           href: '/games/destiny-2/dps-calc' },
-  // { gameId: 'poe2',     label: '🌳 Passive Planner',    href: '/games/path-of-exile-2/passive-planner' },
-  // { gameId: 'warframe', label: '🔧 Mod Builder',        href: '/games/warframe/mod-builder' },
+  { gameId: 'gw2',      label: '🛡️ Build Planner',     href: '/games/guild-wars-2/build-planner' },
+  { gameId: 'lostark',  label: '⚙️ Engravings Calc',   href: '/games/lost-ark/engravings' },
+  { gameId: 'destiny2', label: '🔫 DPS Calc',           href: '/games/destiny-2/dps-calc' },
+  { gameId: 'poe2',     label: '🌳 Passive Planner',    href: '/games/path-of-exile-2/passive-planner' },
+  { gameId: 'warframe', label: '🔧 Mod Builder',        href: '/games/warframe/mod-builder' },
 ];
 
 const GAME_FILTERS = [{ id: 'all', label: 'All Games' }, ...GAMES.map((g) => ({ id: g.id, label: g.name }))];
