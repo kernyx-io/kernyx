@@ -46,27 +46,23 @@ export default function CalculatorPage() {
 
       <div className={styles.layout}>
 
-        {/* LEFT COLUMN */}
         <div>
-
           <div className={styles.panel}>
-            <div className={styles.panelTitle}>Vessel Selection</div>
+            <div className={styles.panelTitle}>Vessel</div>
             <VesselSelection state={state} dispatch={dispatch} />
           </div>
 
           <div className={styles.panel} style={{ marginTop: "1.5rem" }}>
-            <div className={styles.panelTitle}>Broadside Configuration</div>
+            <div className={styles.panelTitle}>Broadside</div>
             <BroadsideConfig state={state} dispatch={dispatch} />
           </div>
 
           <div className={styles.panel} style={{ marginTop: "1.5rem" }}>
-            <div className={styles.panelTitle}>Crew Assignment</div>
+            <div className={styles.panelTitle}>Crew</div>
             <CrewSelection state={state} dispatch={dispatch} />
           </div>
-
         </div>
 
-        {/* RIGHT COLUMN */}
         <div>
           <div className={styles.panel}>
             <div className={styles.panelTitle}>Engagement Report</div>
