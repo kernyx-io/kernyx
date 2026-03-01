@@ -45,7 +45,7 @@ const calculators: CardItem[] = [
 
 const guides: CardItem[] = [];
 
-/* ───────────────── Card ───────────────── */
+/* ───────────────── Card Component ───────────────── */
 
 function Card({ item }: { item: CardItem }) {
   return (
@@ -83,7 +83,7 @@ function Card({ item }: { item: CardItem }) {
   );
 }
 
-/* ───────────────── Section ───────────────── */
+/* ───────────────── Section Component ───────────────── */
 
 function Section({
   icon,
@@ -142,36 +142,6 @@ export default function HomePage() {
         <Section icon="🧮" title="Calculators" items={calculators} />
         <Section icon="📖" title="Guides" items={guides} />
       </main>
-
-      {/* ROADMAP */}
-      <section className={styles.roadmap}>
-        <h2>Platform Roadmap</h2>
-        <ul>
-          <li>✔ Multi-game registry framework</li>
-          <li>✔ Modular calculator architecture</li>
-          <li>⬜ User build saving & sharing</li>
-          <li>⬜ Patch tracking & change logs</li>
-          <li>⬜ AI-powered optimization assistant</li>
-        </ul>
-      </section>
-
-      {/* AD / SUPPORT ZONE */}
-      <section className={styles.monetization}>
-        <div className={styles.adPlaceholder}>
-          Advertisement Space (Responsive Banner)
-        </div>
-
-        <div className={styles.supportBox}>
-          <h3>Support Kernyx</h3>
-          <p>
-            Development, hosting, and analytics are maintained independently.
-            Support ensures continued expansion.
-          </p>
-          <Link href="/support" className={styles.primaryBtn}>
-            Donate / Support
-          </Link>
-        </div>
-      </section>
 
       {/* FOOTER */}
       <footer className={styles.footer}>
