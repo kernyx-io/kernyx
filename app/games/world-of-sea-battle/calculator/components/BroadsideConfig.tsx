@@ -1,4 +1,4 @@
 
 export default function BroadsideConfig() {
-  return <div>Crew Selection</div>
+  return <div>BroadsideConfig</div>
 }
