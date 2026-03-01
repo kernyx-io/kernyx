@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap');
+
+:global(:root) {
+  --gw2-bg:        #0d170d;
+  --gw2-bg-mid:    #111e11;
+  --gw2-bg-card:   #141f14;
+  --gw2-green:     #7ab87a;
+  --gw2-green-l:   #9ed09e;
+  --gw2-gold:      #c8a84b;
+  --gw2-parchment: #d8caa0;
+  --gw2-text:      #a8bca0;
+  --gw2-muted:     #506050;
+  --gw2-border:    rgba(122,184,122,0.14);
+  --gw2-border-mid:rgba(200,168,75,0.28);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.page {
+  min-height: 100vh;
+  background: var(--gw2-bg);
+  background-image:
+    radial-gradient(ellipse at 15% 0%, rgba(30,70,30,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 100%, rgba(70,55,10,0.28) 0%, transparent 55%);
+  color: var(--gw2-text);
+  font-family: 'Lora', Georgia, serif;
+  position: relative;
+}
+
+/* Subtle parchment texture overlay */
+.bgTexture {
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='38' fill='none' stroke='rgba(122%2C184%2C122%2C0.025)' stroke-width='1'/%3E%3Cline x1='40' y1='2' x2='40' y2='78' stroke='rgba(200%2C168%2C75%2C0.02)' stroke-width='0.5'/%3E%3Cline x1='2' y1='40' x2='78' y2='40' stroke='rgba(200%2C168%2C75%2C0.02)' stroke-width='0.5'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 0.55rem;
+  padding: 0.75rem 2rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem; letter-spacing: 0.18em;
+  border-bottom: 1px solid var(--gw2-border);
+  background: rgba(0,0,0,0.35);
+}
+.bcLink { color: var(--gw2-gold); text-decoration: none; opacity: 0.7; transition: opacity .15s; }
+.bcLink:hover { opacity: 1; }
+.bcSep { color: var(--gw2-muted); }
+.bcCurrent { color: var(--gw2-parchment); opacity: 0.55; }
+
+/* ── Hero ── */
+.hero {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 2.5rem;
+  padding: 4rem 2rem 3rem;
+  border-bottom: 1px solid var(--gw2-border);
+  overflow: hidden;
+}
+
+.heroOrb {
+  position: absolute; top: -30%; left: -5%;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(50,100,50,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.heroContent { position: relative; z-index: 1; flex: 1; }
+
+.eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gw2-green-l); margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-family: 'Philosopher', serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 700; line-height: 1.05;
+  color: var(--gw2-parchment); margin-bottom: 1rem;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.6);
+}
+.heroTitle em { font-style: italic; color: var(--gw2-gold); }
+
+.heroSub {
+  font-size: 1rem; line-height: 1.7;
+  color: var(--gw2-text); max-width: 500px; margin-bottom: 1.5rem;
+}
+
+.heroDivider {
+  width: 220px; height: 1px;
+  background: linear-gradient(90deg, var(--gw2-gold), var(--gw2-green), transparent);
+  margin-bottom: 1rem;
+}
+
+.heroMeta {
+  display: flex; align-items: center; gap: 0.75rem;
+  font-family: 'Cinzel', serif; font-size: 0.68rem;
+  letter-spacing: 0.14em; color: var(--gw2-muted);
+}
+.metaDot { width: 3px; height: 3px; border-radius: 50%; background: var(--gw2-gold); opacity: 0.5; }
+
+.heroKnot {
+  width: 170px; height: 170px; flex-shrink: 0;
+  opacity: 0.55;
+  animation: knotSpin 40s linear infinite;
+}
+@keyframes knotSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ── Sections ── */
+.section {
+  position: relative; z-index: 1;
+  padding: 2.5rem 2rem;
+  border-bottom: 1px solid var(--gw2-border);
+}
+
+.sectionHead {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 1.75rem;
+}
+.sectionRule {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gw2-border-mid), transparent);
+}
+.sectionTitle {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--gw2-gold); white-space: nowrap; margin: 0;
+}
+
+/* ── Tool grid ── */
+.toolGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px; background: var(--gw2-border);
+  border: 1px solid var(--gw2-border);
+}
+
+.toolCard {
+  display: flex; flex-direction: column; gap: 0.65rem;
+  padding: 1.5rem; background: var(--gw2-bg-card);
+  text-decoration: none; color: inherit; position: relative; overflow: hidden;
+  transition: background .2s;
+}
+.toolCard::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gw2-green), var(--gw2-gold), transparent);
+  transform: scaleX(0); transform-origin: left; transition: transform .3s;
+}
+.toolCard:hover { background: #192819; }
+.toolCard:hover::before { transform: scaleX(1); }
+.dim { opacity: 0.4; pointer-events: none; }
+
+.cardTopRow { display: flex; align-items: center; justify-content: space-between; }
+.cardIcon { font-size: 1.4rem; }
+.cardBadge {
+  font-family: 'Cinzel', serif; font-size: 0.6rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gw2-muted); border: 1px solid var(--gw2-border-mid);
+  padding: 0.15rem 0.5rem;
+}
+.cardTitle {
+  font-family: 'Philosopher', serif; font-size: 1.1rem; font-weight: 700;
+  color: var(--gw2-parchment);
+}
+.cardDesc { font-size: 0.9rem; line-height: 1.65; color: var(--gw2-text); flex: 1; }
+.cardTags { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.tag {
+  font-family: 'Cinzel', serif; font-size: 0.58rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.15rem 0.5rem; color: var(--gw2-green);
+  border: 1px solid rgba(122,184,122,0.2); background: rgba(122,184,122,0.06);
+}
+
+/* ── Guides ── */
+.guideList {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--gw2-border);
+}
+.guideRow {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--gw2-border);
+  text-decoration: none; color: inherit; transition: background .15s;
+}
+.guideRow:last-child { border-bottom: none; }
+.guideRow:hover { background: rgba(122,184,122,0.04); }
+
+.guideGlyph { color: var(--gw2-gold); font-size: 0.8rem; flex-shrink: 0; }
+.guideBody { flex: 1; }
+.guideTitle { font-family: 'Philosopher', serif; font-size: 1rem; color: var(--gw2-parchment); margin-bottom: 0.25rem; }
+.guideDesc { font-size: 0.84rem; line-height: 1.5; color: var(--gw2-text); }
+.guideArrow { font-family: 'Cinzel', serif; font-size: 0.78rem; color: var(--gw2-gold); flex-shrink: 0; }
+
+/* ── News note ── */
+.newsNote {
+  font-size: 0.95rem; line-height: 1.65; color: var(--gw2-text);
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--gw2-border); border-left: 3px solid var(--gw2-green);
+  background: rgba(122,184,122,0.04);
+}
+.newsLink { color: var(--gw2-gold); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ── Footer ── */
+.footer {
+  position: relative; z-index: 1;
+  padding: 1.5rem 2rem; text-align: center;
+  font-family: 'Cinzel', serif; font-size: 0.65rem;
+  letter-spacing: 0.15em; color: var(--gw2-muted);
+  border-top: 1px solid var(--gw2-border);
+}
+
+@media (max-width: 768px) {
+  .heroKnot { display: none; }
+  .hero { padding: 2.5rem 1.25rem 2rem; }
+  .section { padding: 2rem 1.25rem; }
+}
