@@ -14,10 +14,6 @@
   --d2-border-l:   rgba(167,139,250,0.3);
 }
 
-* {
-  box-sizing: border-box;
-}
-
 .page {
   min-height: 100vh;
   background: var(--d2-bg);
