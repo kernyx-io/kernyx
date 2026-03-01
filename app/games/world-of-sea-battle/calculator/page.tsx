@@ -46,7 +46,7 @@ export default function CalculatorPage() {
 
       {/* IFRAME (Stable + Simple) */}
       <iframe
-        src="/wsb-calculator.html"
+        src="/calculator.html"
         style={{
           width: '100%',
           height: '100vh',
