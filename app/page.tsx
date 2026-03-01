@@ -7,59 +7,11 @@ export const metadata = {
     'Calculators, guides, and tools for your favourite games.',
 };
 
-// ─── Content registry ──────────────────────────────────────────────────────
-// Add new games / tools / guides here — the page renders them automatically.
-
-const games = [
-  {
-    href: '/games/world-of-sea-battle',
-    icon: '⚓',
-    title: 'World of Sea Battle',
-    desc: 'Artillery calculators, ship loadout tools, and combat guides for the high seas.',
-    tags: ['Naval', 'Combat', 'Loadout'],
-    badge: 'Active',
-    badgeVariant: '',
-  },
-  // Add more games here:
-  // {
-  //   href: '/games/example',
-  //   icon: '🎮',
-  //   title: 'Example Game',
-  //   desc: 'Description of tools available.',
-  //   tags: ['Tag1', 'Tag2'],
-  //   badge: 'Coming Soon',
-  //   badgeVariant: '',
-  //   comingSoon: true,
-  // },
-];
-
-const calculators = [
-  {
-    href: '/games/world-of-sea-battle/calculator',
-    icon: '💥',
-    title: 'Cannon DPS Calculator',
-    desc: 'Configure your broadside, pick ammo, crew, and attachments — get live damage output instantly.',
-    tags: ['WoSB', 'Artillery', 'DPS'],
-    badge: 'Live',
-    badgeVariant: 'new',
-  },
-  // Add more calculators here
-];
-
-const guides: CardItem[] = [
-  // Add guides here as you create them:
-  // {
-  //   href: '/guides/example',
-  //   icon: '📖',
-  //   title: 'Example Guide',
-  //   desc: 'Guide description.',
-  //   tags: ['WoSB'],
-  //   badge: 'Guide',
-  //   badgeVariant: '',
-  // },
-];
-
-// ─── Types ─────────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────
+   Content Registry
+   Add new games / tools / guides here only.
+   The UI renders automatically.
+───────────────────────────────────────────── */
 
 type CardItem = {
   href: string;
@@ -72,7 +24,36 @@ type CardItem = {
   comingSoon?: boolean;
 };
 
-// ─── Card component ────────────────────────────────────────────────────────
+const games: CardItem[] = [
+  {
+    href: '/games/world-of-sea-battle',
+    icon: '⚓',
+    title: 'World of Sea Battle',
+    desc:
+      'Artillery calculators, ship loadout tools, and combat guides for the high seas.',
+    tags: ['Naval', 'Combat', 'Loadout'],
+    badge: 'Active',
+  },
+];
+
+const calculators: CardItem[] = [
+  {
+    href: '/games/world-of-sea-battle/calculator',
+    icon: '💥',
+    title: 'Cannon DPS Calculator',
+    desc:
+      'Configure your broadside, pick ammo, crew, and attachments — get live damage output instantly.',
+    tags: ['WoSB', 'Artillery', 'DPS'],
+    badge: 'Live',
+    badgeVariant: 'new',
+  },
+];
+
+const guides: CardItem[] = [];
+
+/* ─────────────────────────────────────────────
+   Card Component
+───────────────────────────────────────────── */
 
 function Card({ item }: { item: CardItem }) {
   const cls = [styles.card, item.comingSoon ? styles.cardComingSoon : '']
@@ -112,7 +93,9 @@ function Card({ item }: { item: CardItem }) {
   );
 }
 
-// ─── Section component ─────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────
+   Section Component
+───────────────────────────────────────────── */
 
 function Section({
   icon,
@@ -134,6 +117,7 @@ function Section({
           {items.filter((i) => !i.comingSoon).length} available
         </span>
       </div>
+
       <div className={styles.grid}>
         {items.map((item) => (
           <Card key={item.href} item={item} />
@@ -143,30 +127,105 @@ function Section({
   );
 }
 
-// ─── Page ──────────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────
+   Page
+───────────────────────────────────────────── */
 
 export default function HomePage() {
   return (
     <div className={styles.page}>
-      {/* Hero */}
+
+      {/* HERO */}
       <header className={styles.hero}>
-        <span className={styles.heroEmblem}>⚓</span>
-        <h1 className={styles.heroTitle}>Game Tools &amp; Guides</h1>
-        <p className={styles.heroSubtitle}>
-          Calculators · Loadout Builders · Field Guides
-        </p>
-        <div className={styles.heroDivider} />
+        <div className={styles.heroGlow} />
+
+        <div className={styles.heroInner}>
+          <span className={styles.heroEmblem}>🎯</span>
+
+          <h1 className={styles.heroTitle}>
+            Competitive Game Optimization Platform
+          </h1>
+
+          <p className={styles.heroSubtitle}>
+            Build Calculators · Strategy Guides · Performance Tools
+          </p>
+
+          <p className={styles.heroDescription}>
+            Advanced analytics and build systems designed to help players
+            optimize loadouts, understand meta shifts, and gain a competitive
+            edge across multiple game ecosystems.
+          </p>
+
+          <div className={styles.heroActions}>
+            <Link href="/games" className={styles.primaryBtn}>
+              Explore Games
+            </Link>
+
+            <Link href="/support" className={styles.secondaryBtn}>
+              Support the Project
+            </Link>
+          </div>
+        </div>
       </header>
 
-      {/* Sections */}
+      {/* FEATURE STRIP */}
+      <section className={styles.featureStrip}>
+        <div className={styles.featureItem}>
+          <span>⚙</span>
+          <div>
+            <strong>Dynamic Calculators</strong>
+            <p>Live stat breakdowns and performance simulation tools.</p>
+          </div>
+        </div>
+
+        <div className={styles.featureItem}>
+          <span>📊</span>
+          <div>
+            <strong>Meta Insights</strong>
+            <p>Understand balance shifts and optimal builds.</p>
+          </div>
+        </div>
+
+        <div className={styles.featureItem}>
+          <span>🌍</span>
+          <div>
+            <strong>Multi-Game Platform</strong>
+            <p>Unified ecosystem built to scale across titles.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* MAIN CONTENT */}
       <main className={styles.content}>
         <Section icon="🎮" title="Games" items={games} />
         <Section icon="🧮" title="Calculators" items={calculators} />
         <Section icon="📖" title="Guides" items={guides} />
       </main>
 
+      {/* SUPPORT STRIP */}
+      <section className={styles.supportStrip}>
+        <div className={styles.supportContent}>
+          <div>
+            <h3>Support Development</h3>
+            <p>
+              Hosting, analytics, and continuous updates are supported by the
+              community.
+            </p>
+          </div>
+          <Link href="/support" className={styles.primaryBtn}>
+            Donate / Support
+          </Link>
+        </div>
+      </section>
+
+      {/* FOOTER */}
       <footer className={styles.footer}>
-        Unofficial fan tools · Not affiliated with any game developer
+        <div>
+          <strong>Kernyx</strong> — Competitive Optimization Tools
+        </div>
+        <div>
+          Unofficial fan tools · Not affiliated with any game developer
+        </div>
       </footer>
     </div>
   );
