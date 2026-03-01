@@ -1,56 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Script from 'next/script';
-import { usePathname } from 'next/navigation';
 import './calculator.css';
 
-/* ─────────────────────────────────────────────
-   IMPORTANT:
-   Keep your full calculator HTML string here.
-   I’m shortening it below for readability —
-   Replace this placeholder with your FULL string.
-───────────────────────────────────────────── */
-
-const CALCULATOR_HTML = `CALCULATOR_HTML`;
-
-/* ───────────────────────────────────────────── */
-
 export default function CalculatorPage() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    // Clear previous content
-    containerRef.current.innerHTML = '';
-
-    // Inject calculator markup
-    containerRef.current.innerHTML = CALCULATOR_HTML;
-
-    // Delay ensures scripts are available
-    const timer = setTimeout(() => {
-      if (typeof (window as any).init === 'function') {
-        try {
-          (window as any).init();
-        } catch (e) {
-          console.error('WSB Calculator init error:', e);
-        }
-      }
-    }, 50);
-
-    return () => clearTimeout(timer);
-
-  }, [pathname]); // Re-run on client navigation
-
   return (
     <>
-      {/* Load calculator scripts BEFORE React interaction */}
-      <Script src="/wsb-data.js" strategy="beforeInteractive" />
-      <Script src="/wsb-app.js" strategy="beforeInteractive" />
-
       {/* Breadcrumb Navigation */}
       <nav
         style={{
@@ -89,8 +44,16 @@ export default function CalculatorPage() {
         </span>
       </nav>
 
-      {/* Calculator Root */}
-      <div ref={containerRef} id="wsb-calculator-root" />
+      {/* IFRAME (Stable + Simple) */}
+      <iframe
+        src="/wsb-calculator.html"
+        style={{
+          width: '100%',
+          height: '100vh',
+          border: 'none',
+          background: '#060b18',
+        }}
+      />
     </>
   );
 }
