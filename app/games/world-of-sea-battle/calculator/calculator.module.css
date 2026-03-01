@@ -1,157 +1,143 @@
-@import url('https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&family=Lora:wght@400;600&family=Cinzel:wght@500;600&display=swap');
-
 :root {
-  --ink-bg:        #0b1420;
-  --ink-panel:     #111c2b;
-  --ink-panel-deep:#162235;
+  --navy: #0a1624;
+  --navy-deep: #08121c;
+  --panel: #0f1e2f;
 
-  --brass:         #c6a75e;
-  --brass-soft:    #e0c88a;
+  --gold: #c8a84b;
+  --gold-soft: #e6cf8a;
 
-  --text-main:     #c9d4e6;
-  --text-muted:    #6c7b94;
+  --text: #c9d4e6;
+  --muted: #6f809d;
 
-  --border-soft:   rgba(198,167,94,0.18);
-  --border-strong: rgba(198,167,94,0.35);
+  --border: rgba(200,168,75,0.35);
+  --border-soft: rgba(200,168,75,0.15);
 }
 
-/* ───────── PAGE ───────── */
+/* PAGE */
 
 .page {
   min-height: 100vh;
-  background: radial-gradient(circle at 50% 0%, #0f1d2e 0%, #0b1420 60%);
-  color: var(--text-main);
-  font-family: 'Lora', serif;
-  padding: 2.5rem 2rem 3rem;
+  background: var(--navy);
+  color: var(--text);
+  padding: 2rem 2rem 4rem;
+  font-family: system-ui, sans-serif;
 }
 
-/* ───────── TITLE ───────── */
+/* HEADER */
 
-.title {
-  font-family: 'Cinzel', serif;
-  font-size: 2rem;
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  letter-spacing: 0.25em;
+  color: var(--gold-soft);
+}
+
+.header p {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--brass-soft);
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border-strong);
-  padding-bottom: 0.75rem;
+  color: var(--muted);
 }
 
-/* ───────── LAYOUT ───────── */
+/* SECTION CONTAINER */
 
-.layout {
+.section {
+  border: 1px solid var(--border);
+  margin-bottom: 1.75rem;
+  background: var(--panel);
+}
+
+.sectionHeader {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+}
+
+/* TWO COLUMN ROW */
+
+.row2 {
   display: grid;
-  grid-template-columns: 40% 60%;
-  gap: 2rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
-@media (max-width: 950px) {
-  .layout {
+@media (max-width: 900px) {
+  .row2 {
     grid-template-columns: 1fr;
   }
 }
 
-/* ───────── PANEL ───────── */
+/* PANEL BODY */
 
-.panel {
-  background: var(--ink-panel);
-  border: 1px solid var(--border-soft);
-  padding: 1.6rem;
-  position: relative;
+.sectionBody {
+  padding: 1.25rem;
 }
 
-.panel::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--brass);
-}
-
-.panelTitle {
-  font-family: 'Cinzel', serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--brass);
-  margin-bottom: 1.25rem;
-}
-
-/* ───────── FORM CONTROLS ───────── */
+/* INPUT STYLE */
 
 .select,
 .input {
   width: 100%;
-  background: var(--ink-panel-deep);
+  background: var(--navy-deep);
   border: 1px solid var(--border-soft);
-  color: var(--text-main);
-  padding: 0.6rem 0.75rem;
-  font-family: 'Lora', serif;
-  font-size: 0.9rem;
-  margin-bottom: 0.8rem;
-  transition: border 0.2s ease;
+  color: var(--text);
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
-.select:focus,
-.input:focus {
-  outline: none;
-  border-color: var(--brass);
+/* STATS GRID */
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
 }
 
-/* ───────── LEDGER STATS ───────── */
-
-.ledger {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.statRow {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(198,167,94,0.08);
-  padding-bottom: 0.35rem;
-  font-size: 0.9rem;
+.statBox {
+  border: 1px solid var(--border-soft);
+  padding: 0.75rem;
+  text-align: center;
 }
 
 .statLabel {
-  color: var(--text-muted);
-  letter-spacing: 0.08em;
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
 }
 
 .statValue {
-  font-family: 'Philosopher', serif;
-  color: var(--brass-soft);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  font-size: 1.2rem;
+  color: var(--gold-soft);
 }
 
-.statValue.flash {
-  opacity: 0.6;
-  transform: translateY(-2px);
+/* SHIP STATS TABLE */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-/* ───────── HIGHLIGHT OUTPUT ───────── */
-
-.highlightBlock {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-strong);
+.table td {
+  border-bottom: 1px solid var(--border-soft);
+  padding: 0.5rem 0;
+  font-size: 0.8rem;
 }
 
-.highlightLabel {
-  font-family: 'Cinzel', serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+.table td:first-child {
+  color: var(--muted);
 }
 
-.highlightValue {
-  font-family: 'Philosopher', serif;
-  font-size: 1.5rem;
-  color: var(--brass);
-  margin-top: 0.4rem;
+/* FOOTER BAR */
+
+.footerBar {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--muted);
 }
