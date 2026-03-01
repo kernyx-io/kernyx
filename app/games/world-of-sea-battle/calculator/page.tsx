@@ -131,29 +131,42 @@ export default function CalculatorPage() {
       </div>
 
       {/* DAMAGE REPORT */}
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>DAMAGE OUTPUT REPORT</div>
-        <div className={styles.sectionBody}>
-          <div className={styles.statsGrid}>
-            <div className={styles.statBox}>
-              <div className={styles.statLabel}>Damage / Shot</div>
-              <div className={styles.statValue}>{results.damagePerShot}</div>
-            </div>
-            <div className={styles.statBox}>
-              <div className={styles.statLabel}>Reload Time</div>
-              <div className={styles.statValue}>{results.reloadTime}s</div>
-            </div>
-            <div className={styles.statBox}>
-              <div className={styles.statLabel}>Cannons</div>
-              <div className={styles.statValue}>{results.cannonCount}</div>
-            </div>
-            <div className={styles.statBox}>
-              <div className={styles.statLabel}>Total DPS</div>
-              <div className={styles.statValue}>{results.totalDPS}</div>
-            </div>
-          </div>
+     <div className={styles.section}>
+  <div className={styles.sectionHeader}>DAMAGE OUTPUT REPORT</div>
+  <div className={styles.sectionBody}>
+    <div className={styles.statsGrid}>
+
+      <div className={styles.statBox}>
+        <div className={styles.statLabel}>Adjusted Damage</div>
+        <div className={styles.statValue}>
+          {results.adjustedDamage.toFixed(1)}
         </div>
       </div>
+
+      <div className={styles.statBox}>
+        <div className={styles.statLabel}>Adjusted Reload</div>
+        <div className={styles.statValue}>
+          {results.adjustedReload.toFixed(2)}s
+        </div>
+      </div>
+
+      <div className={styles.statBox}>
+        <div className={styles.statLabel}>Volley Damage</div>
+        <div className={styles.statValue}>
+          {results.volleyDamage.toFixed(1)}
+        </div>
+      </div>
+
+      <div className={styles.statBox}>
+        <div className={styles.statLabel}>Total DPS</div>
+        <div className={styles.statValue}>
+          {results.totalDPS.toFixed(2)}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
       <div className={styles.footerBar}>
         Unofficial fan project – Not affiliated with World of Sea Battle
