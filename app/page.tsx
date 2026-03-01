@@ -122,56 +122,19 @@ export default function HomePage() {
     <div className={styles.page}>
 
       {/* HERO */}
-    {/* HERO */}
-<header className={styles.hero}>
-  <div className={styles.heroOverlay} />
+      <header className={styles.hero}>
+        <div className={styles.heroOverlay} />
 
-  <div className={styles.heroContent}>
-    <h1 className={styles.heroTitle}>
-      Engineer Your Advantage.
-    </h1>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>
+            Engineer Your Advantage.
+          </h1>
 
-    <p className={styles.heroSubtitle}>
-      Every stat matters.
-    </p>
-  </div>
-</header>
-
-      {/* TRUST STRIP */}
-      <section className={styles.trustStrip}>
-        <div>
-          <strong>Data-Driven</strong>
-          <p>Stat-based simulations and mechanical breakdowns.</p>
-        </div>
-        <div>
-          <strong>Expandable</strong>
-          <p>Built to scale across multiple competitive titles.</p>
-        </div>
-        <div>
-          <strong>Community-Supported</strong>
-          <p>Transparent tools built for serious players.</p>
-        </div>
-      </section>
-
-      {/* FEATURED GAME SPOTLIGHT */}
-      <section className={styles.spotlight}>
-        <div className={styles.spotlightContent}>
-          <h2>Now Live: World of Sea Battle</h2>
-          <p>
-            Configure artillery batteries, evaluate armor penetration,
-            optimize crew bonuses, and calculate real-time damage output.
+          <p className={styles.heroSubtitle}>
+            Every stat matters.
           </p>
-
-          <div className={styles.spotlightActions}>
-            <Link
-              href="/games/world-of-sea-battle"
-              className={styles.primaryBtn}
-            >
-              Enter Tools
-            </Link>
-          </div>
         </div>
-      </section>
+      </header>
 
       {/* CORE CONTENT */}
       <main className={styles.content}>
@@ -213,7 +176,9 @@ export default function HomePage() {
       {/* FOOTER */}
       <footer className={styles.footer}>
         <div>Kernyx © {new Date().getFullYear()}</div>
-        <div>Unofficial fan tools · Not affiliated with any game developer</div>
+        <div>
+          Unofficial fan tools · Not affiliated with any game developer
+        </div>
       </footer>
     </div>
   );
