@@ -14,7 +14,12 @@
   --gw2-border-mid:rgba(200,168,75,0.28);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* FIXED: Scoped universal reset to local page class */
+.page * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 .page {
   min-height: 100vh;
