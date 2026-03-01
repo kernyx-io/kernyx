@@ -6,10 +6,10 @@ import { ships, cannons } from "./lib/data"
 import { calculateResults } from "./lib/calculations"
 import { CalculatorState } from "./lib/types"
 
-import VesselSelection from "./components/VesselSelection.tsx"
-import BroadsideConfig from "./components/BroadsideConfig.tsx"
-import CrewSelection from "./components/CrewSelection.tsx"
-import DamageReport from "./components/DamageReport.tsx"
+import VesselSelection from "./components/VesselSelection"
+import BroadsideConfig from "./components/BroadsideConfig"
+import CrewSelection from "./components/CrewSelection"
+import DamageReport from "./components/DamageReport"
 
 const initialState: CalculatorState = {
   ship: ships[0],
