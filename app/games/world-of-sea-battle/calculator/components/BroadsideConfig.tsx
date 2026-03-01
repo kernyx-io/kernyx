@@ -1,3 +1,5 @@
+"use client"
+
 import { CalculatorState } from "../lib/types"
 
 type Props = {
@@ -6,3 +8,9 @@ type Props = {
 }
 
 export default function BroadsideConfig({ state, dispatch }: Props) {
+  return (
+    <div>
+      {/* your UI here */}
+    </div>
+  )
+}
