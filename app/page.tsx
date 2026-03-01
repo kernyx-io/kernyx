@@ -2,16 +2,10 @@ import Link from 'next/link';
 import styles from './page.module.css';
 
 export const metadata = {
-  title: 'Game Tools & Guides',
+  title: 'Kernyx | Competitive Game Optimization Platform',
   description:
-    'Calculators, guides, and tools for your favourite games.',
+    'Advanced build calculators, meta tools, and strategy guides for competitive games.',
 };
-
-/* ─────────────────────────────────────────────
-   Content Registry
-   Add new games / tools / guides here only.
-   The UI renders automatically.
-───────────────────────────────────────────── */
 
 type CardItem = {
   href: string;
@@ -30,7 +24,7 @@ const games: CardItem[] = [
     icon: '⚓',
     title: 'World of Sea Battle',
     desc:
-      'Artillery calculators, ship loadout tools, and combat guides for the high seas.',
+      'Naval artillery optimization, ship loadout engineering, and tactical dominance tools.',
     tags: ['Naval', 'Combat', 'Loadout'],
     badge: 'Active',
   },
@@ -42,8 +36,8 @@ const calculators: CardItem[] = [
     icon: '💥',
     title: 'Cannon DPS Calculator',
     desc:
-      'Configure your broadside, pick ammo, crew, and attachments — get live damage output instantly.',
-    tags: ['WoSB', 'Artillery', 'DPS'],
+      'Simulate broadside configurations with ammo, crew, and attachment modifiers.',
+    tags: ['Artillery', 'DPS', 'Optimization'],
     badge: 'Live',
     badgeVariant: 'new',
   },
@@ -51,32 +45,28 @@ const calculators: CardItem[] = [
 
 const guides: CardItem[] = [];
 
-/* ─────────────────────────────────────────────
-   Card Component
-───────────────────────────────────────────── */
+/* ───────────────── Card ───────────────── */
 
 function Card({ item }: { item: CardItem }) {
-  const cls = [styles.card, item.comingSoon ? styles.cardComingSoon : '']
-    .filter(Boolean)
-    .join(' ');
-
   return (
-    <Link href={item.comingSoon ? '#' : item.href} className={cls}>
+    <Link
+      href={item.comingSoon ? '#' : item.href}
+      className={`${styles.card} ${
+        item.comingSoon ? styles.cardComingSoon : ''
+      }`}
+    >
       <div className={styles.cardTop}>
         <span className={styles.cardIcon}>{item.icon}</span>
         <span
-          className={[
-            styles.cardBadge,
-            item.badgeVariant === 'new' ? styles.new : '',
-          ]
-            .filter(Boolean)
-            .join(' ')}
+          className={`${styles.cardBadge} ${
+            item.badgeVariant === 'new' ? styles.new : ''
+          }`}
         >
           {item.badge}
         </span>
       </div>
 
-      <div className={styles.cardTitle}>{item.title}</div>
+      <h3 className={styles.cardTitle}>{item.title}</h3>
       <p className={styles.cardDesc}>{item.desc}</p>
 
       <div className={styles.cardFooter}>
@@ -93,9 +83,7 @@ function Card({ item }: { item: CardItem }) {
   );
 }
 
-/* ─────────────────────────────────────────────
-   Section Component
-───────────────────────────────────────────── */
+/* ───────────────── Section ───────────────── */
 
 function Section({
   icon,
@@ -111,10 +99,10 @@ function Section({
   return (
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
-        <span className={styles.sectionIcon}>{icon}</span>
-        <h2 className={styles.sectionTitle}>{title}</h2>
+        <span>{icon}</span>
+        <h2>{title}</h2>
         <span className={styles.sectionCount}>
-          {items.filter((i) => !i.comingSoon).length} available
+          {items.filter((i) => !i.comingSoon).length} Available
         </span>
       </div>
 
@@ -127,9 +115,7 @@ function Section({
   );
 }
 
-/* ─────────────────────────────────────────────
-   Page
-───────────────────────────────────────────── */
+/* ───────────────── Page ───────────────── */
 
 export default function HomePage() {
   return (
@@ -137,81 +123,105 @@ export default function HomePage() {
 
       {/* HERO */}
       <header className={styles.hero}>
-        <div className={styles.heroGlow} />
+        <div className={styles.heroOverlay} />
 
-        <div className={styles.heroInner}>
-          <span className={styles.heroEmblem}>🎯</span>
+        <div className={styles.heroContent}>
+          <span className={styles.heroBadge}>
+            ⚡ Competitive Optimization Suite
+          </span>
 
           <h1 className={styles.heroTitle}>
-            Competitive Game Optimization Platform
+            Engineer Your Advantage.
           </h1>
 
           <p className={styles.heroSubtitle}>
-            Build Calculators · Strategy Guides · Performance Tools
+            Build Smarter. Adapt Faster. Dominate Harder.
           </p>
 
           <p className={styles.heroDescription}>
-            Advanced analytics and build systems designed to help players
-            optimize loadouts, understand meta shifts, and gain a competitive
-            edge across multiple game ecosystems.
+            Kernyx is a modular analytics platform built to support multiple
+            competitive titles. From stat calculators to meta analysis tools,
+            we transform guesswork into measurable performance gains.
           </p>
 
           <div className={styles.heroActions}>
             <Link href="/games" className={styles.primaryBtn}>
-              Explore Games
+              Browse Games
             </Link>
-
-            <Link href="/support" className={styles.secondaryBtn}>
-              Support the Project
+            <Link href="/games/world-of-sea-battle/calculator" className={styles.secondaryBtn}>
+              Try Live Calculator
             </Link>
           </div>
         </div>
       </header>
 
-      {/* FEATURE STRIP */}
-      <section className={styles.featureStrip}>
-        <div className={styles.featureItem}>
-          <span>⚙</span>
-          <div>
-            <strong>Dynamic Calculators</strong>
-            <p>Live stat breakdowns and performance simulation tools.</p>
-          </div>
+      {/* TRUST STRIP */}
+      <section className={styles.trustStrip}>
+        <div>
+          <strong>Data-Driven</strong>
+          <p>Stat-based simulations and mechanical breakdowns.</p>
         </div>
-
-        <div className={styles.featureItem}>
-          <span>📊</span>
-          <div>
-            <strong>Meta Insights</strong>
-            <p>Understand balance shifts and optimal builds.</p>
-          </div>
+        <div>
+          <strong>Expandable</strong>
+          <p>Built to scale across multiple competitive titles.</p>
         </div>
+        <div>
+          <strong>Community-Supported</strong>
+          <p>Transparent tools built for serious players.</p>
+        </div>
+      </section>
 
-        <div className={styles.featureItem}>
-          <span>🌍</span>
-          <div>
-            <strong>Multi-Game Platform</strong>
-            <p>Unified ecosystem built to scale across titles.</p>
+      {/* FEATURED GAME SPOTLIGHT */}
+      <section className={styles.spotlight}>
+        <div className={styles.spotlightContent}>
+          <h2>Now Live: World of Sea Battle</h2>
+          <p>
+            Configure artillery batteries, evaluate armor penetration,
+            optimize crew bonuses, and calculate real-time damage output.
+          </p>
+
+          <div className={styles.spotlightActions}>
+            <Link
+              href="/games/world-of-sea-battle"
+              className={styles.primaryBtn}
+            >
+              Enter Tools
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* MAIN CONTENT */}
+      {/* CORE CONTENT */}
       <main className={styles.content}>
         <Section icon="🎮" title="Games" items={games} />
         <Section icon="🧮" title="Calculators" items={calculators} />
         <Section icon="📖" title="Guides" items={guides} />
       </main>
 
-      {/* SUPPORT STRIP */}
-      <section className={styles.supportStrip}>
-        <div className={styles.supportContent}>
-          <div>
-            <h3>Support Development</h3>
-            <p>
-              Hosting, analytics, and continuous updates are supported by the
-              community.
-            </p>
-          </div>
+      {/* ROADMAP */}
+      <section className={styles.roadmap}>
+        <h2>Platform Roadmap</h2>
+        <ul>
+          <li>✔ Multi-game registry framework</li>
+          <li>✔ Modular calculator architecture</li>
+          <li>⬜ User build saving & sharing</li>
+          <li>⬜ Patch tracking & change logs</li>
+          <li>⬜ AI-powered optimization assistant</li>
+        </ul>
+      </section>
+
+      {/* AD / SUPPORT ZONE */}
+      <section className={styles.monetization}>
+        <div className={styles.adPlaceholder}>
+          Advertisement Space (Responsive Banner)
+        </div>
+
+        <div className={styles.supportBox}>
+          <h3>Support Kernyx</h3>
+          <p>
+            Development, hosting, and analytics are maintained independently.
+            Support ensures continued expansion.
+          </p>
           <Link href="/support" className={styles.primaryBtn}>
             Donate / Support
           </Link>
@@ -220,12 +230,8 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <footer className={styles.footer}>
-        <div>
-          <strong>Kernyx</strong> — Competitive Optimization Tools
-        </div>
-        <div>
-          Unofficial fan tools · Not affiliated with any game developer
-        </div>
+        <div>Kernyx © {new Date().getFullYear()}</div>
+        <div>Unofficial fan tools · Not affiliated with any game developer</div>
       </footer>
     </div>
   );
