@@ -1,36 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&family=Lora:wght@400;600&family=Cinzel:wght@500;600&display=swap');
 
 :root {
-  --navy-bg:        #0d170d;
-  --navy-panel:     #111e11;
-  --navy-panel-deep:#141f14;
+  --ink-bg:        #0b1420;
+  --ink-panel:     #111c2b;
+  --ink-panel-deep:#162235;
 
-  --brass:          #c8a84b;
-  --brass-soft:     #d8caa0;
+  --brass:         #c6a75e;
+  --brass-soft:    #e0c88a;
 
-  --text-main:      #a8bca0;
-  --text-muted:     #506050;
+  --text-main:     #c9d4e6;
+  --text-muted:    #6c7b94;
 
-  --border-soft:    rgba(200,168,75,0.18);
-  --border-strong:  rgba(200,168,75,0.35);
+  --border-soft:   rgba(198,167,94,0.18);
+  --border-strong: rgba(198,167,94,0.35);
 }
 
-/* ───────────────── PAGE ───────────────── */
+/* ───────── PAGE ───────── */
 
 .page {
   min-height: 100vh;
-  background: var(--navy-bg);
+  background: radial-gradient(circle at 50% 0%, #0f1d2e 0%, #0b1420 60%);
   color: var(--text-main);
   font-family: 'Lora', serif;
   padding: 2.5rem 2rem 3rem;
 }
 
-/* ───────────────── HEADER ───────────────── */
+/* ───────── TITLE ───────── */
 
 .title {
   font-family: 'Cinzel', serif;
-  font-size: 1.9rem;
-  letter-spacing: 0.18em;
+  font-size: 2rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--brass-soft);
   margin-bottom: 2rem;
@@ -38,26 +38,26 @@
   padding-bottom: 0.75rem;
 }
 
-/* ───────────────── GRID LAYOUT ───────────────── */
+/* ───────── LAYOUT ───────── */
 
 .layout {
   display: grid;
-  grid-template-columns: 38% 62%;
+  grid-template-columns: 40% 60%;
   gap: 2rem;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 950px) {
   .layout {
     grid-template-columns: 1fr;
   }
 }
 
-/* ───────────────── PANEL ───────────────── */
+/* ───────── PANEL ───────── */
 
 .panel {
-  background: var(--navy-panel);
+  background: var(--ink-panel);
   border: 1px solid var(--border-soft);
-  padding: 1.5rem;
+  padding: 1.6rem;
   position: relative;
 }
 
@@ -74,23 +74,25 @@
 .panelTitle {
   font-family: 'Cinzel', serif;
   font-size: 0.8rem;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--brass);
   margin-bottom: 1.25rem;
 }
 
-/* ───────────────── FORM CONTROLS ───────────────── */
+/* ───────── FORM CONTROLS ───────── */
 
 .select,
 .input {
   width: 100%;
-  background: var(--navy-panel-deep);
+  background: var(--ink-panel-deep);
   border: 1px solid var(--border-soft);
   color: var(--text-main);
   padding: 0.6rem 0.75rem;
   font-family: 'Lora', serif;
   font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+  transition: border 0.2s ease;
 }
 
 .select:focus,
@@ -99,7 +101,7 @@
   border-color: var(--brass);
 }
 
-/* ───────────────── STAT LEDGER ───────────────── */
+/* ───────── LEDGER STATS ───────── */
 
 .ledger {
   display: flex;
@@ -110,9 +112,9 @@
 .statRow {
   display: flex;
   justify-content: space-between;
+  border-bottom: 1px solid rgba(198,167,94,0.08);
+  padding-bottom: 0.35rem;
   font-size: 0.9rem;
-  border-bottom: 1px solid rgba(200,168,75,0.08);
-  padding-bottom: 0.3rem;
 }
 
 .statLabel {
@@ -123,14 +125,33 @@
 .statValue {
   font-family: 'Philosopher', serif;
   color: var(--brass-soft);
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-/* ───────────────── REPORT HIGHLIGHT ───────────────── */
+.statValue.flash {
+  opacity: 0.6;
+  transform: translateY(-2px);
+}
 
-.highlight {
-  font-size: 1.1rem;
+/* ───────── HIGHLIGHT OUTPUT ───────── */
+
+.highlightBlock {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-strong);
+}
+
+.highlightLabel {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.highlightValue {
   font-family: 'Philosopher', serif;
+  font-size: 1.5rem;
   color: var(--brass);
-  letter-spacing: 0.05em;
+  margin-top: 0.4rem;
 }
