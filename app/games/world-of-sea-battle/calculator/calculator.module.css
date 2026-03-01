@@ -1,18 +1,136 @@
-.page {
-  background: #071225;
-  color: #e6c46a;
-  padding: 2rem;
-  font-family: serif;
+@import url('https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&family=Lora:wght@400;600&family=Cinzel:wght@500;600&display=swap');
+
+:root {
+  --navy-bg:        #0d170d;
+  --navy-panel:     #111e11;
+  --navy-panel-deep:#141f14;
+
+  --brass:          #c8a84b;
+  --brass-soft:     #d8caa0;
+
+  --text-main:      #a8bca0;
+  --text-muted:     #506050;
+
+  --border-soft:    rgba(200,168,75,0.18);
+  --border-strong:  rgba(200,168,75,0.35);
 }
+
+/* ───────────────── PAGE ───────────────── */
+
+.page {
+  min-height: 100vh;
+  background: var(--navy-bg);
+  color: var(--text-main);
+  font-family: 'Lora', serif;
+  padding: 2.5rem 2rem 3rem;
+}
+
+/* ───────────────── HEADER ───────────────── */
 
 .title {
-  font-size: 2rem;
+  font-family: 'Cinzel', serif;
+  font-size: 1.9rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brass-soft);
   margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 0.75rem;
 }
 
-.section {
-  border: 1px solid rgba(230,196,106,0.2);
+/* ───────────────── GRID LAYOUT ───────────────── */
+
+.layout {
+  display: grid;
+  grid-template-columns: 38% 62%;
+  gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ───────────────── PANEL ───────────────── */
+
+.panel {
+  background: var(--navy-panel);
+  border: 1px solid var(--border-soft);
   padding: 1.5rem;
-  margin-bottom: 2rem;
-  background: #0b1a33;
+  position: relative;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--brass);
+}
+
+.panelTitle {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 1.25rem;
+}
+
+/* ───────────────── FORM CONTROLS ───────────────── */
+
+.select,
+.input {
+  width: 100%;
+  background: var(--navy-panel-deep);
+  border: 1px solid var(--border-soft);
+  color: var(--text-main);
+  padding: 0.6rem 0.75rem;
+  font-family: 'Lora', serif;
+  font-size: 0.9rem;
+}
+
+.select:focus,
+.input:focus {
+  outline: none;
+  border-color: var(--brass);
+}
+
+/* ───────────────── STAT LEDGER ───────────────── */
+
+.ledger {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(200,168,75,0.08);
+  padding-bottom: 0.3rem;
+}
+
+.statLabel {
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.statValue {
+  font-family: 'Philosopher', serif;
+  color: var(--brass-soft);
+  transition: opacity 0.2s ease;
+}
+
+/* ───────────────── REPORT HIGHLIGHT ───────────────── */
+
+.highlight {
+  font-size: 1.1rem;
+  font-family: 'Philosopher', serif;
+  color: var(--brass);
+  letter-spacing: 0.05em;
 }
