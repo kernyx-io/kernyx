@@ -1,4 +1,8 @@
+import { CalculatorState } from "../lib/types"
 
-export default function BroadsideConfig() {
-  return <div>BroadsideConfig</div>
+type Props = {
+  state: CalculatorState
+  dispatch: React.Dispatch<any>
 }
+
+export default function BroadsideConfig({ state, dispatch }: Props) {
