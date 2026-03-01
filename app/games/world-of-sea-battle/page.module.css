@@ -14,8 +14,6 @@
   --wosb-border-l:  rgba(200,160,48,0.3);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
 .page {
   min-height: 100vh;
   background: var(--wosb-bg);
