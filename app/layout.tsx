@@ -4,6 +4,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 
+export const metadata: Metadata = {
+  title: "Kernyx",
+  description: "Gaming tools and calculators",
+};
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
