@@ -13,7 +13,7 @@ const GAMES = [
     name: 'World of Sea Battle',
     color: '#00b4d8',
     icon: '⚓',
-    href: '/games/world-of-sea-battle',
+    href: '/games/world-of-sea-battles/wsb-calculator',
     storeUrl: 'https://store.steampowered.com/app/2544340/World_of_Sea_Battle/',
     storeLabel: 'Steam',
   },
@@ -68,7 +68,7 @@ const TOOLS = [
   {
     gameId: 'wosb',
     label: '💥 Cannon DPS Calc',
-    href: '/games/world-of-sea-battle/calculator',
+    href: '/games/world-of-sea-battles/wsb-calculator',
   },
   // Add tools here as you build them:
   { gameId: 'gw2',      label: '🛡️ Build Planner',     href: '/games/guild-wars-2/build-planner' },
