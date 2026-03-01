@@ -124,12 +124,10 @@ export default function HomePage() {
       {/* HERO */}
       <header className={styles.hero}>
         <div className={styles.heroOverlay} />
-
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
             Engineer Your Advantage.
           </h1>
-
           <p className={styles.heroSubtitle}>
             Every stat matters.
           </p>
@@ -150,6 +148,7 @@ export default function HomePage() {
           Unofficial fan tools · Not affiliated with any game developer
         </div>
       </footer>
+
     </div>
   );
 }
