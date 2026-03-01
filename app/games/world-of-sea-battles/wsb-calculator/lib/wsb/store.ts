@@ -5,10 +5,17 @@ import { persist } from 'zustand/middleware'
 import type { CannonSlot, AttachmentSlot, CosmeticSlot } from './types'
 import { buildDefaultSlots } from './calculator'
 
+// ─── Sail attachment IDs — kept in sync with attachments.ts ──────────────────
+const SAIL_IDS = new Set([
+  'cheap_sails',
+  'stitched_sails',
+  'elite_sails',
+  'tarpaulin_sails',
+])
+
 // ─── State Shape ──────────────────────────────────────────────────────────────
 
 interface WsbState {
-  // Selections
   shipId: string
   targetShipId: string
   ammoId: string
@@ -19,7 +26,6 @@ interface WsbState {
   supportIds: string[]
   armourTypeId: string
 
-  // Actions
   setShip: (id: string) => void
   setTargetShip: (id: string) => void
   setAmmo: (id: string) => void
@@ -33,7 +39,7 @@ interface WsbState {
   resetAll: () => void
 }
 
-// ─── Default Values ───────────────────────────────────────────────────────────
+// ─── Defaults ─────────────────────────────────────────────────────────────────
 
 const DEFAULTS = {
   shipId: 'none',
@@ -54,108 +60,81 @@ export const useWsbStore = create<WsbState>()(
     (set, get) => ({
       ...DEFAULTS,
 
-      // ── Ship selection — rebuilds cannon slots automatically ────────────────
       setShip: (id) => {
-        const slots = buildDefaultSlots(id)
-        set({ shipId: id, cannonSlots: slots })
+        set({ shipId: id, cannonSlots: buildDefaultSlots(id) })
       },
 
-      // ── Target ship ────────────────────────────────────────────────────────
       setTargetShip: (id) => set({ targetShipId: id }),
 
-      // ── Ammo ───────────────────────────────────────────────────────────────
       setAmmo: (id) => set({ ammoId: id }),
 
-      // ── Cannon slot assignment ─────────────────────────────────────────────
       setCannonSlot: (position, index, cannonId) => {
-        const slots = get().cannonSlots.map((s) =>
-          s.position === position && s.index === index
-            ? { ...s, cannonId }
-            : s
-        )
-        // If slot doesn't exist yet, add it
-        const exists = get().cannonSlots.some(
-          (s) => s.position === position && s.index === index
-        )
-        if (!exists) {
-          slots.push({ position, index, cannonId })
+        const existing = get().cannonSlots
+        const exists = existing.some(s => s.position === position && s.index === index)
+        if (exists) {
+          set({ cannonSlots: existing.map(s =>
+            s.position === position && s.index === index ? { ...s, cannonId } : s
+          )})
+        } else {
+          set({ cannonSlots: [...existing, { position, index, cannonId }] })
         }
-        set({ cannonSlots: slots })
       },
 
-      // ── Attachments — one sail slot max, up to 5 general slots ────────────
       toggleAttachment: (id, slotType) => {
         const current = get().attachmentIds
+        // Deselect if already active
         if (current.includes(id)) {
-          // Deselect
-          set({ attachmentIds: current.filter((a) => a !== id) })
+          set({ attachmentIds: current.filter(a => a !== id) })
           return
         }
         if (slotType === 'sail') {
-          // Only one sail slot — replace any existing sail attachment
-          const withoutSail = current.filter((a) => {
-            const att = import('./attachments').then(m =>
-              m.getAttachmentsBySlot('sail').some(s => s.id === a)
-            )
-            return att
-          })
-          // Simple approach: replace if already have a sail attachment
-          set({ attachmentIds: [...current.filter((a) => !isSailAttachment(a)), id] })
+          // Replace any existing sail attachment (max 1)
+          set({ attachmentIds: [...current.filter(a => !SAIL_IDS.has(a)), id] })
         } else {
-          // Up to 5 general slots
-          const generalCount = current.filter((a) => !isSailAttachment(a)).length
+          // Max 5 general slots
+          const generalCount = current.filter(a => !SAIL_IDS.has(a)).length
           if (generalCount >= 5) return
           set({ attachmentIds: [...current, id] })
         }
       },
 
-      // ── Cosmetics ─────────────────────────────────────────────────────────
       toggleCosmetic: (id, _slotType) => {
         const current = get().cosmeticIds
-        if (current.includes(id)) {
-          set({ cosmeticIds: current.filter((c) => c !== id) })
-        } else {
-          set({ cosmeticIds: [...current, id] })
-        }
+        set({
+          cosmeticIds: current.includes(id)
+            ? current.filter(c => c !== id)
+            : [...current, id],
+        })
       },
 
-      // ── Crew — max 4 ──────────────────────────────────────────────────────
       toggleCrew: (id) => {
         const current = get().crewIds
         if (current.includes(id)) {
-          set({ crewIds: current.filter((c) => c !== id) })
+          set({ crewIds: current.filter(c => c !== id) })
         } else {
           if (current.length >= 4) return
           set({ crewIds: [...current, id] })
         }
       },
 
-      // ── Support — max 3 ───────────────────────────────────────────────────
       toggleSupport: (id) => {
         const current = get().supportIds
         if (current.includes(id)) {
-          set({ supportIds: current.filter((s) => s !== id) })
+          set({ supportIds: current.filter(s => s !== id) })
         } else {
           if (current.length >= 3) return
           set({ supportIds: [...current, id] })
         }
       },
 
-      // ── Armour type ───────────────────────────────────────────────────────
       setArmourType: (id) => set({ armourTypeId: id }),
 
-      // ── Reset cannon slots only (when ship changes) ───────────────────────
-      resetSlots: () => {
-        const slots = buildDefaultSlots(get().shipId)
-        set({ cannonSlots: slots })
-      },
+      resetSlots: () => set({ cannonSlots: buildDefaultSlots(get().shipId) }),
 
-      // ── Full reset ────────────────────────────────────────────────────────
       resetAll: () => set({ ...DEFAULTS }),
     }),
     {
-      name: 'wsb-calculator-v1', // localStorage key
-      // Only persist selections, not actions
+      name: 'wsb-calculator-v1',
       partialize: (state) => ({
         shipId: state.shipId,
         targetShipId: state.targetShipId,
@@ -171,27 +150,12 @@ export const useWsbStore = create<WsbState>()(
   )
 )
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Selector hooks ───────────────────────────────────────────────────────────
 
-// Sail attachment IDs — kept in sync with attachments.ts
-const SAIL_ATTACHMENT_IDS = new Set([
-  'cheap_sails',
-  'stitched_sails',
-  'elite_sails',
-  'tarpaulin_sails',
-])
-
-function isSailAttachment(id: string): boolean {
-  return SAIL_ATTACHMENT_IDS.has(id)
-}
-
-// ─── Selector Hooks ───────────────────────────────────────────────────────────
-// Pre-built selectors to avoid unnecessary re-renders
-
-export const selectShipId = (s: WsbState) => s.shipId
+export const selectShipId       = (s: WsbState) => s.shipId
 export const selectTargetShipId = (s: WsbState) => s.targetShipId
-export const selectAmmoId = (s: WsbState) => s.ammoId
-export const selectCannonSlots = (s: WsbState) => s.cannonSlots
+export const selectAmmoId       = (s: WsbState) => s.ammoId
+export const selectCannonSlots  = (s: WsbState) => s.cannonSlots
 export const selectAttachmentIds = (s: WsbState) => s.attachmentIds
-export const selectCrewIds = (s: WsbState) => s.crewIds
-export const selectSupportIds = (s: WsbState) => s.supportIds
+export const selectCrewIds      = (s: WsbState) => s.crewIds
+export const selectSupportIds   = (s: WsbState) => s.supportIds
