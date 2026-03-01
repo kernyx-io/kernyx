@@ -1,4 +1,4 @@
-import { CalculatorState } from "./types"
+import type { CalculatorState } from "./lib/types"
 
 export function calculateResults(state: CalculatorState) {
   const adjustedReload =
