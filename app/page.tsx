@@ -122,38 +122,32 @@ export default function HomePage() {
     <div className={styles.page}>
 
       {/* HERO */}
-      <header className={styles.hero}>
-        <div className={styles.heroOverlay} />
+     <header className={styles.hero}>
+  <div className={styles.heroOverlay} />
 
-        <div className={styles.heroContent}>
-          <span className={styles.heroBadge}>
-            ⚡ Competitive Optimization Suite
-          </span>
+  <div className={styles.heroContent}>
+    <h1 className={styles.heroTitle}>
+      Engineer Your Advantage.
+    </h1>
 
-          <h1 className={styles.heroTitle}>
-            Engineer Your Advantage.
-          </h1>
+    <p className={styles.heroSubtitle}>
+      Every stat matters.
+    </p>
 
-          <p className={styles.heroSubtitle}>
-            Build Smarter. Adapt Faster. Dominate Harder.
-          </p>
+    <div className={styles.heroActions}>
+      <Link href="/games" className={styles.primaryBtn}>
+        Browse Games
+      </Link>
 
-          <p className={styles.heroDescription}>
-            Kernyx is a modular analytics platform built to support multiple
-            competitive titles. From stat calculators to meta analysis tools,
-            we transform guesswork into measurable performance gains.
-          </p>
-
-          <div className={styles.heroActions}>
-            <Link href="/games" className={styles.primaryBtn}>
-              Browse Games
-            </Link>
-            <Link href="/games/world-of-sea-battle/calculator" className={styles.secondaryBtn}>
-              Try Live Calculator
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Link
+        href="/games/world-of-sea-battle/calculator"
+        className={styles.secondaryBtn}
+      >
+        Try Live Calculator
+      </Link>
+    </div>
+  </div>
+</header>
 
       {/* TRUST STRIP */}
       <section className={styles.trustStrip}>
