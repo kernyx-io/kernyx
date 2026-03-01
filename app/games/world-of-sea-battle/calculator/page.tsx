@@ -4,7 +4,7 @@ import { useReducer } from "react"
 import styles from "./calculator.module.css"
 import { ships, cannons } from "./lib/data"
 import { calculateResults } from "./lib/calculations"
-import { CalculatorState } from "./lib/types"
+import type { CalculatorState } from "./lib/types"
 
 import VesselSelection from "./components/VesselSelection"
 import BroadsideConfig from "./components/BroadsideConfig"
@@ -25,16 +25,12 @@ function reducer(state: CalculatorState, action: any): CalculatorState {
   switch (action.type) {
     case "SET_SHIP":
       return { ...state, ship: action.payload }
-
     case "SET_CANNON":
       return { ...state, cannon: action.payload }
-
     case "SET_COUNT":
       return { ...state, cannonCount: action.payload }
-
     case "SET_CREW":
       return { ...state, crew: action.payload }
-
     default:
       return state
   }
@@ -42,29 +38,43 @@ function reducer(state: CalculatorState, action: any): CalculatorState {
 
 export default function CalculatorPage() {
   const [state, dispatch] = useReducer(reducer, initialState)
-
   const results = calculateResults(state)
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Cannon DPS Calculator</h1>
+      <h1 className={styles.title}>Admiralty Gunnery Ledger</h1>
 
-      <VesselSelection
-        state={state}
-        dispatch={dispatch}
-      />
+      <div className={styles.layout}>
 
-      <BroadsideConfig
-        state={state}
-        dispatch={dispatch}
-      />
+        {/* LEFT COLUMN */}
+        <div>
 
-      <CrewSelection
-        state={state}
-        dispatch={dispatch}
-      />
+          <div className={styles.panel}>
+            <div className={styles.panelTitle}>Vessel Selection</div>
+            <VesselSelection state={state} dispatch={dispatch} />
+          </div>
 
-      <DamageReport results={results} />
+          <div className={styles.panel} style={{ marginTop: "1.5rem" }}>
+            <div className={styles.panelTitle}>Broadside Configuration</div>
+            <BroadsideConfig state={state} dispatch={dispatch} />
+          </div>
+
+          <div className={styles.panel} style={{ marginTop: "1.5rem" }}>
+            <div className={styles.panelTitle}>Crew Assignment</div>
+            <CrewSelection state={state} dispatch={dispatch} />
+          </div>
+
+        </div>
+
+        {/* RIGHT COLUMN */}
+        <div>
+          <div className={styles.panel}>
+            <div className={styles.panelTitle}>Engagement Report</div>
+            <DamageReport results={results} />
+          </div>
+        </div>
+
+      </div>
     </div>
   )
 }
