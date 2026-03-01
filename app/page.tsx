@@ -122,7 +122,8 @@ export default function HomePage() {
     <div className={styles.page}>
 
       {/* HERO */}
-     <header className={styles.hero}>
+    {/* HERO */}
+<header className={styles.hero}>
   <div className={styles.heroOverlay} />
 
   <div className={styles.heroContent}>
@@ -133,19 +134,6 @@ export default function HomePage() {
     <p className={styles.heroSubtitle}>
       Every stat matters.
     </p>
-
-    <div className={styles.heroActions}>
-      <Link href="/games" className={styles.primaryBtn}>
-        Browse Games
-      </Link>
-
-      <Link
-        href="/games/world-of-sea-battle/calculator"
-        className={styles.secondaryBtn}
-      >
-        Try Live Calculator
-      </Link>
-    </div>
   </div>
 </header>
 
