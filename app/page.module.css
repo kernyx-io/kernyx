@@ -1,0 +1,597 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Barlow:wght@300;400;500;600&display=swap');
+
+/* ── Variables ── */
+:global(:root) {
+  --bg:           #13161c;
+  --bg-nav:       #0e1117;
+  --bg-sidebar:   #111419;
+  --bg-card:      #1a1e27;
+  --bg-card-hover:#1f2430;
+  --bg-featured:  #181d28;
+  --border:       rgba(255,255,255,0.07);
+  --border-mid:   rgba(255,255,255,0.12);
+  --cyan:         #00c8e8;
+  --cyan-dim:     rgba(0,200,232,0.18);
+  --white:        #e8ecf2;
+  --mid:          #8892a4;
+  --muted:        #4a5368;
+  --text:         #c0c8d8;
+  --radius:       6px;
+}
+
+/* ── Page shell ── */
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══════════════════════════════════════
+   TOP NAV
+══════════════════════════════════════ */
+.topNav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 1.5rem;
+  height: 52px;
+  background: var(--bg-nav);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.topNavLogo {
+  display: flex;
+  align-items: baseline;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.logoMark {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(0,200,232,0.4);
+}
+
+.logoText {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+
+.topNavLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  flex: 1;
+}
+
+.topNavLink {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--mid);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem 0.9rem;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.topNavLink:hover {
+  color: var(--white);
+  background: rgba(255,255,255,0.06);
+}
+
+.topNavLinkActive {
+  color: var(--white);
+  background: rgba(0,200,232,0.1);
+  border-bottom: 2px solid var(--cyan);
+}
+
+.topNavTag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════
+   BODY LAYOUT
+══════════════════════════════════════ */
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebarSection {
+  padding: 0 0 0.75rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebarSection:last-child {
+  border-bottom: none;
+}
+
+.sidebarLabel {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.75rem 1rem 0.5rem;
+}
+
+.sidebarGame {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1rem;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebarGame:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--white);
+}
+
+.sidebarLink {
+  display: block;
+  padding: 0.42rem 1rem;
+  text-decoration: none;
+  font-size: 0.86rem;
+  transition: background 0.15s;
+}
+
+.sidebarLink:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.sidebarComingSoon {
+  padding: 0.4rem 1rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.sidebarStoreLink {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.42rem 1rem;
+  text-decoration: none;
+  color: var(--mid);
+  font-size: 0.84rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebarStoreLink:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--white);
+}
+
+.sidebarStoreLinkArrow {
+  margin-left: auto;
+  font-size: 0.75rem;
+  opacity: 0.4;
+}
+
+/* ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ */
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 1.5rem 1.75rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+}
+
+/* ── Filter bar ── */
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.filterBtn {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--mid);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 0.3rem 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.filterBtn:hover {
+  color: var(--white);
+  border-color: var(--border-mid);
+  background: rgba(255,255,255,0.08);
+}
+
+.filterBtnActive {
+  color: var(--white);
+  background: rgba(0,200,232,0.12);
+  border-color: rgba(0,200,232,0.35);
+}
+
+/* ── Loading / empty ── */
+.loadingState {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 3rem 0;
+}
+
+.loadingDots {
+  display: flex;
+  gap: 5px;
+}
+
+.loadingDots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  animation: dotPulse 1.2s ease-in-out infinite;
+}
+
+.loadingDots span:nth-child(2) { animation-delay: 0.2s; }
+.loadingDots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50%       { opacity: 1;   transform: scale(1.1); }
+}
+
+.emptyState {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 3rem 0;
+}
+
+/* ══════════════════════════════════════
+   NEWS CARDS
+══════════════════════════════════════ */
+
+/* Hero layout: big card left + 2 stacked right */
+.newsHero {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.newsSecondary {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+}
+
+.newsCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  background: var(--bg-card);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.newsCard:hover {
+  background: var(--bg-card-hover);
+}
+
+.newsCardFeatured {
+  padding: 1.5rem 1.75rem;
+}
+
+.newsCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.newsGameTag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  opacity: 0.9;
+}
+
+.newsTime {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.newsTitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+
+.newsCardFeatured .newsTitle {
+  font-size: 1.4rem;
+}
+
+.newsExcerpt {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--mid);
+  flex: 1;
+}
+
+.newsFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.newsSource {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.newsReadMore {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.8rem;
+  color: var(--cyan);
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+
+.newsCard:hover .newsReadMore {
+  opacity: 1;
+}
+
+/* ── More news grid ── */
+.newsList {}
+
+.newsListHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+
+.newsListCount {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.newsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════
+   STORE TAB
+══════════════════════════════════════ */
+.storePage {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.storeHeader {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.storeTitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  margin-bottom: 0.35rem;
+}
+
+.storeSubtitle {
+  font-size: 0.9rem;
+  color: var(--mid);
+  line-height: 1.5;
+}
+
+.storeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.75rem;
+}
+
+.storeCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+}
+
+.storeCard:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-mid);
+  transform: translateY(-2px);
+}
+
+.storeIcon {
+  font-size: 1.8rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.storeBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.storeName {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.02em;
+}
+
+.storeLabel {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 0.15rem;
+}
+
+.storeArrow {
+  font-size: 1rem;
+  color: var(--muted);
+  transition: color 0.15s, transform 0.15s;
+}
+
+.storeCard:hover .storeArrow {
+  color: var(--cyan);
+  transform: translate(2px, -2px);
+}
+
+.storeDisclaimer {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.02);
+}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.75rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg-nav);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .newsHero {
+    grid-template-columns: 1fr;
+  }
+  .newsSecondary {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main    { padding: 1rem 1rem 2rem; }
+}
+
+@media (max-width: 640px) {
+  .newsHero { grid-template-columns: 1fr; }
+  .newsSecondary { flex-direction: column; }
+  .topNavTag { display: none; }
+  .filterBar { gap: 0.25rem; }
+  .filterBtn { font-size: 0.75rem; padding: 0.25rem 0.65rem; }
+}
