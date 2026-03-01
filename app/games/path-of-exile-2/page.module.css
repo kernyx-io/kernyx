@@ -15,8 +15,9 @@
   --poe-border-l:  rgba(192,120,24,0.32);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
+* {
+  box-sizing: border-box;
+}
 .page {
   min-height: 100vh;
   background: var(--poe-bg);
