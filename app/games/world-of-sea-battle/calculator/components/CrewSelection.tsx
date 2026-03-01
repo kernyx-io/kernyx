@@ -1,4 +1,4 @@
-
-export default function CrewSelection() {
-  return <div>Crew Selection</div>
+type Props = {
+  state: CalculatorState
+  dispatch: React.Dispatch<any>
 }
