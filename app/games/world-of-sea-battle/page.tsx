@@ -1,4 +1,3 @@
-import styles from "./page.module.css";
 import WoSBClient from "./WoSBClient";
 
 export const metadata = {
