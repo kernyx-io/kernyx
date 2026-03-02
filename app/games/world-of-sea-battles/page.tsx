@@ -63,7 +63,7 @@ const TOOLS = [
   },
 ]
 
-const GUIDES = [
+const GUIDES: { title: string; desc: string; tags: string[]; href?: string; live?: boolean }[] = [
   { title: 'Getting Started', desc: 'Server selection, starter ports, and early game survival.', tags: ['BEGINNER'] },
   { title: 'Cannon Selection Guide', desc: 'Choosing the right cannon type and tier for your ship class.', tags: ['COMBAT', 'CANNONS'] },
   { title: 'Broadside Armor & Penetration', desc: 'Understanding armor angles, penetration thresholds, and effective DPM.', tags: ['COMBAT', 'ADVANCED'] },
