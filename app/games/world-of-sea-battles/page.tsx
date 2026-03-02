@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import './hub.css'
+import HubTopNav from './HubTopNav'
 
 export const metadata: Metadata = {
   title: 'World of Sea Battle — Tools & Guides | Kernyx',
@@ -75,34 +76,7 @@ export default async function WorldOfSeaBattlesPage() {
   return (
     <main className="wsb-hub">
 
-      {/* ── Top Nav (matches Kernyx main page) ── */}
-      <nav className="wsb-hub-topnav">
-        <div className="wsb-hub-topnav-logo">
-          <span className="wsb-hub-topnav-logomark">K</span>
-          <span className="wsb-hub-topnav-logotext">ERNYX</span>
-        </div>
-        <div className="wsb-hub-topnav-links">
-          <Link href="/games/world-of-sea-battles" className="wsb-hub-topnav-link wsb-hub-topnav-link-active">
-            <span>⚓</span><span>Sea Battle</span>
-          </Link>
-          <Link href="/games/guild-wars-2" className="wsb-hub-topnav-link">
-            <span>⚔️</span><span>Guild Wars 2</span>
-          </Link>
-          <Link href="/games/lost-ark" className="wsb-hub-topnav-link">
-            <span>🗺️</span><span>Lost Ark</span>
-          </Link>
-          <Link href="/games/destiny-2" className="wsb-hub-topnav-link">
-            <span>🌌</span><span>Destiny 2</span>
-          </Link>
-          <Link href="/games/path-of-exile-2" className="wsb-hub-topnav-link">
-            <span>💀</span><span>Path of Exile 2</span>
-          </Link>
-          <Link href="/games/warframe" className="wsb-hub-topnav-link">
-            <span>🤖</span><span>Warframe</span>
-          </Link>
-        </div>
-        <div className="wsb-hub-topnav-tag">Unofficial Fan Tools</div>
-      </nav>
+      <HubTopNav />
 
       {/* ── Body: sidebar + content ── */}
       <div className="wsb-hub-body">
