@@ -6,6 +6,55 @@ export const metadata: Metadata = {
   description: 'Damage calculators, ship builders, and combat guides for World of Sea Battle.',
 }
 
+// ─── YouTube RSS fetch (no API key needed) ────────────────────────────────────
+
+interface YTVideo {
+  title: string
+  link: string
+  published: string
+  thumbnail: string
+  channel: string
+}
+
+async function fetchYouTubeVideos(query: string, max = 6): Promise<YTVideo[]> {
+  try {
+    const encoded = encodeURIComponent(query)
+    const url = `https://www.youtube.com/feeds/videos.xml?search_query=${encoded}`
+    const res = await fetch(url, { next: { revalidate: 3600 } })
+    if (!res.ok) return []
+    const xml = await res.text()
+    const entries = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)]
+    return entries.slice(0, max).map(([, entry]) => {
+      const title     = entry.match(/<title>(.*?)<\/title>/)?.[1] ?? ''
+      const link      = entry.match(/<link rel="alternate" href="(.*?)"/)?.[1] ?? ''
+      const published = entry.match(/<published>(.*?)<\/published>/)?.[1] ?? ''
+      const thumbnail = entry.match(/<media:thumbnail url="(.*?)"/)?.[1] ?? ''
+      const channel   = entry.match(/<name>(.*?)<\/name>/)?.[1] ?? ''
+      return {
+        title: title.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'"),
+        link,
+        published,
+        thumbnail,
+        channel: channel.replace(/&amp;/g,'&'),
+      }
+    })
+  } catch {
+    return []
+  }
+}
+
+function timeAgo(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime()
+  const days = Math.floor(diff / 86400000)
+  if (days < 1)   return 'Today'
+  if (days < 7)   return `${days}d ago`
+  if (days < 30)  return `${Math.floor(days / 7)}w ago`
+  if (days < 365) return `${Math.floor(days / 30)}mo ago`
+  return `${Math.floor(days / 365)}y ago`
+}
+
+// ─── Static data ──────────────────────────────────────────────────────────────
+
 const TOOLS = [
   {
     href: '/games/world-of-sea-battles/wsb-calculator',
@@ -33,13 +82,11 @@ const TOOLS = [
   },
 ]
 
-const GUIDES = [
-  { title: 'Cannon Selection Guide', desc: 'Long cannon vs carronade vs bombard — when to use each weapon type and on which ship.', status: 'soon' as const },
-  { title: 'Broadside Armor & Penetration', desc: 'How armor reduction interacts with cannon penetration values and which ships are effectively immune to small caliber.', status: 'soon' as const },
-  { title: 'Rate 1 Ship Overview', desc: "Comparing the Santísima Trinidad, 12 Apostolov, and other Rate 1 heavies — trade-offs between firepower, speed, and durability.", status: 'soon' as const },
-]
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function WorldOfSeaBattlesPage() {
+export default async function WorldOfSeaBattlesPage() {
+  const videos = await fetchYouTubeVideos('World of Sea Battle guide')
+
   return (
     <main className="wsb-hub">
 
@@ -100,35 +147,64 @@ export default function WorldOfSeaBattlesPage() {
           </div>
         </section>
 
-        {/* ── Guides ── */}
+        {/* ── YouTube Guides ── */}
         <section className="wsb-hub-section">
           <div className="wsb-hub-section-header">
-            <span className="wsb-hub-section-icon">📖</span>
-            GUIDES
+            <span className="wsb-hub-section-icon">▶</span>
+            LATEST GUIDES
+            <span className="wsb-hub-section-note">from YouTube · updates hourly</span>
           </div>
-          <div className="wsb-hub-guides-list">
-            {GUIDES.map((g, i) => (
-              <div key={i} className="wsb-hub-guide-row">
-                <div className="wsb-hub-guide-dot" />
-                <div className="wsb-hub-guide-body">
-                  <div className="wsb-hub-guide-title">{g.title}</div>
-                  <div className="wsb-hub-guide-desc">{g.desc}</div>
-                </div>
-                <div className="wsb-hub-guide-soon">SOON</div>
-              </div>
-            ))}
+
+          {videos.length === 0 ? (
+            <div className="wsb-hub-no-videos">
+              Could not load videos right now — check back shortly.
+            </div>
+          ) : (
+            <div className="wsb-hub-videos-grid">
+              {videos.map((v, i) => (
+                <a
+                  key={i}
+                  href={v.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="wsb-hub-video-card"
+                >
+                  {v.thumbnail ? (
+                    <div className="wsb-hub-video-thumb">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={v.thumbnail} alt={v.title} loading="lazy" />
+                      <div className="wsb-hub-video-play">▶</div>
+                    </div>
+                  ) : (
+                    <div className="wsb-hub-video-thumb wsb-hub-video-thumb-empty">▶</div>
+                  )}
+                  <div className="wsb-hub-video-body">
+                    <div className="wsb-hub-video-title">{v.title}</div>
+                    <div className="wsb-hub-video-meta">
+                      {v.channel && <span>{v.channel}</span>}
+                      {v.published && <span>{timeAgo(v.published)}</span>}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
+
+          <div className="wsb-hub-yt-link">
+            <a href="https://www.youtube.com/results?search_query=world+of+sea+battle+guide" target="_blank" rel="noopener noreferrer">
+              View all on YouTube →
+            </a>
           </div>
         </section>
 
       </div>
 
-      {/* ── Footer note ── */}
+      {/* ── Footer ── */}
       <div className="wsb-hub-footer">
         Kernyx · Unofficial fan site · Not affiliated with Game-Insight or World of Sea Battle
       </div>
 
       <style>{`
-        /* ── Reset & tokens ── */
         .wsb-hub {
           --gold:        #c9a84c;
           --gold-bright: #e8c96a;
@@ -140,16 +216,12 @@ export default function WorldOfSeaBattlesPage() {
           --cream-dim:   #a89878;
           --green:       #2ecc71;
           --border:      rgba(201,168,76,0.2);
-
           min-height: 100vh;
           background: var(--navy);
           color: var(--cream);
           font-family: 'Crimson Pro', Georgia, serif;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
-
-        /* ── Hero ── */
         .wsb-hub-hero {
           position: relative;
           padding: 4rem 2rem 3rem;
@@ -161,11 +233,8 @@ export default function WorldOfSeaBattlesPage() {
           max-width: 1100px;
           margin: 0 auto;
         }
-
         .wsb-hub-hero-inner { max-width: 600px; }
-
         .wsb-hub-eyebrow { margin-bottom: 1rem; }
-
         .wsb-hub-game-badge {
           font-family: 'Cinzel', serif;
           font-size: 0.68rem;
@@ -175,67 +244,24 @@ export default function WorldOfSeaBattlesPage() {
           padding: 0.3rem 0.75rem;
           border-radius: 2px;
         }
-
         .wsb-hub-title {
           font-family: 'Cinzel Decorative', serif;
           font-size: clamp(2.2rem, 5vw, 3.8rem);
           font-weight: 700;
           line-height: 1.1;
           color: var(--cream);
-          margin: 0 0 1rem;
+          margin: 0.75rem 0 1rem;
           text-shadow: 0 0 60px rgba(201,168,76,0.15);
         }
-
-        .wsb-hub-title em {
-          font-style: italic;
-          color: var(--gold-bright);
-          display: block;
-        }
-
-        .wsb-hub-subtitle {
-          font-size: 1.1rem;
-          color: var(--cream-dim);
-          max-width: 480px;
-          line-height: 1.6;
-          margin: 0 0 1.75rem;
-        }
-
-        .wsb-hub-stats-row {
-          display: flex;
-          align-items: center;
-          gap: 0.6rem;
-          flex-wrap: wrap;
-          font-family: 'Cinzel', serif;
-          font-size: 0.72rem;
-          letter-spacing: 0.1em;
-          color: var(--cream-dim);
-        }
-
+        .wsb-hub-title em { font-style: italic; color: var(--gold-bright); display: block; }
+        .wsb-hub-subtitle { font-size: 1.1rem; color: var(--cream-dim); max-width: 480px; line-height: 1.6; margin: 0 0 1.75rem; }
+        .wsb-hub-stats-row { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.1em; color: var(--cream-dim); }
         .wsb-hub-stat span { color: var(--gold-bright); font-weight: 600; margin-right: 0.3rem; }
-        .wsb-hub-stat-sep  { color: var(--gold-dim); }
+        .wsb-hub-stat-sep { color: var(--gold-dim); }
+        .wsb-hub-hero-ship { font-size: clamp(5rem, 12vw, 10rem); opacity: 0.07; position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); pointer-events: none; user-select: none; }
 
-        .wsb-hub-hero-ship {
-          font-size: clamp(5rem, 12vw, 10rem);
-          opacity: 0.07;
-          position: absolute;
-          right: 2rem;
-          top: 50%;
-          transform: translateY(-50%);
-          pointer-events: none;
-          user-select: none;
-        }
+        .wsb-hub-content { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem 4rem; display: flex; flex-direction: column; gap: 3.5rem; }
 
-        /* ── Content ── */
-        .wsb-hub-content {
-          max-width: 1100px;
-          margin: 0 auto;
-          padding: 3rem 2rem 4rem;
-          display: flex;
-          flex-direction: column;
-          gap: 3.5rem;
-        }
-
-        /* ── Section header ── */
         .wsb-hub-section-header {
           font-family: 'Cinzel', serif;
           font-size: 0.72rem;
@@ -248,166 +274,47 @@ export default function WorldOfSeaBattlesPage() {
           padding-bottom: 0.75rem;
           border-bottom: 1px solid var(--border);
         }
-
         .wsb-hub-section-icon { font-size: 0.9rem; }
+        .wsb-hub-section-note { margin-left: auto; font-size: 0.6rem; color: var(--gold-dim); letter-spacing: 0.1em; font-family: 'Cinzel', serif; }
 
-        /* ── Tool cards ── */
-        .wsb-hub-tools-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 1rem;
-        }
-
-        .wsb-hub-tool-card {
-          background: var(--navy-mid);
-          border: 1px solid var(--border);
-          border-radius: 4px;
-          padding: 1.25rem 1.5rem 1.5rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.6rem;
-          text-decoration: none;
-          color: var(--cream);
-          transition: border-color 0.2s, background 0.2s;
-          position: relative;
-        }
-
-        .wsb-hub-tool-card:not(.soon):hover {
-          border-color: rgba(201,168,76,0.5);
-          background: var(--navy-light);
-        }
-
-        .wsb-hub-tool-card.soon {
-          opacity: 0.55;
-          cursor: default;
-          pointer-events: none;
-        }
-
-        .wsb-hub-tool-top {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
+        /* Tools */
+        .wsb-hub-tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .wsb-hub-tool-card { background: var(--navy-mid); border: 1px solid var(--border); border-radius: 4px; padding: 1.25rem 1.5rem 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; text-decoration: none; color: var(--cream); transition: border-color 0.2s, background 0.2s; }
+        .wsb-hub-tool-card:not(.soon):hover { border-color: rgba(201,168,76,0.5); background: var(--navy-light); }
+        .wsb-hub-tool-card.soon { opacity: 0.55; cursor: default; pointer-events: none; }
+        .wsb-hub-tool-top { display: flex; align-items: center; justify-content: space-between; }
         .wsb-hub-tool-icon { font-size: 1.4rem; }
+        .wsb-hub-tool-badge { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.12em; padding: 0.2rem 0.5rem; border-radius: 2px; }
+        .wsb-hub-tool-badge-available { background: rgba(46,204,113,0.12); color: var(--green); border: 1px solid rgba(46,204,113,0.3); }
+        .wsb-hub-tool-badge-soon { background: rgba(201,168,76,0.1); color: var(--gold-dim); border: 1px solid var(--border); }
+        .wsb-hub-tool-title { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 600; color: var(--cream); letter-spacing: 0.04em; }
+        .wsb-hub-tool-desc { font-size: 0.97rem; color: var(--cream-dim); line-height: 1.55; flex: 1; }
+        .wsb-hub-tool-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem; }
+        .wsb-hub-tag { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.1em; color: var(--gold-dim); border: 1px solid rgba(201,168,76,0.15); padding: 0.15rem 0.45rem; border-radius: 2px; }
 
-        .wsb-hub-tool-badge {
-          font-family: 'Cinzel', serif;
-          font-size: 0.55rem;
-          letter-spacing: 0.12em;
-          padding: 0.2rem 0.5rem;
-          border-radius: 2px;
-        }
+        /* YouTube video grid */
+        .wsb-hub-videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+        .wsb-hub-video-card { background: var(--navy-mid); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; text-decoration: none; color: var(--cream); display: flex; flex-direction: column; transition: border-color 0.2s, transform 0.2s; }
+        .wsb-hub-video-card:hover { border-color: rgba(201,168,76,0.5); transform: translateY(-2px); }
+        .wsb-hub-video-thumb { position: relative; aspect-ratio: 16/9; overflow: hidden; background: var(--navy-light); }
+        .wsb-hub-video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .wsb-hub-video-thumb-empty { display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--gold-dim); }
+        .wsb-hub-video-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(6,12,26,0.4); opacity: 0; transition: opacity 0.2s; font-size: 2rem; color: var(--gold-bright); }
+        .wsb-hub-video-card:hover .wsb-hub-video-play { opacity: 1; }
+        .wsb-hub-video-body { padding: 0.75rem 1rem 1rem; flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
+        .wsb-hub-video-title { font-size: 0.95rem; font-weight: 600; color: var(--cream); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .wsb-hub-video-meta { display: flex; gap: 0.75rem; font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--gold-dim); margin-top: auto; padding-top: 0.4rem; }
+        .wsb-hub-no-videos { font-size: 0.95rem; color: var(--cream-dim); font-style: italic; padding: 1rem 0; }
+        .wsb-hub-yt-link { margin-top: 1rem; text-align: right; }
+        .wsb-hub-yt-link a { font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.1em; color: var(--gold); text-decoration: none; }
+        .wsb-hub-yt-link a:hover { color: var(--gold-bright); }
 
-        .wsb-hub-tool-badge-available {
-          background: rgba(46,204,113,0.12);
-          color: var(--green);
-          border: 1px solid rgba(46,204,113,0.3);
-        }
-
-        .wsb-hub-tool-badge-soon {
-          background: rgba(201,168,76,0.1);
-          color: var(--gold-dim);
-          border: 1px solid var(--border);
-        }
-
-        .wsb-hub-tool-title {
-          font-family: 'Cinzel', serif;
-          font-size: 1rem;
-          font-weight: 600;
-          color: var(--cream);
-          letter-spacing: 0.04em;
-        }
-
-        .wsb-hub-tool-desc {
-          font-size: 0.97rem;
-          color: var(--cream-dim);
-          line-height: 1.55;
-          flex: 1;
-        }
-
-        .wsb-hub-tool-tags {
-          display: flex;
-          gap: 0.4rem;
-          flex-wrap: wrap;
-          margin-top: 0.25rem;
-        }
-
-        .wsb-hub-tag {
-          font-family: 'Cinzel', serif;
-          font-size: 0.55rem;
-          letter-spacing: 0.1em;
-          color: var(--gold-dim);
-          border: 1px solid rgba(201,168,76,0.15);
-          padding: 0.15rem 0.45rem;
-          border-radius: 2px;
-        }
-
-        /* ── Guides ── */
-        .wsb-hub-guides-list {
-          display: flex;
-          flex-direction: column;
-          gap: 0;
-        }
-
-        .wsb-hub-guide-row {
-          display: flex;
-          align-items: flex-start;
-          gap: 1rem;
-          padding: 1rem 0;
-          border-bottom: 1px solid rgba(201,168,76,0.07);
-        }
-
-        .wsb-hub-guide-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: var(--gold-dim);
-          margin-top: 0.55rem;
-          flex-shrink: 0;
-        }
-
-        .wsb-hub-guide-body { flex: 1; }
-
-        .wsb-hub-guide-title {
-          font-family: 'Cinzel', serif;
-          font-size: 0.92rem;
-          color: var(--cream);
-          margin-bottom: 0.3rem;
-          letter-spacing: 0.03em;
-        }
-
-        .wsb-hub-guide-desc {
-          font-size: 0.95rem;
-          color: var(--cream-dim);
-          line-height: 1.5;
-        }
-
-        .wsb-hub-guide-soon {
-          font-family: 'Cinzel', serif;
-          font-size: 0.6rem;
-          letter-spacing: 0.14em;
-          color: var(--gold-dim);
-          padding-top: 0.4rem;
-          white-space: nowrap;
-        }
-
-        /* ── Footer ── */
-        .wsb-hub-footer {
-          text-align: center;
-          padding: 1.5rem;
-          font-family: 'Cinzel', serif;
-          font-size: 0.6rem;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: var(--gold-dim);
-          border-top: 1px solid var(--border);
-        }
+        .wsb-hub-footer { text-align: center; padding: 1.5rem; font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); border-top: 1px solid var(--border); }
 
         @media (max-width: 640px) {
           .wsb-hub-hero { flex-direction: column; padding: 2.5rem 1.25rem 2rem; }
           .wsb-hub-content { padding: 2rem 1.25rem 3rem; }
-          .wsb-hub-tools-grid { grid-template-columns: 1fr; }
+          .wsb-hub-tools-grid, .wsb-hub-videos-grid { grid-template-columns: 1fr; }
         }
       `}</style>
     </main>
