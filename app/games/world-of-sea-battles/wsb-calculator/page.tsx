@@ -80,10 +80,9 @@ export default function WorldOfSeaBattlesPage() {
           <div className="wsb-hub-tools-grid">
             {TOOLS.map((tool) => (
               <Link
-                key={tool.href}
-                href={tool.href}
+                key={tool.title}
+                href={tool.status === 'soon' ? '#' : tool.href}
                 className={`wsb-hub-tool-card ${tool.status === 'soon' ? 'soon' : ''}`}
-                aria-disabled={tool.status === 'soon'}
               >
                 <div className="wsb-hub-tool-top">
                   <span className="wsb-hub-tool-icon">{tool.icon}</span>
