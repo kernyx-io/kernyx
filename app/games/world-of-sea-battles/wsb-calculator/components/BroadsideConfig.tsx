@@ -17,11 +17,8 @@ function CannonSelect({
   onChange: (id: string) => void
   position: CannonSlot['position']
 }) {
-  // Filter cannons valid for this position
   const filtered = CANNONS.filter(c => {
-    if (c.id === 'none') return true
     if (position === 'broadside') return !c.bowSternOnly && !c.specialShipOnly
-    // bow or stern: include bowSternOnly, exclude broadside-only (none marked as such)
     return !c.specialShipOnly
   })
 
@@ -31,14 +28,12 @@ function CannonSelect({
     return acc
   }, {})
 
-  const selected = getCannonById(value)
-
   return (
     <select
       className="wsb-select"
       value={value}
       onChange={e => onChange(e.target.value)}
-      style={{ fontSize: '0.78rem' }}
+      style={{ fontSize: '0.75rem' }}
     >
       <option value="none">— Empty —</option>
       {Object.entries(grouped).map(([cat, cannons]) => (
@@ -54,64 +49,69 @@ function CannonSelect({
   )
 }
 
-// ─── Single cannon slot ───────────────────────────────────────────────────────
+// ─── Single cannon slot card ──────────────────────────────────────────────────
 
 function CannonSlotCard({
   position,
   index,
   cannonId,
   onChange,
+  label,
 }: {
   position: CannonSlot['position']
   index: number
   cannonId: string
   onChange: (id: string) => void
+  label: string
 }) {
   const cannon = getCannonById(cannonId)
-  const posLabel = position === 'bow' ? 'Bow' : position === 'stern' ? 'Stern' : 'Broadside'
-  const slotLabel = `${posLabel} ${index + 1}`
 
   return (
     <div className="wsb-cannon-slot">
-      <div className="wsb-cannon-slot-label">{slotLabel}</div>
+      <div className="wsb-cannon-slot-label">{label}</div>
       <CannonSelect value={cannonId} onChange={onChange} position={position} />
       {cannon && cannon.id !== 'none' && (
         <div className="wsb-cannon-slot-stats">
           <span className="wsb-stat-chip">Pen <span>{cannon.penetration}</span></span>
           <span className="wsb-stat-chip">Reload <span>{cannon.reloadTime}s</span></span>
-          <span className="wsb-stat-chip">Range <span>{cannon.rangeMin ? `${cannon.rangeMin}–` : ''}{cannon.range}m</span></span>
-          {cannon.shots > 1 && (
-            <span className="wsb-stat-chip">×<span>{cannon.shots}</span></span>
-          )}
-          {cannon.bowSternOnly && (
-            <span className="wsb-stat-chip" style={{ color: 'var(--gold-dim)' }}>Bow/Stern only</span>
-          )}
+          <span className="wsb-stat-chip">Rng <span>{cannon.rangeMin ? `${cannon.rangeMin}–` : ''}{cannon.range}m</span></span>
+          {cannon.shots > 1 && <span className="wsb-stat-chip">×<span>{cannon.shots}</span></span>}
         </div>
       )}
     </div>
   )
 }
 
-// ─── Position section ─────────────────────────────────────────────────────────
+// ─── Column of slots ──────────────────────────────────────────────────────────
 
-function PositionSection({
+function SlotColumn({
   position,
   count,
   slots,
   onSlotChange,
+  header,
+  color,
 }: {
   position: CannonSlot['position']
   count: number
   slots: CannonSlot[]
-  onSlotChange: (position: CannonSlot['position'], index: number, cannonId: string) => void
+  onSlotChange: (pos: CannonSlot['position'], idx: number, id: string) => void
+  header: string
+  color: string
 }) {
-  if (count === 0) return null
-  const label = position === 'bow' ? '⬆ Bow Weapons' : position === 'stern' ? '⬇ Stern Weapons' : '⬛ Broadside Weapons'
+  if (count === 0) return (
+    <div className="wsb-bs-column wsb-bs-column-empty">
+      <div className="wsb-bs-col-header" style={{ color }}>{header}</div>
+      <div style={{ color: 'var(--cream-dim)', fontSize: '0.7rem', fontStyle: 'italic', textAlign: 'center', padding: '1rem 0' }}>
+        No {header.toLowerCase()} slots
+      </div>
+    </div>
+  )
 
   return (
-    <div className="wsb-broadside-section">
-      <div className="wsb-broadside-section-label">{label}</div>
-      <div className="wsb-cannon-slots">
+    <div className="wsb-bs-column">
+      <div className="wsb-bs-col-header" style={{ color }}>{header}</div>
+      <div className="wsb-bs-slots">
         {Array.from({ length: count }, (_, i) => {
           const slot = slots.find(s => s.position === position && s.index === i)
           return (
@@ -120,11 +120,36 @@ function PositionSection({
               position={position}
               index={i}
               cannonId={slot?.cannonId ?? 'none'}
-              onChange={(id) => onSlotChange(position, i, id)}
+              onChange={id => onSlotChange(position, i, id)}
+              label={`${header} ${i + 1}`}
             />
           )
         })}
       </div>
+    </div>
+  )
+}
+
+// ─── Ship silhouette centre panel ─────────────────────────────────────────────
+
+function ShipCentre({ ship, layout, armedCount }: {
+  ship: NonNullable<ReturnType<typeof getShipById>>
+  layout: { bow: number; broadside: number; stern: number }
+  armedCount: number
+}) {
+  const total = layout.bow + layout.broadside + layout.stern
+  return (
+    <div className="wsb-bs-centre">
+      <div className="wsb-bs-ship-icon">⛵</div>
+      <div className="wsb-bs-ship-name">{ship.name}</div>
+      <div className="wsb-bs-ship-rate">Rate {ship.rate}</div>
+      <div className="wsb-bs-ship-divider" />
+      <div className="wsb-bs-stat"><span>{layout.bow}</span> Bow</div>
+      <div className="wsb-bs-stat"><span>{layout.broadside}</span> Broadside</div>
+      <div className="wsb-bs-stat"><span>{layout.stern}</span> Stern</div>
+      <div className="wsb-bs-ship-divider" />
+      <div className="wsb-bs-armed">{armedCount} / {total}</div>
+      <div className="wsb-bs-armed-label">Armed</div>
     </div>
   )
 }
@@ -135,18 +160,25 @@ export default function BroadsideConfig() {
   const { shipId, cannonSlots, setCannonSlot, resetSlots } = useWsbStore()
   const ship = getShipById(shipId)
   const layout = ship ? parseWeaponSlots(ship.heavyWeapons) : { bow: 0, broadside: 0, stern: 0 }
-  const totalSlots = layout.bow + layout.broadside + layout.stern
 
-  // Summary stats
-  const armedSlots = cannonSlots.filter(s => s.cannonId !== 'none')
-  const armedCount = armedSlots.length
+  const armedCount = cannonSlots.filter(s => s.cannonId !== 'none').length
 
-  // Quick-fill: set all broadside slots to a given cannon
-  function fillAll(cannonId: string) {
-    ;(['bow', 'broadside', 'stern'] as const).forEach(pos => {
-      const count = layout[pos === 'bow' ? 'bow' : pos === 'stern' ? 'stern' : 'broadside']
-      Array.from({ length: count }, (_, i) => setCannonSlot(pos, i, cannonId))
-    })
+  // Split broadside evenly: port = first half, starboard = second half
+  const portCount = Math.ceil(layout.broadside / 2)
+  const starboardCount = Math.floor(layout.broadside / 2)
+
+  // Port slots = indices 0..portCount-1, starboard = portCount..broadside-1
+  const portSlots = cannonSlots
+    .filter(s => s.position === 'broadside' && s.index < portCount)
+  const starboardSlots = cannonSlots
+    .filter(s => s.position === 'broadside' && s.index >= portCount)
+    .map(s => ({ ...s, index: s.index - portCount }))
+
+  function handlePortChange(pos: CannonSlot['position'], idx: number, id: string) {
+    setCannonSlot('broadside', idx, id)
+  }
+  function handleStarboardChange(pos: CannonSlot['position'], idx: number, id: string) {
+    setCannonSlot('broadside', idx + portCount, id)
   }
 
   return (
@@ -155,15 +187,7 @@ export default function BroadsideConfig() {
         <div className="wsb-panel-title-row">
           <span>💥 Broadside Configuration</span>
           {ship && (
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <button
-                className="wsb-toggle-btn"
-                onClick={resetSlots}
-                title="Clear all cannon slots"
-              >
-                Clear All
-              </button>
-            </div>
+            <button className="wsb-toggle-btn" onClick={resetSlots}>Clear All</button>
           )}
         </div>
       </div>
@@ -171,45 +195,59 @@ export default function BroadsideConfig() {
       {!ship ? (
         <div className="wsb-no-ship">⚓ Select a vessel above to configure your broadside.</div>
       ) : (
-        <div className="wsb-broadside-grid">
-          <PositionSection
-            position="bow"
-            count={layout.bow}
-            slots={cannonSlots}
-            onSlotChange={setCannonSlot}
-          />
-          <PositionSection
-            position="broadside"
-            count={layout.broadside}
-            slots={cannonSlots}
-            onSlotChange={setCannonSlot}
-          />
-          <PositionSection
-            position="stern"
-            count={layout.stern}
-            slots={cannonSlots}
-            onSlotChange={setCannonSlot}
-          />
+        <div className="wsb-bs-layout">
 
-          {/* Summary bar */}
-          <div className="wsb-broadside-summary">
-            <div className="wsb-summary-stat">
-              <div className="wsb-summary-stat-value">{totalSlots}</div>
-              <div className="wsb-summary-stat-label">Total Slots</div>
+          {/* Bow column (top) */}
+          {layout.bow > 0 && (
+            <div className="wsb-bs-top">
+              <SlotColumn
+                position="bow"
+                count={layout.bow}
+                slots={cannonSlots}
+                onSlotChange={setCannonSlot}
+                header="Bow"
+                color="#7aadcf"
+              />
             </div>
-            <div className="wsb-summary-stat">
-              <div className="wsb-summary-stat-value">{armedCount}</div>
-              <div className="wsb-summary-stat-label">Armed</div>
-            </div>
-            <div className="wsb-summary-stat">
-              <div className="wsb-summary-stat-value">{layout.bow + layout.stern}</div>
-              <div className="wsb-summary-stat-label">Bow / Stern</div>
-            </div>
-            <div className="wsb-summary-stat">
-              <div className="wsb-summary-stat-value">{layout.broadside}</div>
-              <div className="wsb-summary-stat-label">Broadside</div>
-            </div>
+          )}
+
+          {/* Middle row: Port | Ship | Starboard */}
+          <div className="wsb-bs-middle">
+            <SlotColumn
+              position="broadside"
+              count={portCount}
+              slots={portSlots}
+              onSlotChange={handlePortChange}
+              header="Port"
+              color="var(--cream-dim)"
+            />
+
+            <ShipCentre ship={ship} layout={layout} armedCount={armedCount} />
+
+            <SlotColumn
+              position="broadside"
+              count={starboardCount}
+              slots={starboardSlots}
+              onSlotChange={handleStarboardChange}
+              header="Starboard"
+              color="var(--cream-dim)"
+            />
           </div>
+
+          {/* Stern column (bottom) */}
+          {layout.stern > 0 && (
+            <div className="wsb-bs-bottom">
+              <SlotColumn
+                position="stern"
+                count={layout.stern}
+                slots={cannonSlots}
+                onSlotChange={setCannonSlot}
+                header="Stern"
+                color="#cf9f7a"
+              />
+            </div>
+          )}
+
         </div>
       )}
     </div>
