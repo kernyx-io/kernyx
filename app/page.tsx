@@ -13,7 +13,7 @@ const GAMES = [
     name: 'World of Sea Battle',
     color: '#00b4d8',
     icon: '⚓',
-    href: '/games/world-of-sea-battles/wsb-calculator',
+    href: '/games/world-of-sea-battles',
     storeUrl: 'https://store.steampowered.com/app/2544340/World_of_Sea_Battle/',
     storeLabel: 'Steam',
   },
