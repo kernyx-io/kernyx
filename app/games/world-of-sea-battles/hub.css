@@ -16,6 +16,80 @@
           font-family: 'Crimson Pro', Georgia, serif;
         }
 
+        /* ── Top Nav Bar ── */
+        .wsb-hub-topbar {
+          display: flex;
+          align-items: center;
+          gap: 1.5rem;
+          padding: 0 2rem;
+          height: 44px;
+          background: rgba(10,14,24,0.95);
+          border-bottom: 1px solid var(--border);
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          backdrop-filter: blur(8px);
+        }
+        .wsb-hub-topbar-back {
+          display: flex;
+          align-items: center;
+          gap: 0.45rem;
+          font-family: 'Cinzel', serif;
+          font-size: 0.65rem;
+          letter-spacing: 0.08em;
+          color: var(--gold-dim);
+          text-decoration: none;
+          white-space: nowrap;
+          transition: color 0.2s;
+          flex-shrink: 0;
+        }
+        .wsb-hub-topbar-back:hover { color: var(--gold); }
+        .wsb-hub-topbar-logo {
+          width: 20px;
+          height: 20px;
+          background: var(--gold);
+          color: var(--navy-deep);
+          font-weight: 700;
+          font-size: 0.7rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 3px;
+        }
+        .wsb-hub-topbar-sep { color: var(--border); }
+        .wsb-hub-topbar-games {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          overflow-x: auto;
+          scrollbar-width: none;
+          flex: 1;
+        }
+        .wsb-hub-topbar-games::-webkit-scrollbar { display: none; }
+        .wsb-hub-topbar-game {
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-family: 'Cinzel', serif;
+          font-size: 0.6rem;
+          letter-spacing: 0.06em;
+          color: var(--cream-dim);
+          text-decoration: none;
+          padding: 0.3rem 0.7rem;
+          border-radius: 3px;
+          white-space: nowrap;
+          transition: background 0.15s, color 0.15s;
+        }
+        .wsb-hub-topbar-game:hover { background: rgba(255,255,255,0.05); color: var(--cream); }
+        .wsb-hub-topbar-game-active {
+          background: rgba(201,168,76,0.1);
+          color: var(--gold);
+          border: 1px solid rgba(201,168,76,0.2);
+        }
+        .wsb-hub-topbar-game-active:hover { background: rgba(201,168,76,0.15); color: var(--gold-bright); }
+
+
+
         .wsb-hub-hero {
           position: relative;
           padding: 4rem 2rem 3rem;

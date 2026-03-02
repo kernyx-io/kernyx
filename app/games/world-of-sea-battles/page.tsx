@@ -75,6 +75,36 @@ export default async function WorldOfSeaBattlesPage() {
   return (
     <main className="wsb-hub">
 
+      {/* ── Top Nav Bar ── */}
+      <nav className="wsb-hub-topbar">
+        <Link href="/" className="wsb-hub-topbar-back">
+          <span className="wsb-hub-topbar-logo">K</span>
+          <span>Kernyx</span>
+          <span className="wsb-hub-topbar-sep">·</span>
+          <span>All Games</span>
+        </Link>
+        <div className="wsb-hub-topbar-games">
+          <Link href="/games/world-of-sea-battles" className="wsb-hub-topbar-game wsb-hub-topbar-game-active">
+            <span>⚓</span><span>Sea Battle</span>
+          </Link>
+          <Link href="/games/guild-wars-2" className="wsb-hub-topbar-game">
+            <span>⚔️</span><span>Guild Wars 2</span>
+          </Link>
+          <Link href="/games/lost-ark" className="wsb-hub-topbar-game">
+            <span>🗺️</span><span>Lost Ark</span>
+          </Link>
+          <Link href="/games/destiny-2" className="wsb-hub-topbar-game">
+            <span>🌌</span><span>Destiny 2</span>
+          </Link>
+          <Link href="/games/path-of-exile-2" className="wsb-hub-topbar-game">
+            <span>💀</span><span>Path of Exile 2</span>
+          </Link>
+          <Link href="/games/warframe" className="wsb-hub-topbar-game">
+            <span>🤖</span><span>Warframe</span>
+          </Link>
+        </div>
+      </nav>
+
       {/* ── Hero ── */}
       <div className="wsb-hub-hero">
         <div className="wsb-hub-hero-inner">
@@ -228,7 +258,7 @@ export default async function WorldOfSeaBattlesPage() {
               <div className="wsb-hub-social-arrow">→</div>
             </a>
 
-            <a href="https://discord.gg/worldofseabattle" target="_blank" rel="noopener noreferrer" className="wsb-hub-social-card">
+            <a href="https://discord.gg/pmf8NXpVP4" target="_blank" rel="noopener noreferrer" className="wsb-hub-social-card">
               <div className="wsb-hub-social-icon wsb-hub-social-discord">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
               </div>
@@ -239,7 +269,7 @@ export default async function WorldOfSeaBattlesPage() {
               <div className="wsb-hub-social-arrow">→</div>
             </a>
 
-            <a href="https://x.com/worldofseabattle" target="_blank" rel="noopener noreferrer" className="wsb-hub-social-card">
+            <a href="https://x.com/WOSB_game" target="_blank" rel="noopener noreferrer" className="wsb-hub-social-card">
               <div className="wsb-hub-social-icon wsb-hub-social-x">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
               </div>
@@ -250,7 +280,7 @@ export default async function WorldOfSeaBattlesPage() {
               <div className="wsb-hub-social-arrow">→</div>
             </a>
 
-            <a href="https://www.facebook.com/worldofseabattle" target="_blank" rel="noopener noreferrer" className="wsb-hub-social-card">
+            <a href="https://www.facebook.com/WorldofSeaBattle" target="_blank" rel="noopener noreferrer" className="wsb-hub-social-card">
               <div className="wsb-hub-social-icon wsb-hub-social-fb">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28"><path d="M24 12.073C24 5.404 18.627 0 12 0S0 5.404 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.313 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
               </div>
