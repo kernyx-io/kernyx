@@ -62,22 +62,15 @@ const TOOLS = [
     desc: 'Configure your ship, cannons, crew, attachments, and ammo to calculate full volley damage, DPM, and per-side breakdowns.',
     tags: ['DAMAGE', 'DPM', 'CANNONS'],
   },
-  {
-    href: '#',
-    icon: '⚓',
-    status: 'soon' as const,
-    title: 'Ship Comparison',
-    desc: 'Compare any two ships side-by-side across all stats — durability, speed, armor, maneuverability, and weapon layout.',
-    tags: ['SHIPS', 'STATS'],
-  },
-  {
-    href: '#',
-    icon: '🧭',
-    status: 'soon' as const,
-    title: 'Fleet Builder',
-    desc: 'Plan squadron compositions and calculate combined broadside output for coordinated fleet engagements.',
-    tags: ['FLEET', 'SQUADRON'],
-  },
+]
+
+const GUIDES = [
+  { title: 'Getting Started', desc: 'Server selection, starter ports, and early game survival.', tags: ['BEGINNER'] },
+  { title: 'Cannon Selection Guide', desc: 'Choosing the right cannon type and tier for your ship class.', tags: ['COMBAT', 'CANNONS'] },
+  { title: 'Broadside Armor & Penetration', desc: 'Understanding armor angles, penetration thresholds, and effective DPM.', tags: ['COMBAT', 'ADVANCED'] },
+  { title: 'Rate 1 Ship Overview', desc: 'Stats, loadouts, and best-use cases for top-tier ships of the line.', tags: ['SHIPS'] },
+  { title: 'Economy & Trading', desc: 'Gold farming routes, trading house strategies, and resource management.', tags: ['ECONOMY'] },
+  { title: 'Guild Port Battles', desc: 'Coordinating fleet compositions and tactics for port siege warfare.', tags: ['GUILD', 'PVP'] },
 ]
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -141,6 +134,27 @@ export default async function WorldOfSeaBattlesPage() {
                   {tool.tags.map(t => <span key={t} className="wsb-hub-tag">{t}</span>)}
                 </div>
               </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Written Guides ── */}
+        <section className="wsb-hub-section">
+          <div className="wsb-hub-section-header">
+            <span className="wsb-hub-section-icon">📖</span>
+            GUIDES
+            <span className="wsb-hub-section-note">coming soon</span>
+          </div>
+          <div className="wsb-hub-guides-grid">
+            {GUIDES.map((guide) => (
+              <div key={guide.title} className="wsb-hub-guide-card">
+                <div className="wsb-hub-guide-soon-badge">SOON</div>
+                <div className="wsb-hub-guide-title">{guide.title}</div>
+                <div className="wsb-hub-guide-desc">{guide.desc}</div>
+                <div className="wsb-hub-tool-tags">
+                  {guide.tags.map(t => <span key={t} className="wsb-hub-tag">{t}</span>)}
+                </div>
+              </div>
             ))}
           </div>
         </section>
