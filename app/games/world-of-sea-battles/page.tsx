@@ -57,7 +57,6 @@ const TOOLS = [
   {
     href: '/games/world-of-sea-battles/wsb-calculator',
     icon: '💥',
-    status: 'available' as const,
     title: 'Broadside Calculator',
     desc: 'Configure your ship, cannons, crew, attachments, and ammo to calculate full volley damage, DPM, and per-side breakdowns.',
     tags: ['DAMAGE', 'DPM', 'CANNONS'],
@@ -119,14 +118,12 @@ export default async function WorldOfSeaBattlesPage() {
             {TOOLS.map((tool) => (
               <Link
                 key={tool.title}
-                href={tool.status === 'soon' ? '#' : tool.href}
-                className={`wsb-hub-tool-card ${tool.status === 'soon' ? 'soon' : ''}`}
+                href={tool.href}
+                className="wsb-hub-tool-card"
               >
                 <div className="wsb-hub-tool-top">
                   <span className="wsb-hub-tool-icon">{tool.icon}</span>
-                  <span className={`wsb-hub-tool-badge wsb-hub-tool-badge-${tool.status}`}>
-                    {tool.status === 'available' ? 'AVAILABLE' : 'COMING SOON'}
-                  </span>
+                  <span className="wsb-hub-tool-badge wsb-hub-tool-badge-available">AVAILABLE</span>
                 </div>
                 <div className="wsb-hub-tool-title">{tool.title}</div>
                 <div className="wsb-hub-tool-desc">{tool.desc}</div>
