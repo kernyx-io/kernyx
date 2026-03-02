@@ -7,11 +7,11 @@ import { NextResponse } from 'next/server';
 
 const GAMES = [
   {
-    id: 'wosb',
-    name: 'World of Sea Battle',
-    color: '#00b4d8',
-    icon: '⚓',
-    steamAppId: '2544340',
+  id: 'wosb',
+  name: 'World of Sea Battle',
+  color: '#00b4d8',
+  icon: '⚓',
+  steamAppId: '2948190',
   },
   {
     id: 'gw2',
