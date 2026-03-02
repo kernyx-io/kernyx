@@ -14,7 +14,7 @@ const GAMES = [
     color: '#00b4d8',
     icon: '⚓',
     href: '/games/world-of-sea-battles',
-    storeUrl: 'https://store.steampowered.com/app/2544340/World_of_Sea_Battle/',
+    storeUrl: 'https://store.steampowered.com/app/2948190/World_of_Sea_Battle/',
     storeLabel: 'Steam',
   },
   {
@@ -23,8 +23,8 @@ const GAMES = [
     color: '#c8a84b',
     icon: '⚔️',
     href: '/games/guild-wars-2',
-    storeUrl: 'https://www.guildwars2.com/en/buy-now/',
-    storeLabel: 'Official Store',
+   storeUrl: 'https://buy.guildwars2.com/',
+storeLabel: 'Official Store',
   },
   {
     id: 'lostark',
