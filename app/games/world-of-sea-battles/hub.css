@@ -232,3 +232,220 @@
           border-radius: 2px;
           width: fit-content;
         }
+
+
+        /* ══════════════════════════════════════
+           TOP NAV — matches Kernyx main page style
+           but uses gold/navy palette
+        ══════════════════════════════════════ */
+        .wsb-hub-topnav {
+          display: flex;
+          align-items: center;
+          gap: 1.5rem;
+          padding: 0 1.5rem;
+          height: 52px;
+          background: rgba(6,12,26,0.98);
+          border-bottom: 1px solid var(--border);
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          flex-shrink: 0;
+        }
+
+        .wsb-hub-topnav-logo {
+          display: flex;
+          align-items: baseline;
+          gap: 0;
+          flex-shrink: 0;
+          user-select: none;
+          text-decoration: none;
+        }
+
+        .wsb-hub-topnav-logomark {
+          font-family: 'Cinzel', serif;
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--gold);
+          line-height: 1;
+          text-shadow: 0 0 20px rgba(201,168,76,0.4);
+        }
+
+        .wsb-hub-topnav-logotext {
+          font-family: 'Cinzel', serif;
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--cream);
+          line-height: 1;
+          letter-spacing: 0.06em;
+        }
+
+        .wsb-hub-topnav-links {
+          display: flex;
+          align-items: center;
+          gap: 0.1rem;
+          flex: 1;
+          overflow-x: auto;
+          scrollbar-width: none;
+        }
+        .wsb-hub-topnav-links::-webkit-scrollbar { display: none; }
+
+        .wsb-hub-topnav-link {
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-family: 'Cinzel', serif;
+          font-size: 0.72rem;
+          font-weight: 500;
+          letter-spacing: 0.05em;
+          color: var(--cream-dim);
+          text-decoration: none;
+          padding: 0.35rem 0.85rem;
+          border-radius: 4px;
+          white-space: nowrap;
+          transition: color 0.15s, background 0.15s;
+          border-bottom: 2px solid transparent;
+        }
+
+        .wsb-hub-topnav-link:hover {
+          color: var(--cream);
+          background: rgba(201,168,76,0.06);
+        }
+
+        .wsb-hub-topnav-link-active {
+          color: var(--gold);
+          background: rgba(201,168,76,0.08);
+          border-bottom: 2px solid var(--gold);
+        }
+
+        .wsb-hub-topnav-tag {
+          font-family: 'Cinzel', serif;
+          font-size: 0.6rem;
+          letter-spacing: 0.14em;
+          color: var(--gold-dim);
+          text-transform: uppercase;
+          flex-shrink: 0;
+        }
+
+        /* ══════════════════════════════════════
+           BODY LAYOUT — sidebar + main
+        ══════════════════════════════════════ */
+        .wsb-hub-body {
+          display: flex;
+          flex: 1;
+          min-height: 0;
+          align-items: stretch;
+        }
+
+        /* ══════════════════════════════════════
+           SIDEBAR — gold/navy palette
+        ══════════════════════════════════════ */
+        .wsb-hub-sidebar {
+          width: 220px;
+          flex-shrink: 0;
+          background: var(--navy-mid);
+          border-right: 1px solid var(--border);
+          padding: 1.25rem 0;
+          display: flex;
+          flex-direction: column;
+          overflow-y: auto;
+        }
+
+        .wsb-hub-sidebar-section {
+          padding: 0 0 1rem;
+          margin-bottom: 0.25rem;
+          border-bottom: 1px solid rgba(201,168,76,0.1);
+        }
+        .wsb-hub-sidebar-section:last-child { border-bottom: none; }
+
+        .wsb-hub-sidebar-label {
+          font-family: 'Cinzel', serif;
+          font-size: 0.58rem;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--gold-dim);
+          padding: 0.75rem 1.1rem 0.5rem;
+        }
+
+        .wsb-hub-sidebar-game {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.45rem 1.1rem;
+          text-decoration: none;
+          color: var(--gold);
+          font-family: 'Cinzel', serif;
+          font-size: 0.78rem;
+          font-weight: 600;
+          letter-spacing: 0.03em;
+          transition: background 0.15s;
+          border-left: 2px solid var(--gold);
+          background: rgba(201,168,76,0.06);
+        }
+        .wsb-hub-sidebar-game:hover { background: rgba(201,168,76,0.1); }
+
+        .wsb-hub-sidebar-link {
+          display: block;
+          padding: 0.42rem 1.1rem;
+          text-decoration: none;
+          font-family: 'Crimson Pro', Georgia, serif;
+          font-size: 0.95rem;
+          color: var(--cream-dim);
+          transition: background 0.15s, color 0.15s;
+        }
+        .wsb-hub-sidebar-link:hover {
+          background: rgba(201,168,76,0.06);
+          color: var(--cream);
+        }
+
+        .wsb-hub-sidebar-soon-game {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.38rem 1.1rem;
+          font-family: 'Crimson Pro', Georgia, serif;
+          font-size: 0.9rem;
+          color: var(--gold-dim);
+          font-style: italic;
+          opacity: 0.7;
+        }
+
+        .wsb-hub-sidebar-store {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.42rem 1.1rem;
+          text-decoration: none;
+          font-family: 'Crimson Pro', Georgia, serif;
+          font-size: 0.9rem;
+          color: var(--cream-dim);
+          transition: background 0.15s, color 0.15s;
+        }
+        .wsb-hub-sidebar-store:hover {
+          background: rgba(201,168,76,0.06);
+          color: var(--cream);
+        }
+        .wsb-hub-sidebar-store-arrow {
+          margin-left: auto;
+          font-size: 0.75rem;
+          opacity: 0.4;
+        }
+
+        /* ══════════════════════════════════════
+           MAIN — scrollable content area
+        ══════════════════════════════════════ */
+        .wsb-hub-main {
+          flex: 1;
+          min-width: 0;
+          overflow-y: auto;
+          display: flex;
+          flex-direction: column;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+          .wsb-hub-sidebar { display: none; }
+          .wsb-hub-topnav-tag { display: none; }
+        }
+        @media (max-width: 640px) {
+          .wsb-hub-topnav-link span:last-child { display: none; }
+        }

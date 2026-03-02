@@ -75,35 +75,73 @@ export default async function WorldOfSeaBattlesPage() {
   return (
     <main className="wsb-hub">
 
-      {/* ── Top Nav Bar ── */}
-      <nav className="wsb-hub-topbar">
-        <Link href="/" className="wsb-hub-topbar-back">
-          <span className="wsb-hub-topbar-logo">K</span>
-          <span>Kernyx</span>
-          <span className="wsb-hub-topbar-sep">·</span>
-          <span>All Games</span>
-        </Link>
-        <div className="wsb-hub-topbar-games">
-          <Link href="/games/world-of-sea-battles" className="wsb-hub-topbar-game wsb-hub-topbar-game-active">
+      {/* ── Top Nav (matches Kernyx main page) ── */}
+      <nav className="wsb-hub-topnav">
+        <div className="wsb-hub-topnav-logo">
+          <span className="wsb-hub-topnav-logomark">K</span>
+          <span className="wsb-hub-topnav-logotext">ERNYX</span>
+        </div>
+        <div className="wsb-hub-topnav-links">
+          <Link href="/games/world-of-sea-battles" className="wsb-hub-topnav-link wsb-hub-topnav-link-active">
             <span>⚓</span><span>Sea Battle</span>
           </Link>
-          <Link href="/games/guild-wars-2" className="wsb-hub-topbar-game">
+          <Link href="/games/guild-wars-2" className="wsb-hub-topnav-link">
             <span>⚔️</span><span>Guild Wars 2</span>
           </Link>
-          <Link href="/games/lost-ark" className="wsb-hub-topbar-game">
+          <Link href="/games/lost-ark" className="wsb-hub-topnav-link">
             <span>🗺️</span><span>Lost Ark</span>
           </Link>
-          <Link href="/games/destiny-2" className="wsb-hub-topbar-game">
+          <Link href="/games/destiny-2" className="wsb-hub-topnav-link">
             <span>🌌</span><span>Destiny 2</span>
           </Link>
-          <Link href="/games/path-of-exile-2" className="wsb-hub-topbar-game">
+          <Link href="/games/path-of-exile-2" className="wsb-hub-topnav-link">
             <span>💀</span><span>Path of Exile 2</span>
           </Link>
-          <Link href="/games/warframe" className="wsb-hub-topbar-game">
+          <Link href="/games/warframe" className="wsb-hub-topnav-link">
             <span>🤖</span><span>Warframe</span>
           </Link>
         </div>
+        <div className="wsb-hub-topnav-tag">Unofficial Fan Tools</div>
       </nav>
+
+      {/* ── Body: sidebar + content ── */}
+      <div className="wsb-hub-body">
+
+      {/* ── Sidebar ── */}
+      <aside className="wsb-hub-sidebar">
+        <div className="wsb-hub-sidebar-section">
+          <div className="wsb-hub-sidebar-label">Current Game</div>
+          <Link href="/games/world-of-sea-battles" className="wsb-hub-sidebar-game">
+            <span>⚓</span><span>World of Sea Battle</span>
+          </Link>
+        </div>
+        <div className="wsb-hub-sidebar-section">
+          <div className="wsb-hub-sidebar-label">Tools</div>
+          <Link href="/games/world-of-sea-battles/wsb-calculator" className="wsb-hub-sidebar-link">
+            💥 Cannon DPS Calc
+          </Link>
+          <Link href="/games/world-of-sea-battles/ships" className="wsb-hub-sidebar-link">
+            🚢 Ship Guide
+          </Link>
+        </div>
+        <div className="wsb-hub-sidebar-section">
+          <div className="wsb-hub-sidebar-label">Coming Soon</div>
+          <div className="wsb-hub-sidebar-soon-game"><span>⚔️</span><span>Guild Wars 2</span></div>
+          <div className="wsb-hub-sidebar-soon-game"><span>🗺️</span><span>Lost Ark</span></div>
+          <div className="wsb-hub-sidebar-soon-game"><span>🌌</span><span>Destiny 2</span></div>
+          <div className="wsb-hub-sidebar-soon-game"><span>💀</span><span>Path of Exile 2</span></div>
+          <div className="wsb-hub-sidebar-soon-game"><span>🤖</span><span>Warframe</span></div>
+        </div>
+        <div className="wsb-hub-sidebar-section">
+          <div className="wsb-hub-sidebar-label">Quick Store</div>
+          <a href="https://store.steampowered.com/app/2948190/World_of_Sea_Battle/" target="_blank" rel="noopener noreferrer" className="wsb-hub-sidebar-store">
+            <span>⚓</span><span>World of Sea Battle</span><span className="wsb-hub-sidebar-store-arrow">↗</span>
+          </a>
+        </div>
+      </aside>
+
+      {/* ── Main scroll area ── */}
+      <div className="wsb-hub-main">
 
       {/* ── Hero ── */}
       <div className="wsb-hub-hero">
@@ -296,12 +334,12 @@ export default async function WorldOfSeaBattlesPage() {
 
       </div>
 
-      {/* ── Footer ── */}
-      <div className="wsb-hub-footer">
-        Kernyx · Unofficial fan site · Not affiliated with Game-Insight or World of Sea Battle
-      </div>
-
-      
+        {/* ── Footer ── */}
+        <div className="wsb-hub-footer">
+          Kernyx · Unofficial fan site · Not affiliated with Game-Insight or World of Sea Battle
+        </div>
+      </div>{/* /wsb-hub-main */}
+      </div>{/* /wsb-hub-body */}
     </main>
   )
 }
