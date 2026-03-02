@@ -1,4 +1,3 @@
-
 // ─── Cannon ───────────────────────────────────────────────────────────────────
 
 export type CannonCategory =
@@ -180,6 +179,18 @@ export interface SlotResult {
   dpm: number
 }
 
+export interface GroupResult {
+  side: string
+  position: CannonSlot['position']
+  cannonName: string
+  slotCount: number
+  armedCount: number
+  volleyDmg: number
+  dpm: number
+  reloadTime: number
+  shots: number
+}
+
 export interface DamageReport {
   volleyDamage: number
   damagePerMinute: number
@@ -189,5 +200,6 @@ export interface DamageReport {
   dmgBonusPct: number
   targetArmourLost: number
   slotResults: SlotResult[]
+  groupResults: GroupResult[]
   bonusPills: string[]
 }

@@ -1,4 +1,4 @@
-import type { CannonSlot, DamageReport, SlotResult } from './types'
+import type { CannonSlot, DamageReport } from './types'
 import { getCannonById } from './cannons'
 import { getShipById, parseWeaponSlots } from './ships'
 import { getAmmoById } from './ammo'
@@ -18,60 +18,97 @@ interface CalcInput {
   supportIds: string[]
 }
 
+export interface GroupResult {
+  side: string               // 'Bow' | 'Port' | 'Starboard' | 'Stern'
+  position: CannonSlot['position']
+  cannonName: string         // cannon used on this side (or 'Mixed' / 'Empty')
+  slotCount: number          // number of slots on this side
+  armedCount: number         // how many are filled
+  volleyDmg: number          // total volley damage for this side
+  dpm: number                // total DPM for this side
+  reloadTime: number         // effective reload
+  shots: number              // barrels per cannon
+}
+
 // ─── Bonus Aggregation ────────────────────────────────────────────────────────
 
-function aggregateBonuses(input: CalcInput): {
-  dmgBonus: number      // additive multiplier e.g. 0.12 = +12%
-  reloadBonus: number   // additive multiplier e.g. 0.18 = 18% faster
-  bonusPills: string[]
-} {
+function aggregateBonuses(input: CalcInput) {
   let dmgBonus = 0
   let reloadBonus = 0
   const bonusPills: string[] = []
 
-  // Attachments
   for (const id of input.attachmentIds) {
     const att = getAttachmentById(id)
     if (!att) continue
-    if (att.dmgBonus !== 0) {
-      dmgBonus += att.dmgBonus
-      bonusPills.push(`${att.name}: +${(att.dmgBonus * 100).toFixed(0)}% dmg`)
-    }
-    if (att.rateBonus !== 0) {
-      reloadBonus += att.rateBonus
-      bonusPills.push(`${att.name}: +${(att.rateBonus * 100).toFixed(0)}% reload`)
-    }
+    if (att.dmgBonus !== 0) { dmgBonus += att.dmgBonus; bonusPills.push(`${att.name}: +${(att.dmgBonus*100).toFixed(0)}% dmg`) }
+    if (att.rateBonus !== 0) { reloadBonus += att.rateBonus; bonusPills.push(`${att.name}: +${(att.rateBonus*100).toFixed(0)}% reload`) }
   }
-
-  // Crew
   for (const id of input.crewIds) {
     const crew = getCrewById(id)
     if (!crew) continue
-    if (crew.dmgBonus !== 0) {
-      dmgBonus += crew.dmgBonus
-      bonusPills.push(`${crew.name}: +${(crew.dmgBonus * 100).toFixed(0)}% dmg`)
-    }
-    if (crew.reloadBonus !== 0) {
-      reloadBonus += crew.reloadBonus
-      bonusPills.push(`${crew.name}: +${(crew.reloadBonus * 100).toFixed(0)}% reload`)
-    }
+    if (crew.dmgBonus !== 0) { dmgBonus += crew.dmgBonus; bonusPills.push(`${crew.name}: +${(crew.dmgBonus*100).toFixed(0)}% dmg`) }
+    if (crew.reloadBonus !== 0) { reloadBonus += crew.reloadBonus; bonusPills.push(`${crew.name}: +${(crew.reloadBonus*100).toFixed(0)}% reload`) }
   }
-
-  // Support items
   for (const id of input.supportIds) {
     const sup = getSupportById(id)
     if (!sup) continue
-    if (sup.dmgBonus !== 0) {
-      dmgBonus += sup.dmgBonus
-      bonusPills.push(`${sup.name}: +${(sup.dmgBonus * 100).toFixed(0)}% dmg`)
-    }
-    if (sup.reloadBonus !== 0) {
-      reloadBonus += sup.reloadBonus
-      bonusPills.push(`${sup.name}: ${sup.reloadBonus > 0 ? '+' : ''}${(sup.reloadBonus * 100).toFixed(0)}% reload`)
-    }
+    if (sup.dmgBonus !== 0) { dmgBonus += sup.dmgBonus; bonusPills.push(`${sup.name}: +${(sup.dmgBonus*100).toFixed(0)}% dmg`) }
+    if (sup.reloadBonus !== 0) { reloadBonus += sup.reloadBonus; bonusPills.push(`${sup.name}: ${sup.reloadBonus>0?'+':''}${(sup.reloadBonus*100).toFixed(0)}% reload`) }
   }
 
   return { dmgBonus, reloadBonus, bonusPills }
+}
+
+// ─── Calculate one side group ─────────────────────────────────────────────────
+
+function calcSide(
+  side: string,
+  position: CannonSlot['position'],
+  slots: CannonSlot[],
+  targetArmour: number,
+  ammoPct: number,
+  dmgBonus: number,
+  reloadBonus: number,
+  hasReinforcedCannons: boolean,
+): GroupResult {
+  const isBowStern = position === 'bow' || position === 'stern'
+  const posBonus = hasReinforcedCannons && isBowStern ? 1.13 : 0
+  const totalDmgMult = 1 + dmgBonus + posBonus
+
+  const armed = slots.filter(s => s.cannonId !== 'none')
+  const cannonNames = [...new Set(armed.map(s => getCannonById(s.cannonId)?.name ?? ''))]
+  const cannonName = cannonNames.length === 0 ? 'Empty' : cannonNames.length === 1 ? cannonNames[0] : 'Mixed'
+
+  let volleyDmg = 0
+  let dpm = 0
+  let reloadTime = 0
+  let shots = 1
+
+  for (const slot of armed) {
+    const cannon = getCannonById(slot.cannonId)
+    if (!cannon || cannon.id === 'none') continue
+    const dmgAfterArmour = Math.max(0, cannon.dmg - targetArmour)
+    const finalDmg = dmgAfterArmour * ammoPct * totalDmgMult * cannon.shots
+    const effReload = reloadBonus > 0
+      ? cannon.reloadTime / (1 + reloadBonus)
+      : cannon.reloadTime * (1 + Math.abs(reloadBonus))
+    volleyDmg += finalDmg
+    dpm += effReload > 0 ? (finalDmg / effReload) * 60 : 0
+    reloadTime = effReload
+    shots = cannon.shots
+  }
+
+  return {
+    side,
+    position,
+    cannonName,
+    slotCount: slots.length,
+    armedCount: armed.length,
+    volleyDmg: parseFloat(volleyDmg.toFixed(1)),
+    dpm: parseFloat(dpm.toFixed(1)),
+    reloadTime: parseFloat(reloadTime.toFixed(1)),
+    shots,
+  }
 }
 
 // ─── Main Calculator ──────────────────────────────────────────────────────────
@@ -80,99 +117,39 @@ export function calculateDamage(input: CalcInput): DamageReport {
   const ship = getShipById(input.shipId)
   const targetShip = getShipById(input.targetShipId)
   const ammo = getAmmoById(input.ammoId)
-
-  // Target armour (broadside armor value = damage reduced per shot)
   const targetArmour = targetShip?.broadsideArmor ?? 0
-
-  // Aggregate bonuses from crew, attachments, support
   const { dmgBonus, reloadBonus, bonusPills } = aggregateBonuses(input)
-
-  // Ammo hull damage multiplier
   const ammoPct = ammo.hullDmgPct
-
-  // Build weapon slot layout from ship
-  const weaponLayout = ship ? parseWeaponSlots(ship.heavyWeapons) : { bow: 0, broadside: 0, stern: 0 }
-
-  // Has Reinforced Cannons attachment (bow/stern +113%)
+  const layout = ship ? parseWeaponSlots(ship.heavyWeapons) : { bow: 0, broadside: 0, stern: 0 }
   const hasReinforcedCannons = input.attachmentIds.includes('reinforced_cannons')
+  const n = layout.broadside
 
-  // Process each filled slot
-  const slotResults: SlotResult[] = []
-  let totalVolley = 0
-  let totalDPM = 0
-  let cannonsArmed = 0
-
-  // Determine which slots are valid for this ship
-  const validSlots: CannonSlot[] = []
-  for (let i = 0; i < weaponLayout.bow; i++) {
-    validSlots.push({ position: 'bow', index: i, cannonId: 'none' })
-  }
-  for (let i = 0; i < weaponLayout.broadside; i++) {
-    validSlots.push({ position: 'broadside', index: i, cannonId: 'none' })
-  }
-  for (let i = 0; i < weaponLayout.stern; i++) {
-    validSlots.push({ position: 'stern', index: i, cannonId: 'none' })
-  }
-
-  // Merge user selections into valid slots
-  const mergedSlots = validSlots.map((vs) => {
-    const userSlot = input.cannonSlots.find(
-      (s) => s.position === vs.position && s.index === vs.index
-    )
-    return userSlot ?? vs
-  })
-
-  for (const slot of mergedSlots) {
-    const cannon = getCannonById(slot.cannonId)
-    if (!cannon || cannon.id === 'none') continue
-
-    cannonsArmed++
-
-    // Position bonus: bow/stern get reinforced cannons bonus if equipped
-    const posBonus =
-      hasReinforcedCannons && (slot.position === 'bow' || slot.position === 'stern')
-        ? 1.13
-        : 0
-
-    // Total damage multiplier
-    const totalDmgMult = 1 + dmgBonus + posBonus
-
-    // Base damage per shot (per barrel)
-    const baseDmgPerShot = cannon.dmg
-
-    // Effective damage after armour reduction (per shot, per barrel)
-    const dmgAfterArmour = Math.max(0, baseDmgPerShot - targetArmour)
-
-    // Apply ammo hull % and damage bonus multiplier
-    const finalDmgPerShot = dmgAfterArmour * ammoPct * totalDmgMult
-
-    // Total damage for this cannon per volley (shots = number of barrels)
-    const volleyDmg = finalDmgPerShot * cannon.shots
-
-    // Effective reload time (faster reload = lower number)
-    // reloadBonus is additive: 0.18 = 18% faster = divide by 1.18
-    const effectiveReload = reloadBonus > 0
-      ? cannon.reloadTime / (1 + reloadBonus)
-      : cannon.reloadTime * (1 + Math.abs(reloadBonus))
-
-    // Damage per minute
-    const dpm = effectiveReload > 0 ? (volleyDmg / effectiveReload) * 60 : 0
-
-    totalVolley += volleyDmg
-    totalDPM += dpm
-
-    slotResults.push({
-      position: slot.position,
-      index: slot.index,
-      cannonName: cannon.name,
-      baseDmg: baseDmgPerShot * cannon.shots,
-      finalDmg: volleyDmg,
-      shots: cannon.shots,
-      reloadTime: parseFloat(effectiveReload.toFixed(1)),
-      dpm: parseFloat(dpm.toFixed(1)),
+  // Build slot arrays per side
+  function getSide(position: CannonSlot['position'], start: number, count: number): CannonSlot[] {
+    return Array.from({ length: count }, (_, i) => {
+      const idx = start + i
+      return input.cannonSlots.find(s => s.position === position && s.index === idx)
+        ?? { position, index: idx, cannonId: 'none' }
     })
   }
 
+  const groups: GroupResult[] = []
+
+  if (layout.bow > 0) {
+    groups.push(calcSide('Bow', 'bow', getSide('bow', 0, layout.bow), targetArmour, ammoPct, dmgBonus, reloadBonus, hasReinforcedCannons))
+  }
+  if (n > 0) {
+    groups.push(calcSide('Port', 'broadside', getSide('broadside', 0, n), targetArmour, ammoPct, dmgBonus, reloadBonus, hasReinforcedCannons))
+    groups.push(calcSide('Starboard', 'broadside', getSide('broadside', n, n), targetArmour, ammoPct, dmgBonus, reloadBonus, hasReinforcedCannons))
+  }
+  if (layout.stern > 0) {
+    groups.push(calcSide('Stern', 'stern', getSide('stern', 0, layout.stern), targetArmour, ammoPct, dmgBonus, reloadBonus, hasReinforcedCannons))
+  }
+
+  const totalVolley = groups.reduce((s, g) => s + g.volleyDmg, 0)
+  const totalDPM   = groups.reduce((s, g) => s + g.dpm, 0)
+  const cannonsArmed = groups.reduce((s, g) => s + g.armedCount, 0)
+  const totalSlots   = groups.reduce((s, g) => s + g.slotCount, 0)
   const avgDmgPerCannon = cannonsArmed > 0 ? totalVolley / cannonsArmed : 0
 
   return {
@@ -180,35 +157,29 @@ export function calculateDamage(input: CalcInput): DamageReport {
     damagePerMinute: parseFloat(totalDPM.toFixed(1)),
     avgDmgPerCannon: parseFloat(avgDmgPerCannon.toFixed(1)),
     cannonsArmed,
-    totalSlots: mergedSlots.length,
+    totalSlots,
     dmgBonusPct: parseFloat((dmgBonus * 100).toFixed(1)),
     targetArmourLost: parseFloat(targetArmour.toFixed(1)),
-    slotResults,
+    groupResults: groups,
     bonusPills,
+    // keep slotResults for type compat — empty now
+    slotResults: [],
   }
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-/** Format a number with commas e.g. 12345 → "12,345" */
 export function fmt(n: number): string {
   return n.toLocaleString('en-US', { maximumFractionDigits: 1 })
 }
 
-/** Build default empty cannon slots for a ship */
 export function buildDefaultSlots(shipId: string): CannonSlot[] {
   const ship = getShipById(shipId)
   if (!ship) return []
   const layout = parseWeaponSlots(ship.heavyWeapons)
   const slots: CannonSlot[] = []
-  for (let i = 0; i < layout.bow; i++) {
-    slots.push({ position: 'bow', index: i, cannonId: 'none' })
-  }
-  for (let i = 0; i < layout.broadside; i++) {
-    slots.push({ position: 'broadside', index: i, cannonId: 'none' })
-  }
-  for (let i = 0; i < layout.stern; i++) {
-    slots.push({ position: 'stern', index: i, cannonId: 'none' })
-  }
+  for (let i = 0; i < layout.bow; i++) slots.push({ position: 'bow', index: i, cannonId: 'none' })
+  for (let i = 0; i < layout.broadside * 2; i++) slots.push({ position: 'broadside', index: i, cannonId: 'none' })
+  for (let i = 0; i < layout.stern; i++) slots.push({ position: 'stern', index: i, cannonId: 'none' })
   return slots
 }
