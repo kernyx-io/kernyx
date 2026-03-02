@@ -991,3 +991,149 @@
   text-align: center;
   padding: 0.5rem 0;
 }
+
+/* ── Ship Overview ───────────────────────────────────────────────────────── */
+.wsb-ship-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .wsb-ship-overview-grid { grid-template-columns: 1fr; }
+}
+
+.wsb-ship-stats-col,
+.wsb-ship-loadout-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.wsb-stats-section-header {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  padding: 0.75rem 0 0.35rem;
+  border-bottom: 1px solid var(--gold-border);
+  margin-bottom: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.wsb-statrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(201,168,76,0.06);
+  gap: 1rem;
+}
+
+.wsb-statrow-label {
+  font-size: 0.95rem;
+  color: var(--cream-dim);
+}
+
+.wsb-statrow-value {
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--cream);
+  text-align: right;
+}
+
+/* ── Loadout summary boxes ───────────────────────────────────────────────── */
+.wsb-loadout-summary {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 0 0.5rem;
+}
+
+.wsb-loadout-summary-stat {
+  flex: 1;
+  min-width: 90px;
+  background: var(--navy-mid);
+  border: var(--panel-border);
+  border-radius: var(--panel-radius);
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.wsb-loadout-summary-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
+.wsb-loadout-summary-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: 'Cinzel', serif;
+}
+
+.wsb-loadout-summary-value.positive { color: var(--green); }
+.wsb-loadout-summary-value.negative { color: var(--red-light); }
+.wsb-loadout-summary-value.neutral  { color: var(--cream); }
+
+/* ── Effects list ────────────────────────────────────────────────────────── */
+.wsb-effects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.wsb-effect-row {
+  background: var(--navy-mid);
+  border: var(--panel-border);
+  border-radius: var(--panel-radius);
+  padding: 0.55rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.wsb-effect-source {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--cream);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wsb-effect-desc {
+  font-size: 0.88rem;
+  color: var(--cream-dim);
+  font-family: 'Crimson Pro', serif;
+}
+
+.wsb-effect-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.wsb-effect-tag-Attachment { background: rgba(122,173,207,0.15); color: #7aadcf; border: 1px solid rgba(122,173,207,0.3); }
+.wsb-effect-tag-Crew       { background: rgba(39,174,96,0.15);   color: #2ecc71; border: 1px solid rgba(39,174,96,0.3); }
+.wsb-effect-tag-Support    { background: rgba(201,168,76,0.15);  color: var(--gold); border: 1px solid var(--gold-border); }
+.wsb-effect-tag-Ammo       { background: rgba(192,57,43,0.15);   color: #e74c3c; border: 1px solid rgba(192,57,43,0.3); }
+
+.wsb-no-loadout {
+  font-size: 0.92rem;
+  color: var(--cream-dim);
+  font-style: italic;
+  padding: 1.5rem 0;
+  text-align: center;
+  font-family: 'Crimson Pro', serif;
+  line-height: 1.6;
+}
