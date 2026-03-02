@@ -67,7 +67,7 @@ const GUIDES = [
   { title: 'Getting Started', desc: 'Server selection, starter ports, and early game survival.', tags: ['BEGINNER'] },
   { title: 'Cannon Selection Guide', desc: 'Choosing the right cannon type and tier for your ship class.', tags: ['COMBAT', 'CANNONS'] },
   { title: 'Broadside Armor & Penetration', desc: 'Understanding armor angles, penetration thresholds, and effective DPM.', tags: ['COMBAT', 'ADVANCED'] },
-  { title: 'Rate 1 Ship Overview', desc: 'Stats, loadouts, and best-use cases for top-tier ships of the line.', tags: ['SHIPS'] },
+  { title: 'Ship Guide', desc: 'Full stats, roles, and tactical breakdown for every ship in the Archipelago — all rates and types.', tags: ['SHIPS'], href: '/games/world-of-sea-battles/ships', live: true },
   { title: 'Economy & Trading', desc: 'Gold farming routes, trading house strategies, and resource management.', tags: ['ECONOMY'] },
   { title: 'Guild Port Battles', desc: 'Coordinating fleet compositions and tactics for port siege warfare.', tags: ['GUILD', 'PVP'] },
 ]
@@ -144,14 +144,25 @@ export default async function WorldOfSeaBattlesPage() {
           </div>
           <div className="wsb-hub-guides-grid">
             {GUIDES.map((guide) => (
-              <div key={guide.title} className="wsb-hub-guide-card">
-                <div className="wsb-hub-guide-soon-badge">SOON</div>
-                <div className="wsb-hub-guide-title">{guide.title}</div>
-                <div className="wsb-hub-guide-desc">{guide.desc}</div>
-                <div className="wsb-hub-tool-tags">
-                  {guide.tags.map(t => <span key={t} className="wsb-hub-tag">{t}</span>)}
+              {guide.live ? (
+                <Link key={guide.title} href={guide.href!} className="wsb-hub-guide-card wsb-hub-guide-card-live">
+                  <div className="wsb-hub-guide-live-badge">AVAILABLE</div>
+                  <div className="wsb-hub-guide-title">{guide.title}</div>
+                  <div className="wsb-hub-guide-desc">{guide.desc}</div>
+                  <div className="wsb-hub-tool-tags">
+                    {guide.tags.map(t => <span key={t} className="wsb-hub-tag">{t}</span>)}
+                  </div>
+                </Link>
+              ) : (
+                <div key={guide.title} className="wsb-hub-guide-card">
+                  <div className="wsb-hub-guide-soon-badge">SOON</div>
+                  <div className="wsb-hub-guide-title">{guide.title}</div>
+                  <div className="wsb-hub-guide-desc">{guide.desc}</div>
+                  <div className="wsb-hub-tool-tags">
+                    {guide.tags.map(t => <span key={t} className="wsb-hub-tag">{t}</span>)}
+                  </div>
                 </div>
-              </div>
+              )}
             ))}
           </div>
         </section>
