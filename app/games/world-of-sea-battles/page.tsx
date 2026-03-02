@@ -143,26 +143,24 @@ export default async function WorldOfSeaBattlesPage() {
             <span className="wsb-hub-section-note">coming soon</span>
           </div>
           <div className="wsb-hub-guides-grid">
-            {GUIDES.map((guide) => (
-              {guide.live ? (
-                <Link key={guide.title} href={guide.href!} className="wsb-hub-guide-card wsb-hub-guide-card-live">
-                  <div className="wsb-hub-guide-live-badge">AVAILABLE</div>
-                  <div className="wsb-hub-guide-title">{guide.title}</div>
-                  <div className="wsb-hub-guide-desc">{guide.desc}</div>
-                  <div className="wsb-hub-tool-tags">
-                    {guide.tags.map(t => <span key={t} className="wsb-hub-tag">{t}</span>)}
-                  </div>
-                </Link>
-              ) : (
-                <div key={guide.title} className="wsb-hub-guide-card">
-                  <div className="wsb-hub-guide-soon-badge">SOON</div>
-                  <div className="wsb-hub-guide-title">{guide.title}</div>
-                  <div className="wsb-hub-guide-desc">{guide.desc}</div>
-                  <div className="wsb-hub-tool-tags">
-                    {guide.tags.map(t => <span key={t} className="wsb-hub-tag">{t}</span>)}
-                  </div>
+            {GUIDES.map((guide) => guide.live ? (
+              <Link key={guide.title} href={guide.href!} className="wsb-hub-guide-card wsb-hub-guide-card-live">
+                <div className="wsb-hub-guide-live-badge">AVAILABLE</div>
+                <div className="wsb-hub-guide-title">{guide.title}</div>
+                <div className="wsb-hub-guide-desc">{guide.desc}</div>
+                <div className="wsb-hub-tool-tags">
+                  {guide.tags.map(t => <span key={t} className="wsb-hub-tag">{t}</span>)}
                 </div>
-              )}
+              </Link>
+            ) : (
+              <div key={guide.title} className="wsb-hub-guide-card">
+                <div className="wsb-hub-guide-soon-badge">SOON</div>
+                <div className="wsb-hub-guide-title">{guide.title}</div>
+                <div className="wsb-hub-guide-desc">{guide.desc}</div>
+                <div className="wsb-hub-tool-tags">
+                  {guide.tags.map(t => <span key={t} className="wsb-hub-tag">{t}</span>)}
+                </div>
+              </div>
             ))}
           </div>
         </section>
