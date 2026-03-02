@@ -950,3 +950,44 @@
   }
   .wsb-bs-ship-icon { display: none; }
 }
+
+/* ── Side panels ─────────────────────────────────────────────────────────── */
+.wsb-side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--navy-panel);
+  border: var(--panel-border);
+  border-radius: var(--panel-radius);
+}
+
+.wsb-side-panel-empty {
+  opacity: 0.35;
+}
+
+.wsb-side-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--gold-border);
+}
+
+.wsb-side-count {
+  font-size: 0.55rem;
+  color: var(--cream-dim);
+  letter-spacing: 0.1em;
+}
+
+.wsb-side-empty {
+  font-size: 0.72rem;
+  color: var(--cream-dim);
+  font-style: italic;
+  text-align: center;
+  padding: 0.5rem 0;
+}
