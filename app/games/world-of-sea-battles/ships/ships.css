@@ -1,0 +1,268 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  --navy-deep:  #0a0e18;
+  --navy-mid:   #111827;
+  --navy-light: #1a2235;
+  --border:     #2a3a52;
+  --gold:       #c9a84c;
+  --gold-bright:#e8c96a;
+  --gold-dim:   #7a6230;
+  --cream:      #e8e0d0;
+  --cream-dim:  #9a9080;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.ships-page {
+  min-height: 100vh;
+  background: var(--navy-deep);
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(0,180,216,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(201,168,76,0.05) 0%, transparent 50%);
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: var(--cream);
+  padding-bottom: 4rem;
+}
+
+/* ── Hero ── */
+.ships-hero {
+  padding: 2.5rem 2.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.ships-back {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-dim);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 1.2rem;
+  transition: color 0.2s;
+}
+.ships-back:hover { color: var(--gold); }
+
+.ships-title {
+  font-family: 'Cinzel', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 40px rgba(201,168,76,0.3);
+  line-height: 1;
+}
+
+.ships-subtitle {
+  margin-top: 0.6rem;
+  font-size: 1.05rem;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+
+/* ── Controls ── */
+.ships-controls {
+  padding: 1.5rem 2.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ships-search {
+  background: var(--navy-mid);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.55rem 1rem;
+  color: var(--cream);
+  font-family: 'Crimson Pro', serif;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 320px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.ships-search:focus { border-color: var(--gold-dim); }
+.ships-search::placeholder { color: var(--cream-dim); }
+
+.ships-filters { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+.filter-group { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+
+.filter-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--gold-dim);
+  white-space: nowrap;
+  min-width: 40px;
+}
+
+.filter-pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+.filter-pill {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.7rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--cream-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-pill:hover { border-color: var(--gold-dim); color: var(--cream); }
+.filter-pill.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); }
+
+/* ── Count ── */
+.ships-count {
+  padding: 0.8rem 2.5rem;
+  font-size: 0.9rem;
+  color: var(--cream-dim);
+  border-bottom: 1px solid var(--border);
+}
+.ships-count strong { color: var(--gold); }
+
+/* ── Grid ── */
+.ships-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 1.25rem;
+  padding: 2rem 2.5rem;
+}
+
+.ships-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+
+/* ── Ship Card ── */
+.ship-card {
+  background: var(--navy-mid);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.ship-card:hover {
+  border-color: var(--gold-dim);
+  transform: translateY(-2px);
+}
+
+.ship-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ship-card-rate {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-dim);
+}
+
+.ship-type-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid;
+  border-radius: 2px;
+}
+
+.ship-card-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--cream);
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.ship-card-info {
+  font-size: 0.92rem;
+  color: var(--cream-dim);
+  line-height: 1.55;
+  font-style: italic;
+  flex: 1;
+}
+
+/* ── Stat Bars ── */
+.ship-stats { display: flex; flex-direction: column; gap: 0.45rem; }
+
+.sb-row {
+  display: grid;
+  grid-template-columns: 72px 1fr 48px;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sb-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--cream-dim);
+  white-space: nowrap;
+}
+
+.sb-track {
+  height: 4px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.sb-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.sb-val {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  color: var(--cream);
+  text-align: right;
+}
+
+/* ── Ship Footer ── */
+.ship-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0.4rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.85rem;
+}
+
+.ship-footer-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  color: var(--cream-dim);
+  text-align: center;
+}
+
+.ship-footer-stat span:first-child { font-size: 0.85rem; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .ships-hero,
+  .ships-controls,
+  .ships-count,
+  .ships-grid { padding-left: 1.25rem; padding-right: 1.25rem; }
+
+  .ships-title { font-size: 1.8rem; }
+  .ships-grid { grid-template-columns: 1fr; }
+  .ship-footer { grid-template-columns: 1fr 1fr; }
+}
