@@ -19,25 +19,37 @@ interface YTVideo {
 async function fetchYouTubeVideos(query: string, max = 6): Promise<YTVideo[]> {
   try {
     const encoded = encodeURIComponent(query)
-    const url = `https://www.youtube.com/feeds/videos.xml?search_query=${encoded}`
-    const res = await fetch(url, { next: { revalidate: 3600 } })
-    if (!res.ok) return []
-    const xml = await res.text()
-    const entries = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)]
-    return entries.slice(0, max).map(([, entry]) => {
-      const title     = entry.match(/<title>(.*?)<\/title>/)?.[1] ?? ''
-      const link      = entry.match(/<link rel="alternate" href="(.*?)"/)?.[1] ?? ''
-      const published = entry.match(/<published>(.*?)<\/published>/)?.[1] ?? ''
-      const thumbnail = entry.match(/<media:thumbnail url="(.*?)"/)?.[1] ?? ''
-      const channel   = entry.match(/<name>(.*?)<\/name>/)?.[1] ?? ''
-      return {
-        title: title.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'"),
-        link,
-        published,
-        thumbnail,
-        channel: channel.replace(/&amp;/g,'&'),
-      }
+    const url = `https://www.youtube.com/results?search_query=${encoded}&sp=EgIIAQ%253D%253D`
+    const res = await fetch(url, {
+      next: { revalidate: 3600 },
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
     })
+    if (!res.ok) return []
+    const html = await res.text()
+    const match = html.match(/var ytInitialData = (\{[\s\S]*?\});<\/script>/)
+    if (!match) return []
+    const data = JSON.parse(match[1])
+    const contents =
+      data?.contents?.twoColumnSearchResultsRenderer?.primaryContents
+        ?.sectionListRenderer?.contents?.[0]?.itemSectionRenderer?.contents ?? []
+    const videos: YTVideo[] = []
+    for (const item of contents) {
+      const v = item?.videoRenderer
+      if (!v) continue
+      const videoId   = v.videoId ?? ''
+      const title     = v.title?.runs?.[0]?.text ?? ''
+      const channel   = v.ownerText?.runs?.[0]?.text ?? ''
+      const published = v.publishedTimeText?.simpleText ?? ''
+      const thumbnail = `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`
+      if (videoId && title) {
+        videos.push({ title, link: `https://www.youtube.com/watch?v=${videoId}`, published, thumbnail, channel })
+      }
+      if (videos.length >= max) break
+    }
+    return videos
   } catch {
     return []
   }
