@@ -33,7 +33,7 @@ export const ATTACHMENTS: Attachment[] = [
   { id: 'advanced_gun_carriages', slotType: 'general', name: 'Advanced Gun Carriages', dmgBonus: 0,    rateBonus: 0,    desc: 'Weapon angle +10. Weapon aiming speed +30%.' },
   { id: 'upper_deck',             slotType: 'general', name: 'Upper Deck',             dmgBonus: 0,    rateBonus: 0,    desc: 'Barrel reload speed +35%. Swivel gun reload speed +35%.' },
   { id: 'ammunition_cradles',     slotType: 'general', name: 'Ammunition Cradles',     dmgBonus: 0,    rateBonus: 0.18, desc: 'Reload Speed +12%.' },
-  { id: 'ammunition_cradles R1',     slotType: 'general', name: 'Ammunition Cradles',     dmgBonus: 0,    rateBonus: 0.18, desc: 'Reload Speed +18%.' },
+  { id: 'ammunition_cradles R1',     slotType: 'general', name: 'Ammunition Cradles R1',     dmgBonus: 0,    rateBonus: 0.18, desc: 'Reload Speed +18%.' },
   { id: 'incendiary_mixture',     slotType: 'general', name: 'Incendiary Mixture',     dmgBonus: 0,    rateBonus: 0,    desc: 'Fire effects and ignition with any ammo type. Projectile speed +10%.' },
   { id: 'fortified_ports',        slotType: 'general', name: 'Fortified Ports',        dmgBonus: 0,    rateBonus: 0,    desc: 'Cannon range +10m.' },
   { id: 'combat_arsenal',         slotType: 'general', name: 'Combat Arsenal',         dmgBonus: 0,    rateBonus: 0,    desc: 'Items reload +20%. Ammo type switch speed +50%.' },
