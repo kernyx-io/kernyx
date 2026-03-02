@@ -58,7 +58,7 @@
   font-family: 'IM Fell English', serif;
   font-style: italic;
   color: var(--cream-dim);
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   margin: 0.4rem 0 1rem;
   letter-spacing: 0.06em;
 }
@@ -117,8 +117,8 @@
 /* ── Panel title ─────────────────────────────────────────────────────────── */
 .wsb-panel-title {
   font-family: 'Cinzel', serif;
-  font-size: 0.68rem;
-  letter-spacing: 0.2em;
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 1rem;
@@ -137,7 +137,7 @@
 /* ── Section toggle button ───────────────────────────────────────────────── */
 .wsb-toggle-btn {
   font-family: 'Cinzel', serif;
-  font-size: 0.58rem;
+  font-size: 0.74rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   background: transparent;
@@ -156,8 +156,8 @@
 /* ── Labels and form elements ────────────────────────────────────────────── */
 .wsb-label {
   font-family: 'Cinzel', serif;
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
+  font-size: 0.97rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--cream-dim);
   margin-bottom: 0.35rem;
@@ -170,7 +170,7 @@
   border: 1px solid var(--gold-border);
   color: var(--cream);
   font-family: 'IM Fell English', serif;
-  font-size: 0.85rem;
+  font-size: 1.02rem;
   padding: 0.5rem 0.75rem;
   border-radius: 2px;
   appearance: none;
@@ -189,7 +189,7 @@
   background: var(--navy-mid);
   color: var(--gold-dim);
   font-style: normal;
-  font-size: 0.75rem;
+  font-size: 0.92rem;
 }
 
 /* ── Vessel card ─────────────────────────────────────────────────────────── */
@@ -199,13 +199,13 @@
   background: var(--navy-mid);
   border: 1px solid var(--gold-border);
   border-radius: 2px;
-  font-size: 0.8rem;
+  font-size: 0.97rem;
   min-height: 80px;
 }
 
 .wsb-vessel-card-name {
   font-family: 'Cinzel', serif;
-  font-size: 0.78rem;
+  font-size: 1.2rem;
   color: var(--gold-bright);
   letter-spacing: 0.1em;
   margin-bottom: 0.5rem;
@@ -220,7 +220,7 @@
 
 .wsb-tag {
   font-family: 'Cinzel', serif;
-  font-size: 0.55rem;
+  font-size: 1.05rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 0.15rem 0.5rem;
@@ -235,7 +235,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.25rem 1rem;
-  font-size: 0.75rem;
+  font-size: 0.92rem;
   color: var(--cream-dim);
 }
 .wsb-vessel-stats span { color: var(--cream); }
@@ -244,7 +244,7 @@
   margin-top: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--gold-border);
-  font-size: 0.72rem;
+  font-size: 1.05rem;
   color: var(--cream-dim);
   letter-spacing: 0.04em;
 }
@@ -253,7 +253,7 @@
 .wsb-vessel-info {
   margin-top: 0.5rem;
   font-style: italic;
-  font-size: 0.72rem;
+  font-size: 1.05rem;
   color: var(--cream-dim);
   line-height: 1.5;
 }
@@ -261,7 +261,7 @@
 .wsb-vessel-empty {
   color: var(--cream-dim);
   font-style: italic;
-  font-size: 0.8rem;
+  font-size: 0.97rem;
   text-align: center;
   padding: 1rem 0;
 }
@@ -281,8 +281,8 @@
 
 .wsb-broadside-section-label {
   font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gold-dim);
   border-bottom: 1px solid var(--gold-border);
@@ -304,8 +304,8 @@
 
 .wsb-cannon-slot-label {
   font-family: 'Cinzel', serif;
-  font-size: 0.55rem;
-  letter-spacing: 0.14em;
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--cream-dim);
   margin-bottom: 0.35rem;
@@ -319,7 +319,7 @@
 }
 
 .wsb-stat-chip {
-  font-size: 0.65rem;
+  font-size: 1rem;
   color: var(--cream-dim);
 }
 .wsb-stat-chip span {
@@ -341,11 +341,11 @@
 }
 .wsb-summary-stat-value {
   font-family: 'Cinzel', serif;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: var(--gold-bright);
 }
 .wsb-summary-stat-label {
-  font-size: 0.62rem;
+  font-size: 0.97rem;
   color: var(--cream-dim);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -354,7 +354,7 @@
 .wsb-no-ship {
   color: var(--cream-dim);
   font-style: italic;
-  font-size: 0.82rem;
+  font-size: 1rem;
   text-align: center;
   padding: 1.5rem 0;
 }
@@ -383,11 +383,11 @@
   background: rgba(201, 168, 76, 0.07);
 }
 
-.wsb-ammo-icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
+.wsb-ammo-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
 
 .wsb-ammo-name {
   font-family: 'Cinzel', serif;
-  font-size: 0.62rem;
+  font-size: 0.97rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--cream);
@@ -396,7 +396,7 @@
 
 .wsb-ammo-pct {
   font-family: 'Cinzel', serif;
-  font-size: 0.95rem;
+  font-size: 1.2rem;
   color: var(--gold-bright);
   margin-bottom: 0.3rem;
 }
@@ -412,7 +412,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.6rem;
+  font-size: 1.2rem;
   color: var(--cream-dim);
 }
 
@@ -432,7 +432,7 @@
 }
 
 .wsb-ammo-desc {
-  font-size: 0.65rem;
+  font-size: 1rem;
   color: var(--cream-dim);
   font-style: italic;
   line-height: 1.4;
@@ -441,7 +441,7 @@
 .wsb-ammo-special {
   margin-top: 0.3rem;
   font-family: 'Cinzel', serif;
-  font-size: 0.55rem;
+  font-size: 1.05rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--gold);
@@ -474,7 +474,7 @@
 
 .wsb-item-name {
   font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
+  font-size: 1.2rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--cream);
@@ -490,7 +490,7 @@
 }
 
 .wsb-item-tag {
-  font-size: 0.55rem;
+  font-size: 1.05rem;
   padding: 0.1rem 0.4rem;
   border-radius: 2px;
   border: 1px solid rgba(201,168,76,0.2);
@@ -502,7 +502,7 @@
 .wsb-item-tag.bonus-reload { border-color: rgba(39,174,96,0.4); color: #2ecc71; }
 
 .wsb-item-desc {
-  font-size: 0.65rem;
+  font-size: 1rem;
   color: var(--cream-dim);
   font-style: italic;
   line-height: 1.4;
@@ -511,7 +511,7 @@
 .wsb-item-bonus {
   margin-top: 0.3rem;
   font-family: 'Cinzel', serif;
-  font-size: 0.58rem;
+  font-size: 0.74rem;
   letter-spacing: 0.08em;
   color: var(--gold);
 }
@@ -529,8 +529,8 @@
 
 .wsb-selected-label {
   font-family: 'Cinzel', serif;
-  font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--gold-dim);
   white-space: nowrap;
@@ -538,7 +538,7 @@
 
 .wsb-slot-pill {
   font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
+  font-size: 1.2rem;
   letter-spacing: 0.08em;
   padding: 0.2rem 0.6rem;
   border-radius: 12px;
@@ -554,7 +554,7 @@
 
 .wsb-count-badge {
   font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
+  font-size: 1.2rem;
   letter-spacing: 0.1em;
   color: var(--cream-dim);
   margin-left: auto;
@@ -563,8 +563,8 @@
 /* ── Faction group label ─────────────────────────────────────────────────── */
 .wsb-group-label {
   font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gold-dim);
   grid-column: 1 / -1;
@@ -582,8 +582,8 @@
 
 .wsb-stats-section-title {
   font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gold-dim);
   margin-bottom: 0.6rem;
@@ -596,7 +596,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.2rem 0;
-  font-size: 0.78rem;
+  font-size: 1.2rem;
   border-bottom: 1px solid rgba(201,168,76,0.07);
 }
 .wsb-stat-row:last-child { border-bottom: none; }
@@ -609,7 +609,7 @@
 
 .wsb-ship-name-header {
   font-family: 'Cinzel', serif;
-  font-size: 0.82rem;
+  font-size: 1rem;
   letter-spacing: 0.12em;
   color: var(--gold-bright);
   margin-bottom: 0.75rem;
@@ -629,15 +629,15 @@
 
 .wsb-report-kicker {
   font-family: 'Cinzel', serif;
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
+  font-size: 0.97rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gold-dim);
   margin-bottom: 0.25rem;
 }
 
 .wsb-report-subnote {
-  font-size: 0.72rem;
+  font-size: 1.05rem;
   color: var(--cream-dim);
   font-style: italic;
   max-width: 520px;
@@ -646,8 +646,8 @@
 
 .wsb-report-badge {
   font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 0.3rem 0.8rem;
   border-radius: 2px;
@@ -673,7 +673,7 @@
 
 .wsb-bonus-pill {
   font-family: 'Cinzel', serif;
-  font-size: 0.55rem;
+  font-size: 1.05rem;
   letter-spacing: 0.08em;
   padding: 0.15rem 0.5rem;
   border-radius: 12px;
@@ -702,8 +702,8 @@
 
 .wsb-stat-box-label {
   font-family: 'Cinzel', serif;
-  font-size: 0.55rem;
-  letter-spacing: 0.14em;
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--cream-dim);
   margin-bottom: 0.35rem;
@@ -711,14 +711,14 @@
 
 .wsb-stat-box-value {
   font-family: 'Cinzel', serif;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   color: var(--gold-bright);
   line-height: 1;
 }
 .wsb-stat-box-value.negative { color: var(--red-light); }
 
 .wsb-stat-box-unit {
-  font-size: 0.62rem;
+  font-size: 0.97rem;
   color: var(--cream-dim);
   margin-top: 0.2rem;
 }
@@ -733,7 +733,7 @@
 .wsb-breakdown-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.75rem;
+  font-size: 0.92rem;
 }
 
 .wsb-breakdown-table thead tr {
@@ -742,7 +742,7 @@
 
 .wsb-breakdown-table th {
   font-family: 'Cinzel', serif;
-  font-size: 0.55rem;
+  font-size: 1.05rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gold-dim);
@@ -774,14 +774,14 @@
   text-align: center;
   color: var(--cream-dim);
   font-style: italic;
-  font-size: 0.82rem;
+  font-size: 1rem;
   padding: 2rem 1rem;
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 .wsb-footer {
   text-align: center;
-  font-size: 0.7rem;
+  font-size: 0.88rem;
   color: var(--cream-dim);
   font-style: italic;
   margin-top: 3rem;
@@ -856,8 +856,8 @@
 
 .wsb-bs-col-header {
   font-family: 'Cinzel', serif;
-  font-size: 0.62rem;
-  letter-spacing: 0.2em;
+  font-size: 0.97rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--gold-border);
@@ -886,13 +886,13 @@
 }
 
 .wsb-bs-ship-icon {
-  font-size: 2rem;
+  font-size: 2.2rem;
   margin-bottom: 0.25rem;
 }
 
 .wsb-bs-ship-name {
   font-family: 'Cinzel', serif;
-  font-size: 0.65rem;
+  font-size: 1rem;
   letter-spacing: 0.1em;
   color: var(--gold-bright);
   text-align: center;
@@ -900,7 +900,7 @@
 
 .wsb-bs-ship-rate {
   font-family: 'Cinzel', serif;
-  font-size: 0.55rem;
+  font-size: 1.05rem;
   letter-spacing: 0.1em;
   color: var(--gold-dim);
 }
@@ -913,7 +913,7 @@
 }
 
 .wsb-bs-stat {
-  font-size: 0.7rem;
+  font-size: 0.88rem;
   color: var(--cream-dim);
   text-align: center;
 }
@@ -924,15 +924,15 @@
 
 .wsb-bs-armed {
   font-family: 'Cinzel', serif;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: var(--gold-bright);
   margin-top: 0.25rem;
 }
 
 .wsb-bs-armed-label {
   font-family: 'Cinzel', serif;
-  font-size: 0.5rem;
-  letter-spacing: 0.14em;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--cream-dim);
 }
@@ -968,8 +968,8 @@
 
 .wsb-side-label {
   font-family: 'Cinzel', serif;
-  font-size: 0.65rem;
-  letter-spacing: 0.18em;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -979,13 +979,13 @@
 }
 
 .wsb-side-count {
-  font-size: 0.55rem;
+  font-size: 1.05rem;
   color: var(--cream-dim);
   letter-spacing: 0.1em;
 }
 
 .wsb-side-empty {
-  font-size: 0.72rem;
+  font-size: 1.05rem;
   color: var(--cream-dim);
   font-style: italic;
   text-align: center;
