@@ -18,38 +18,23 @@ interface YTVideo {
 
 async function fetchYouTubeVideos(query: string, max = 6): Promise<YTVideo[]> {
   try {
+    const apiKey = process.env.YOUTUBE_API_KEY
+    if (!apiKey) return []
+
     const encoded = encodeURIComponent(query)
-    const url = `https://www.youtube.com/results?search_query=${encoded}&sp=EgIIAQ%253D%253D`
-    const res = await fetch(url, {
-      next: { revalidate: 3600 },
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept-Language': 'en-US,en;q=0.9',
-      },
-    })
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encoded}&type=video&maxResults=${max}&order=date&key=${apiKey}`
+
+    const res = await fetch(url, { next: { revalidate: 3600 } })
     if (!res.ok) return []
-    const html = await res.text()
-    const match = html.match(/var ytInitialData = (\{[\s\S]*?\});<\/script>/)
-    if (!match) return []
-    const data = JSON.parse(match[1])
-    const contents =
-      data?.contents?.twoColumnSearchResultsRenderer?.primaryContents
-        ?.sectionListRenderer?.contents?.[0]?.itemSectionRenderer?.contents ?? []
-    const videos: YTVideo[] = []
-    for (const item of contents) {
-      const v = item?.videoRenderer
-      if (!v) continue
-      const videoId   = v.videoId ?? ''
-      const title     = v.title?.runs?.[0]?.text ?? ''
-      const channel   = v.ownerText?.runs?.[0]?.text ?? ''
-      const published = v.publishedTimeText?.simpleText ?? ''
-      const thumbnail = `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`
-      if (videoId && title) {
-        videos.push({ title, link: `https://www.youtube.com/watch?v=${videoId}`, published, thumbnail, channel })
-      }
-      if (videos.length >= max) break
-    }
-    return videos
+
+    const data = await res.json()
+    return (data.items ?? []).map((item: any) => ({
+      title:     item.snippet.title,
+      link:      `https://www.youtube.com/watch?v=${item.id.videoId}`,
+      published: item.snippet.publishedAt,
+      thumbnail: item.snippet.thumbnails?.medium?.url ?? '',
+      channel:   item.snippet.channelTitle,
+    }))
   } catch {
     return []
   }
@@ -209,9 +194,63 @@ export default async function WorldOfSeaBattlesPage() {
           </div>
         </section>
 
+        {/* ── Community ── */}
+        <section className="wsb-hub-section">
+          <div className="wsb-hub-section-header">
+            <span className="wsb-hub-section-icon">🌐</span>
+            OFFICIAL COMMUNITY
+          </div>
+          <div className="wsb-hub-community-grid">
+            <a href="https://www.reddit.com/r/worldofseabattle/" target="_blank" rel="noopener noreferrer" className="wsb-hub-social-card">
+              <div className="wsb-hub-social-icon wsb-hub-social-reddit">
+                <svg viewBox="0 0 20 20" fill="currentColor" width="28" height="28"><path d="M10 0C4.478 0 0 4.478 0 10s4.478 10 10 10 10-4.478 10-10S15.522 0 10 0zm5.93 10a1.27 1.27 0 00-2.14-.92c-1.07-.71-2.52-1.16-4.1-1.22l.7-3.28 2.27.48a.9.9 0 101.82-.1.9.9 0 00-.88.74l-2.53-.53a.19.19 0 00-.23.14l-.78 3.66c-1.61.05-3.08.5-4.17 1.22a1.27 1.27 0 10-1.38 2.06c-.03.18-.05.36-.05.55 0 2.79 3.25 5.05 7.26 5.05s7.26-2.26 7.26-5.05c0-.18-.02-.36-.05-.54A1.27 1.27 0 0015.93 10zM6.36 11.27a.9.9 0 110 1.8.9.9 0 010-1.8zm7.06 2.38c-.49.49-1.28.73-2.42.73s-1.93-.24-2.42-.73a.18.18 0 010-.26.18.18 0 01.26 0c.38.38 1.05.55 2.16.55s1.78-.17 2.16-.55a.18.18 0 01.26.26zm-.14-1.48a.9.9 0 110-1.8.9.9 0 010 1.8z"/></svg>
+              </div>
+              <div className="wsb-hub-social-body">
+                <div className="wsb-hub-social-name">Reddit</div>
+                <div className="wsb-hub-social-desc">r/worldofseabattle — community discussion, tips, and news</div>
+              </div>
+              <div className="wsb-hub-social-arrow">→</div>
+            </a>
+
+            <a href="https://discord.gg/worldofseabattle" target="_blank" rel="noopener noreferrer" className="wsb-hub-social-card">
+              <div className="wsb-hub-social-icon wsb-hub-social-discord">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+              </div>
+              <div className="wsb-hub-social-body">
+                <div className="wsb-hub-social-name">Discord</div>
+                <div className="wsb-hub-social-desc">Official server — dev announcements, help channels, events</div>
+              </div>
+              <div className="wsb-hub-social-arrow">→</div>
+            </a>
+
+            <a href="https://x.com/worldofseabattle" target="_blank" rel="noopener noreferrer" className="wsb-hub-social-card">
+              <div className="wsb-hub-social-icon wsb-hub-social-x">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </div>
+              <div className="wsb-hub-social-body">
+                <div className="wsb-hub-social-name">X / Twitter</div>
+                <div className="wsb-hub-social-desc">Official account — updates, patch notes, and announcements</div>
+              </div>
+              <div className="wsb-hub-social-arrow">→</div>
+            </a>
+
+            <a href="https://www.facebook.com/worldofseabattle" target="_blank" rel="noopener noreferrer" className="wsb-hub-social-card">
+              <div className="wsb-hub-social-icon wsb-hub-social-fb">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28"><path d="M24 12.073C24 5.404 18.627 0 12 0S0 5.404 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.313 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+              </div>
+              <div className="wsb-hub-social-body">
+                <div className="wsb-hub-social-name">Facebook</div>
+                <div className="wsb-hub-social-desc">Official page — community posts and game updates</div>
+              </div>
+              <div className="wsb-hub-social-arrow">→</div>
+            </a>
+          </div>
+        </section>
+
+
       </div>
 
-      {/* ── Footer ── */}
+      {/* ── Footer ── */
       <div className="wsb-hub-footer">
         Kernyx · Unofficial fan site · Not affiliated with Game-Insight or World of Sea Battle
       </div>
@@ -322,6 +361,22 @@ export default async function WorldOfSeaBattlesPage() {
         .wsb-hub-yt-link a:hover { color: var(--gold-bright); }
 
         .wsb-hub-footer { text-align: center; padding: 1.5rem; font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); border-top: 1px solid var(--border); }
+
+
+        /* Community / social */
+        .wsb-hub-community-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; }
+        .wsb-hub-social-card { display: flex; align-items: center; gap: 1rem; background: var(--navy-mid); border: 1px solid var(--border); border-radius: 4px; padding: 1rem 1.25rem; text-decoration: none; color: var(--cream); transition: border-color 0.2s, background 0.2s; }
+        .wsb-hub-social-card:hover { border-color: rgba(201,168,76,0.5); background: var(--navy-light); }
+        .wsb-hub-social-icon { width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .wsb-hub-social-reddit  { background: rgba(255,69,0,0.12);   color: #ff4500; }
+        .wsb-hub-social-discord { background: rgba(88,101,242,0.12); color: #5865f2; }
+        .wsb-hub-social-x       { background: rgba(255,255,255,0.06); color: var(--cream); }
+        .wsb-hub-social-fb      { background: rgba(24,119,242,0.12); color: #1877f2; }
+        .wsb-hub-social-body { flex: 1; }
+        .wsb-hub-social-name { font-family: 'Cinzel', serif; font-size: 0.88rem; font-weight: 600; color: var(--cream); letter-spacing: 0.04em; margin-bottom: 0.2rem; }
+        .wsb-hub-social-desc { font-size: 0.88rem; color: var(--cream-dim); line-height: 1.4; }
+        .wsb-hub-social-arrow { font-size: 1rem; color: var(--gold-dim); flex-shrink: 0; transition: color 0.2s; }
+        .wsb-hub-social-card:hover .wsb-hub-social-arrow { color: var(--gold); }
 
         @media (max-width: 640px) {
           .wsb-hub-hero { flex-direction: column; padding: 2.5rem 1.25rem 2rem; }
