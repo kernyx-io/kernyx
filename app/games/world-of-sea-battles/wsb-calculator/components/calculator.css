@@ -1137,3 +1137,55 @@
   font-family: 'Crimson Pro', serif;
   line-height: 1.6;
 }
+
+/* ── Stat row with deltas ─────────────────────────────────────────────────── */
+.wsb-statrow-values {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+.wsb-statrow-base {
+  font-size: 0.92rem;
+  color: var(--cream-dim);
+  text-decoration: line-through;
+  text-decoration-color: rgba(168,152,120,0.5);
+}
+
+.wsb-statrow-arrow {
+  font-size: 0.8rem;
+  color: var(--cream-dim);
+}
+
+.wsb-statrow-modified {
+  font-size: 0.97rem;
+  font-weight: 700;
+}
+
+.wsb-statrow-modified.positive { color: #2ecc71; }
+.wsb-statrow-modified.negative { color: var(--red-light); }
+
+.wsb-statrow-value.positive { color: #2ecc71; }
+.wsb-statrow-value.negative { color: var(--red-light); }
+
+.wsb-delta-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.wsb-delta-badge.positive {
+  background: rgba(39,174,96,0.15);
+  color: #2ecc71;
+  border: 1px solid rgba(39,174,96,0.3);
+}
+
+.wsb-delta-badge.negative {
+  background: rgba(192,57,43,0.15);
+  color: var(--red-light);
+  border: 1px solid rgba(192,57,43,0.3);
+}
