@@ -75,7 +75,7 @@ export default function ShipStats() {
   // Support
   for (const id of supportIds) {
     const sup = getSupportById(id)
-    if (sup) effects.push({ source: sup.name, desc: sup.desc, tag: 'Support' })
+    if (sup) effects.push({ source: sup.name, desc: sup.bonusDesc, tag: 'Support' })
   }
 
   // Numeric combat bonuses to show as modified stats
