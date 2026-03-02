@@ -133,3 +133,28 @@
         .wsb-hub-guide-soon-badge { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.12em; color: var(--gold-dim); border: 1px solid var(--border); padding: 0.2rem 0.5rem; border-radius: 2px; width: fit-content; }
         .wsb-hub-guide-title { font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 600; color: var(--cream); letter-spacing: 0.04em; }
         .wsb-hub-guide-desc { font-size: 0.93rem; color: var(--cream-dim); line-height: 1.5; flex: 1; }
+
+        /* Live guide card - matches tool card style */
+        .wsb-hub-guide-card-live {
+          opacity: 1;
+          text-decoration: none;
+          cursor: pointer;
+          border-color: var(--border);
+          transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+        }
+        .wsb-hub-guide-card-live:hover {
+          border-color: var(--gold-dim);
+          box-shadow: 0 0 20px rgba(201,168,76,0.1);
+          transform: translateY(-2px);
+        }
+        .wsb-hub-guide-live-badge {
+          font-family: 'Cinzel', serif;
+          font-size: 0.55rem;
+          letter-spacing: 0.12em;
+          color: #4ade80;
+          border: 1px solid #166534;
+          background: rgba(74,222,128,0.08);
+          padding: 0.2rem 0.5rem;
+          border-radius: 2px;
+          width: fit-content;
+        }
