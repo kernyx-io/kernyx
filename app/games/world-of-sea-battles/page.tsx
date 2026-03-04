@@ -211,32 +211,28 @@ export default async function WorldOfSeaBattlesPage() {
               <div className="wsb-hub-videos-grid">
                 {videos.map((v, i) => (
                   
-                    key={i}
-                    href={v.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="wsb-hub-video-card"
-                  >
-                    {v.thumbnail ? (
-                      <div className="wsb-hub-video-thumb">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={v.thumbnail} alt={v.title} loading="lazy" />
-                        <div className="wsb-hub-video-play">▶</div>
-                      </div>
-                    ) : (
-                      <div className="wsb-hub-video-thumb wsb-hub-video-thumb-empty">▶</div>
-                    )}
-                    <div className="wsb-hub-video-body">
-                      <div className="wsb-hub-video-title">{v.title}</div>
-                      <div className="wsb-hub-video-meta">
-                        {v.channel && <span>{v.channel}</span>}
-                        {v.published && <span>{timeAgo(v.published)}</span>}
-                      </div>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
+                  {videos.map((v, i) => (
+  <a
+    key={i}
+    href={v.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="wsb-hub-video-card"
+  >
+    <img
+      src={v.thumbnail}
+      alt={v.title}
+      className="wsb-hub-video-thumb"
+    />
+    <div className="wsb-hub-video-body">
+      <div className="wsb-hub-video-title">{v.title}</div>
+      <div className="wsb-hub-video-meta">
+        <span>{v.channel}</span>
+        <span>{timeAgo(v.published)}</span>
+      </div>
+    </div>
+  </a>
+))}
 
             <div className="wsb-hub-yt-link">
               <a href="https://www.youtube.com/results?search_query=world+of+sea+battle+guide" target="_blank" rel="noopener noreferrer">
