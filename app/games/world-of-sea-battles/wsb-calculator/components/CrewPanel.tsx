@@ -1,107 +1,98 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import './calculator.css'
-import { useWsbStore } from '@/lib/wsb/store'
-import { CREW, CREW_FACTIONS, getCrewById } from '@/lib/wsb/crew'
+import "./calculator.css";
+import { useWsbStore } from "@/lib/wsb/store";
+import { CREW, CREW_FACTIONS, getCrewById } from "@/lib/wsb/crew";
+
+function MiniPill({ label }: { label: string }) {
+  return <span className="calc-mini-pill">{label}</span>;
+}
 
 export default function CrewPanel() {
-  const { crewIds, toggleCrew } = useWsbStore()
-  const [collapsed, setCollapsed] = useState(false)
-
-  const selectedCrew = crewIds.map(id => getCrewById(id)).filter(Boolean)
+  const { crewIds, toggleCrew } = useWsbStore();
+  const selectedCrew = crewIds.map((id) => getCrewById(id)).filter(Boolean);
 
   return (
-    <div className="wsb-panel full-width">
-      <div className="wsb-panel-title">
-        <div className="wsb-panel-title-row">
-          <span>
-            👥 Crew Selection{' '}
-            <span style={{
-              fontFamily: "'IM Fell English', serif",
-              fontSize: '0.78rem',
-              fontStyle: 'italic',
-              color: 'var(--cream-dim)',
-              letterSpacing: 0,
-              textTransform: 'none',
-            }}>
-              — Select up to 4
-            </span>
-          </span>
-          <button className="wsb-toggle-btn" onClick={() => setCollapsed(c => !c)}>
-            {collapsed ? 'Expand' : 'Shrink'}
-          </button>
+    <div className="calc-select-panel">
+      <div className="calc-select-head">
+        <div>
+          <div className="calc-select-label">Crew</div>
+          <div className="calc-select-sub">Select up to 4 crew members.</div>
+        </div>
+
+        <div className="calc-limit-badges">
+          <MiniPill label={`${crewIds.length}/4 selected`} />
         </div>
       </div>
 
-      {/* Active crew bar */}
-      <div className="wsb-selected-bar">
-        <span className="wsb-selected-label">Active Crew</span>
+      <div className="calc-active-strip">
         {Array.from({ length: 4 }, (_, i) => {
-          const member = selectedCrew[i]
+          const member = selectedCrew[i];
           return (
-            <span
+            <button
               key={i}
-              className={`wsb-slot-pill${member ? ' filled' : ''}`}
+              type="button"
+              className={`calc-slot-chip ${member ? "calc-slot-chip-filled" : ""}`}
               onClick={() => member && toggleCrew(member.id)}
-              style={{ cursor: member ? 'pointer' : 'default' }}
+              disabled={!member}
               title={member ? `Remove ${member.name}` : undefined}
             >
-              {member ? member.name : 'Empty'}
-            </span>
-          )
+              {member ? member.name : "Empty"}
+            </button>
+          );
         })}
-        <span className="wsb-count-badge">{crewIds.length} / 4 slots filled</span>
       </div>
 
-      {!collapsed && (
-        <div className="wsb-items-grid">
-          {CREW_FACTIONS.map(faction => {
-            const factionCrew = CREW.filter(c => c.faction === faction)
-            return (
-              <>
-                <div key={`label-${faction}`} className="wsb-group-label">{faction}</div>
-                {factionCrew.map(member => {
-                  const isActive = crewIds.includes(member.id)
-                  const isDisabled = !isActive && crewIds.length >= 4
+      <div className="calc-catalog-stack">
+        {CREW_FACTIONS.map((faction) => {
+          const factionCrew = CREW.filter((c) => c.faction === faction);
+
+          return (
+            <section key={faction} className="calc-catalog-section">
+              <div className="calc-catalog-title">{faction}</div>
+
+              <div className="calc-choice-grid">
+                {factionCrew.map((member) => {
+                  const isActive = crewIds.includes(member.id);
+                  const isDisabled = !isActive && crewIds.length >= 4;
+
+                  const pills = [
+                    ...member.types,
+                    member.dmgBonus !== 0
+                      ? `${member.dmgBonus > 0 ? "+" : ""}${Math.round(member.dmgBonus * 100)}% dmg`
+                      : null,
+                    member.reloadBonus !== 0
+                      ? `${member.reloadBonus > 0 ? "+" : ""}${Math.round(member.reloadBonus * 100)}% reload`
+                      : null,
+                  ].filter(Boolean) as string[];
 
                   return (
-                    <div
+                    <button
                       key={member.id}
-                      className={`wsb-item-card${isActive ? ' active' : ''}${isDisabled ? ' disabled' : ''}`}
+                      type="button"
+                      className={`calc-choice-card ${isActive ? "calc-choice-card-active" : ""}`}
                       onClick={() => !isDisabled && toggleCrew(member.id)}
-                      role="button"
-                      tabIndex={isDisabled ? -1 : 0}
-                      onKeyDown={e => e.key === 'Enter' && !isDisabled && toggleCrew(member.id)}
-                      title={isDisabled ? 'Max 4 crew slots reached' : undefined}
+                      disabled={isDisabled}
+                      title={isDisabled ? "Max 4 crew slots reached" : undefined}
                     >
-                      <div className="wsb-item-name">{member.name}</div>
-
-                      <div className="wsb-item-tags">
-                        {member.types.map(t => (
-                          <span key={t} className="wsb-item-tag">{t}</span>
-                        ))}
-                        {member.dmgBonus !== 0 && (
-                          <span className="wsb-item-tag bonus-dmg">
-                            +{(member.dmgBonus * 100).toFixed(0)}% dmg
-                          </span>
-                        )}
-                        {member.reloadBonus !== 0 && (
-                          <span className="wsb-item-tag bonus-reload">
-                            +{(member.reloadBonus * 100).toFixed(0)}% reload
-                          </span>
-                        )}
+                      <div className="calc-choice-top">
+                        <div className="calc-choice-name">{member.name}</div>
+                        {isActive && <span className="calc-choice-state">Selected</span>}
                       </div>
 
-                      <div className="wsb-item-desc">{member.bonusDesc}</div>
-                    </div>
-                  )
+                      <div className="calc-pill-row">
+                        {pills.length > 0 ? pills.map((pill) => <MiniPill key={pill} label={pill} />) : <MiniPill label="Utility" />}
+                      </div>
+
+                      <p className="calc-choice-desc">{member.bonusDesc}</p>
+                    </button>
+                  );
                 })}
-              </>
-            )
-          })}
-        </div>
-      )}
+              </div>
+            </section>
+          );
+        })}
+      </div>
     </div>
-  )
+  );
 }
