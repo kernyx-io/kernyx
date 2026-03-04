@@ -22,8 +22,9 @@
   font-family: 'Crimson Pro', Georgia, serif;
   background: var(--navy);
   color: var(--cream);
-  min-height: 100vh;
   padding: 0 0 4rem;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
