@@ -281,29 +281,55 @@ export default function WosbMapPage() {
                   sizes="(max-width: 1100px) 100vw, 70vw"
                 />
 
-                {MAP_LAYERS.map((layer) =>
-                  activeLayers[layer.id]
-                    ? layer.markers.map((marker) => (
-                        <div
-                          key={marker.id}
-                          className="wosb-map-labeled-marker"
-                          style={{
-                            left: `${marker.x}%`,
-                            top: `${marker.y}%`,
-                          }}
-                        >
-                          <button
-                            type="button"
-                            className="wosb-map-marker"
-                            title={marker.name}
-                          >
-                            <span>{layer.icon}</span>
-                          </button>
-                          <span className="wosb-map-marker-label">{marker.name}</span>
-                        </div>
-                      ))
-                    : null
-                )}
+             <div className="wosb-map-marker-overlay">
+  {MAP_LAYERS.map((layer) =>
+    activeLayers[layer.id]
+      ? layer.markers.map((marker) => {
+          const markerSize = Math.max(28, Math.min(56, 32 * viewport.scale));
+          const scaledLeft = marker.x;
+          const scaledTop = marker.y;
+
+          return (
+            <div
+              key={marker.id}
+              className="wosb-map-labeled-marker"
+              style={{
+                left: `${scaledLeft}%`,
+                top: `${scaledTop}%`,
+                transform: `translate(-50%, -50%) translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.scale})`,
+                transformOrigin: "center center",
+              }}
+            >
+              <button
+                type="button"
+                className="wosb-map-marker"
+                title={marker.name}
+                style={{
+                  width: `${markerSize}px`,
+                  height: `${markerSize}px`,
+                }}
+              >
+                <img
+                  src="/map-icons/city.png"
+                  alt={marker.name}
+                  className="wosb-map-marker-image"
+                />
+              </button>
+
+              <span
+                className="wosb-map-marker-label"
+                style={{
+                  fontSize: `${Math.max(11, Math.min(18, 12 * viewport.scale))}px`,
+                }}
+              >
+                {marker.name}
+              </span>
+            </div>
+          );
+        })
+      : null
+  )}
+</div>
               </div>
             </div>
           </div>
