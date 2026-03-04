@@ -23,11 +23,6 @@ const TOOLS = [
 ];
 
 const COMING_SOON_GAMES = [
-  { icon: '⚔️',  name: 'Guild Wars 2',    note: 'Build planner & DPS tools' },
-  { icon: '🗺️', name: 'Lost Ark',         note: 'Engravings calculator' },
-  { icon: '🌌',  name: 'Destiny 2',       note: 'Weapon DPS tracker' },
-  { icon: '💀',  name: 'Path of Exile 2', note: 'Passive tree planner' },
-  { icon: '🤖',  name: 'Warframe',        note: 'Mod build optimizer' },
 ];
 
 /* ─── Helpers ────────────────────────────────────────── */
@@ -47,24 +42,32 @@ function timeAgo(isoDate: string): string {
 
 function NewsCard({ item, featured }: { item: NewsItem; featured?: boolean }) {
   return (
-    
+    <a
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
       className={`${styles.newsCard} ${featured ? styles.newsCardFeatured : ''}`}
     >
       <div className={styles.newsCardTop}>
-        <span className={styles.newsGameTag} style={{ color: WOSB.color, borderColor: WOSB.color }}>
+        <span
+          className={styles.newsGameTag}
+          style={{ color: WOSB.color, borderColor: WOSB.color }}
+        >
           {WOSB.icon} {item.gameName}
         </span>
         <span className={styles.newsTime}>{timeAgo(item.date)}</span>
       </div>
+
       <div className={styles.newsTitle}>{item.title}</div>
+
       {featured && item.excerpt && (
         <p className={styles.newsExcerpt}>{item.excerpt}…</p>
       )}
+
       <div className={styles.newsFooter}>
-        <span className={styles.newsSource}>{item.source === 'rss' ? 'Official Site' : 'Steam'}</span>
+        <span className={styles.newsSource}>
+          {item.source === 'rss' ? 'Official Site' : 'Steam'}
+        </span>
         <span className={styles.newsReadMore}>Read →</span>
       </div>
     </a>
