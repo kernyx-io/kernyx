@@ -205,9 +205,7 @@ export default async function WorldOfSeaBattlesPage() {
           <div className="wsb-hub-section-header">
             <span className="wsb-hub-section-icon">▶</span>
             LATEST GUIDES
-            <span className="wsb-hub-section-note">
-              from YouTube · updates hourly
-            </span>
+            <span className="wsb-hub-section-note">from YouTube · updates hourly</span>
           </div>
 
           {videos.length === 0 ? (
@@ -265,7 +263,7 @@ export default async function WorldOfSeaBattlesPage() {
 
           <div className="wsb-hub-community-grid">
             <a
-              href="https://www.reddit.com/r/worldofseabattle/"
+              href="https://www.reddit.com/r/wosb/"
               target="_blank"
               rel="noopener noreferrer"
               className="wsb-hub-social-card"
@@ -281,7 +279,7 @@ export default async function WorldOfSeaBattlesPage() {
             </a>
 
             <a
-              href="https://discord.gg/pmf8NXpVP4"
+              href="https://discord.gg/wHkAQ9DzeN"
               target="_blank"
               rel="noopener noreferrer"
               className="wsb-hub-social-card"
