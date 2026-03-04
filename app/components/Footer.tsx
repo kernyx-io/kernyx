@@ -5,8 +5,8 @@ import Link from "next/link";
 const footerLinks = [
   { label: "Privacy Policy", href: "/privacy-policy" },
   { label: "Terms of Service", href: "/terms-of-service" },
-  { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Footer() {
@@ -15,9 +15,9 @@ export default function Footer() {
   return (
     <footer
       style={{
-        background: "linear-gradient(135deg, #0a1628 0%, #132238 50%, #0d1b2e 100%)",
-        borderTop: "2px solid #c9a84c",
-        padding: "2rem",
+        background: "#0d1117",
+        borderTop: "1px solid #1a2332",
+        padding: "1.5rem 2rem",
         textAlign: "center",
       }}
     >
@@ -25,9 +25,9 @@ export default function Footer() {
         style={{
           display: "flex",
           justifyContent: "center",
-          gap: "2rem",
+          gap: "1.5rem",
           flexWrap: "wrap",
-          marginBottom: "1.25rem",
+          marginBottom: "1rem",
         }}
       >
         {footerLinks.map((link) => (
@@ -36,9 +36,9 @@ export default function Footer() {
             href={link.href}
             style={{
               textDecoration: "none",
-              fontFamily: "'Crimson Pro', serif",
-              fontSize: "1.15rem",
-              color: "#d0d8e8",
+              fontFamily: "'Inter', 'Segoe UI', sans-serif",
+              fontSize: "0.85rem",
+              color: "#00d4ff",
               transition: "color 0.2s",
             }}
           >
@@ -49,13 +49,15 @@ export default function Footer() {
 
       <p
         style={{
-          fontFamily: "'Crimson Pro', serif",
-          fontSize: "1rem",
-          color: "#6b7a90",
+          fontFamily: "'Inter', 'Segoe UI', sans-serif",
+          fontSize: "0.75rem",
+          color: "#4a5568",
           margin: 0,
+          lineHeight: 1.6,
         }}
       >
-        &copy; {year} Kernyx. All rights reserved. Kernyx is a fan site and is not affiliated with any game developers or publishers.
+        &copy; {year} Kernyx. All rights reserved. Kernyx is an unofficial fan site and is not
+        affiliated with any game developers or publishers.
       </p>
     </footer>
   );

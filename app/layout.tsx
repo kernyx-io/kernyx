@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Kernyx",
-  description: "Gaming tools and calculators",
+  description: "Unofficial fan-made gaming tools and calculators",
 };
 
 export default function RootLayout({
@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link
-          href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:wght@400;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap"
           rel="stylesheet"
         />
         <Script
@@ -48,7 +48,8 @@ export default function RootLayout({
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
-          backgroundColor: "#0d1b2e",
+          backgroundColor: "#0d1117",
+          color: "#e6edf3",
         }}
       >
         <Header />
