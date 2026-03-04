@@ -104,7 +104,7 @@ export default function WosbMapPage() {
 
           <div className="wosb-map-stage">
             <Image
-              src="/images/wosb-map.webp"
+              src="/images/wosb-map.png"
               alt="World of Sea Battle map"
               fill
               priority
