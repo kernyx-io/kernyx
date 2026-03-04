@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const gameLinks = [
   { label: "All Games", href: "/games" },
@@ -18,10 +18,32 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname();
   const [gamesOpen, setGamesOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const gamesActive = useMemo(() => {
     return pathname === "/games" || pathname.startsWith("/games/");
   }, [pathname]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (!dropdownRef.current) return;
+      if (!dropdownRef.current.contains(event.target as Node)) {
+        setGamesOpen(false);
+      }
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setGamesOpen(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   return (
     <header
@@ -54,11 +76,7 @@ export default function Header() {
         </Link>
 
         <nav style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
-          <div
-            style={{ position: "relative" }}
-            onMouseEnter={() => setGamesOpen(true)}
-            onMouseLeave={() => setGamesOpen(false)}
-          >
+          <div ref={dropdownRef} style={{ position: "relative" }}>
             <button
               type="button"
               onClick={() => setGamesOpen((v) => !v)}
@@ -87,14 +105,16 @@ export default function Header() {
               <div
                 style={{
                   position: "absolute",
-                  top: "calc(100% + 0.45rem)",
+                  top: "100%",
                   left: 0,
+                  marginTop: "0.35rem",
                   minWidth: "220px",
                   background: "#111827",
                   border: "1px solid #1f2937",
                   borderRadius: "8px",
                   padding: "0.35rem",
                   boxShadow: "0 10px 24px rgba(0, 0, 0, 0.35)",
+                  zIndex: 1100,
                 }}
               >
                 {gameLinks.map((link) => {
