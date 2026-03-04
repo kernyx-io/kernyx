@@ -1,293 +1,283 @@
-'use client'
+"use client";
 
-import './calculator.css'
-import { useWsbStore } from '@/lib/wsb/store'
-import { getShipById, parseWeaponSlots } from '@/lib/wsb/ships'
-import { getAttachmentById } from '@/lib/wsb/attachments'
-import { getCrewById } from '@/lib/wsb/crew'
-import { getSupportById } from '@/lib/wsb/support'
-import { getAmmoById } from '@/lib/wsb/ammo'
-import { fmt } from '@/lib/wsb/calculator'
-
-// ─── Stat delta aggregation ───────────────────────────────────────────────────
+import "./calculator.css";
+import { useWsbStore } from "@/lib/wsb/store";
+import { getShipById, parseWeaponSlots } from "@/lib/wsb/ships";
+import { getAttachmentById } from "@/lib/wsb/attachments";
+import { getCrewById } from "@/lib/wsb/crew";
+import { getSupportById } from "@/lib/wsb/support";
+import { getAmmoById } from "@/lib/wsb/ammo";
+import { fmt } from "@/lib/wsb/calculator";
 
 interface StatDeltas {
-  durability:          number   // flat
-  durabilityPct:       number   // additive multiplier e.g. 0.10 = +10%
-  speedFlat:           number   // flat knots
-  speedPct:            number
-  maneuverFlat:        number   // flat points
-  maneuverPct:         number
-  armorFlat:           number
-  armorPct:            number
-  crewFlat:            number
-  holdFlat:            number
-  holdPct:             number
+  durability: number;
+  durabilityPct: number;
+  speedFlat: number;
+  speedPct: number;
+  maneuverFlat: number;
+  maneuverPct: number;
+  armorFlat: number;
+  armorPct: number;
+  crewFlat: number;
+  holdFlat: number;
+  holdPct: number;
 }
 
 function emptyDeltas(): StatDeltas {
   return {
-    durability: 0, durabilityPct: 0,
-    speedFlat: 0, speedPct: 0,
-    maneuverFlat: 0, maneuverPct: 0,
-    armorFlat: 0, armorPct: 0,
+    durability: 0,
+    durabilityPct: 0,
+    speedFlat: 0,
+    speedPct: 0,
+    maneuverFlat: 0,
+    maneuverPct: 0,
+    armorFlat: 0,
+    armorPct: 0,
     crewFlat: 0,
-    holdFlat: 0, holdPct: 0,
-  }
+    holdFlat: 0,
+    holdPct: 0,
+  };
 }
 
-// Parse attachment desc strings — these have the numeric data in text form
 function parseAttachmentDesc(desc: string, d: StatDeltas) {
-  // Extract percentage modifier for a keyword e.g. "Durability +10%"
   const getPct = (pattern: RegExp): number => {
-    const m = desc.match(new RegExp(pattern.source + '\\s*([+-][\\d.]+)%', 'i'))
-    return m ? parseFloat(m[1]) / 100 : 0
-  }
-  // Extract flat modifier for a keyword e.g. "Crew +20"  or "Armor +1"
-  const getFlat = (pattern: RegExp): number => {
-    const m = desc.match(new RegExp(pattern.source + '[^%\\d]*([+-][\\d.]+)(?!%)', 'i'))
-    return m ? parseFloat(m[1]) : 0
-  }
-  // Extract flat knt e.g. "Speed +0.4 knt"
+    const m = desc.match(new RegExp(pattern.source + "\\s*([+-][\\d.]+)%", "i"));
+    return m ? parseFloat(m[1]) / 100 : 0;
+  };
+
   const getKnots = (): number => {
-    const m = desc.match(/speed\s*\+\s*([\d.]+)\s*knt/i)
-    return m ? parseFloat(m[1]) : 0
-  }
+    const m = desc.match(/speed\s*\+\s*([\d.]+)\s*knt/i);
+    return m ? parseFloat(m[1]) : 0;
+  };
 
-  // Durability: could be flat ("Durability +210") or pct ("Durability +10%")
-  d.durabilityPct  += getPct(/durability/)
-  // flat durability only if it's a plain number NOT followed by %
-  const durFlatM = desc.match(/durability\s*\+\s*(\d+)(?!\s*%)/i)
-  if (durFlatM) d.durability += parseFloat(durFlatM[1])
-  const durNegM = desc.match(/durability\s*-\s*(\d+)(?!\s*%)/i)
-  if (durNegM) d.durability -= parseFloat(durNegM[1])
+  d.durabilityPct += getPct(/durability/);
 
-  // Speed
-  d.speedPct  += getPct(/(?:cruise max\.\s*)?speed(?!\s*change)(?!\s*penalty)/)
-  d.speedFlat += getKnots()
-  // "Speed change -15%" = penalty to speed
-  const scM = desc.match(/speed\s*change\s*([+-][\d.]+)%/i)
-  if (scM) d.speedPct += parseFloat(scM[1]) / 100
+  const durFlatM = desc.match(/durability\s*\+\s*(\d+)(?!\s*%)/i);
+  if (durFlatM) d.durability += parseFloat(durFlatM[1]);
+  const durNegM = desc.match(/durability\s*-\s*(\d+)(?!\s*%)/i);
+  if (durNegM) d.durability -= parseFloat(durNegM[1]);
 
-  // Maneuverability: both flat ("Maneuverability -1") and pct ("Maneuverability +8%")
-  d.maneuverPct  += getPct(/maneuverability/)
-  const manFlatM = desc.match(/maneuverability\s*([+-]\d+)(?!\s*%)/i)
-  if (manFlatM) d.maneuverFlat += parseFloat(manFlatM[1])
+  d.speedPct += getPct(/(?:cruise max\.\s*)?speed(?!\s*change)(?!\s*penalty)/);
+  d.speedFlat += getKnots();
+  const scM = desc.match(/speed\s*change\s*([+-][\d.]+)%/i);
+  if (scM) d.speedPct += parseFloat(scM[1]) / 100;
 
-  // Armor
-  d.armorPct  += getPct(/armor/)
-  const armorFlatM = desc.match(/armor\s*([+-]\d+)(?!\s*%)/i)
-  if (armorFlatM) d.armorFlat += parseFloat(armorFlatM[1])
+  d.maneuverPct += getPct(/maneuverability/);
+  const manFlatM = desc.match(/maneuverability\s*([+-]\d+)(?!\s*%)/i);
+  if (manFlatM) d.maneuverFlat += parseFloat(manFlatM[1]);
 
-  // Crew flat
-  const crewM = desc.match(/crew\s*\+\s*(\d+)/i)
-  if (crewM) d.crewFlat += parseFloat(crewM[1])
+  d.armorPct += getPct(/armor/);
+  const armorFlatM = desc.match(/armor\s*([+-]\d+)(?!\s*%)/i);
+  if (armorFlatM) d.armorFlat += parseFloat(armorFlatM[1]);
 
-  // Hold: flat ("Hold +6500") or pct ("Hold +12%")
-  d.holdPct  += getPct(/hold/)
-  const holdFlatM = desc.match(/hold\s*\+\s*(\d+)(?!\s*%)/i)
-  if (holdFlatM) d.holdFlat += parseFloat(holdFlatM[1])
+  const crewM = desc.match(/crew\s*\+\s*(\d+)/i);
+  if (crewM) d.crewFlat += parseFloat(crewM[1]);
+
+  d.holdPct += getPct(/hold/);
+  const holdFlatM = desc.match(/hold\s*\+\s*(\d+)(?!\s*%)/i);
+  if (holdFlatM) d.holdFlat += parseFloat(holdFlatM[1]);
 }
 
 function computeDeltas(
   attachmentIds: string[],
   crewIds: string[],
-  supportIds: string[],
+  supportIds: string[]
 ): StatDeltas {
-  const d = emptyDeltas()
+  const d = emptyDeltas();
 
-  // Attachments: parse desc strings (numeric data lives in text)
   for (const id of attachmentIds) {
-    const a = getAttachmentById(id)
-    if (a) parseAttachmentDesc(a.desc, d)
+    const a = getAttachmentById(id);
+    if (a) parseAttachmentDesc(a.desc, d);
   }
 
-  // Crew: use stored numeric fields directly
   for (const id of crewIds) {
-    const c = getCrewById(id)
-    if (!c) continue
-    d.speedPct    += c.speedBonus      // e.g. sailing_master +0.25
-    d.maneuverPct += c.maneuverBonus   // e.g. pilot -0.31 (turning penalty)
+    const c = getCrewById(id);
+    if (!c) continue;
+    d.speedPct += c.speedBonus;
+    d.maneuverPct += c.maneuverBonus;
   }
 
-  // Support: use stored numeric fields directly
   for (const id of supportIds) {
-    const s = getSupportById(id)
-    if (!s) continue
-    d.speedPct    += s.speedBonus      // e.g. rum_ration -0.08
-    d.maneuverPct += s.maneuverBonus   // e.g. filling_ration +0.05
+    const s = getSupportById(id);
+    if (!s) continue;
+    d.speedPct += s.speedBonus;
+    d.maneuverPct += s.maneuverBonus;
   }
 
-  return d
+  return d;
 }
 
 function applyPctFlat(base: number, pct: number, flat: number) {
-  return base * (1 + pct) + flat
+  return base * (1 + pct) + flat;
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function Section({ title }: { title: string }) {
-  return <div className="wsb-stats-section-header">{title}</div>
-}
-
-function DeltaBadge({ delta, isPercent = false }: { delta: number; isPercent?: boolean }) {
-  if (Math.abs(delta) < 0.009) return null
-  const pos = delta > 0
-  const label = isPercent
-    ? `${pos ? '+' : ''}${(delta * 100).toFixed(0)}%`
-    : `${pos ? '+' : ''}${Math.abs(delta) < 10 ? delta.toFixed(1) : Math.round(delta)}`
-  return (
-    <span className={`wsb-delta-badge ${pos ? 'positive' : 'negative'}`}>{label}</span>
-  )
-}
-
-function StatRow({
+function StatTile({
   label,
   base,
   modified,
-  unit = '',
+  unit = "",
   decimals = 0,
 }: {
-  label: string
-  base: number
-  modified: number
-  unit?: string
-  decimals?: number
+  label: string;
+  base: number;
+  modified: number;
+  unit?: string;
+  decimals?: number;
 }) {
-  const delta = modified - base
-  const changed = Math.abs(delta) > 0.009
-  const display = (v: number) => decimals > 0 ? v.toFixed(decimals) : fmt(Math.round(v))
+  const changed = Math.abs(modified - base) > 0.009;
+  const render = (v: number) =>
+    decimals > 0 ? v.toFixed(decimals) : fmt(Math.round(v));
 
   return (
-    <div className="wsb-statrow">
-      <span className="wsb-statrow-label">{label}</span>
-      <span className="wsb-statrow-values">
-        {changed ? (
-          <>
-            <span className="wsb-statrow-base">{display(base)}{unit}</span>
-            <span className="wsb-statrow-arrow">→</span>
-            <span className={`wsb-statrow-modified ${delta > 0 ? 'positive' : 'negative'}`}>
-              {display(modified)}{unit}
-            </span>
-            <DeltaBadge delta={delta} />
-          </>
-        ) : (
-          <span className="wsb-statrow-value">{display(base)}{unit}</span>
-        )}
-      </span>
-    </div>
-  )
-}
-
-function TextRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="wsb-statrow">
-      <span className="wsb-statrow-label">{label}</span>
-      <span className="wsb-statrow-value">{value}</span>
-    </div>
-  )
-}
-
-function EffectRow({ source, desc, tag }: { source: string; desc: string; tag: string }) {
-  return (
-    <div className="wsb-effect-row">
-      <div className="wsb-effect-source">
-        <span className={`wsb-effect-tag wsb-effect-tag-${tag}`}>{tag}</span>
-        {source}
+    <div className="calc-stat-tile">
+      <div className="calc-stat-tile-label">{label}</div>
+      <div className="calc-stat-tile-main">
+        {render(modified)}
+        {unit}
       </div>
-      <div className="wsb-effect-desc">{desc}</div>
+      <div className="calc-stat-tile-sub">
+        Base {render(base)}
+        {unit}
+        {changed && ` → ${render(modified)}${unit}`}
+      </div>
     </div>
-  )
+  );
 }
-
-// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function ShipStats() {
-  const { shipId, ammoId, attachmentIds, crewIds, supportIds } = useWsbStore()
-  const ship = getShipById(shipId)
-  if (!ship) return null
+  const { shipId, ammoId, attachmentIds, crewIds, supportIds } = useWsbStore();
+  const ship = getShipById(shipId);
 
-  const layout = parseWeaponSlots(ship.heavyWeapons)
-  const d = computeDeltas(attachmentIds, crewIds, supportIds)
+  if (!ship) {
+    return <div className="calc-empty-inline">Select a ship to see live stats.</div>;
+  }
 
-  const modDurability  = applyPctFlat(ship.durability,     d.durabilityPct, d.durability)
-  const modSpeed       = applyPctFlat(ship.speed,          d.speedPct,      d.speedFlat)
-  const modManeuver    = applyPctFlat(ship.maneuverability,d.maneuverPct,   d.maneuverFlat)
-  const modArmor       = applyPctFlat(ship.broadsideArmor, d.armorPct,      d.armorFlat)
-  const modCrew        = ship.crew + d.crewFlat
-  const modHold        = applyPctFlat(ship.hold,           d.holdPct,       d.holdFlat)
+  const layout = parseWeaponSlots(ship.heavyWeapons);
+  const d = computeDeltas(attachmentIds, crewIds, supportIds);
 
-  // Loadout effects list
-  const effects: { source: string; desc: string; tag: string }[] = []
-  const ammo = getAmmoById(ammoId)
-  if (ammo && ammoId !== 'round_shot') effects.push({ source: ammo.name, desc: ammo.desc, tag: 'Ammo' })
-  for (const id of attachmentIds) { const a = getAttachmentById(id); if (a) effects.push({ source: a.name, desc: a.desc, tag: 'Attachment' }) }
-  for (const id of crewIds) { const c = getCrewById(id); if (c) effects.push({ source: c.name, desc: c.bonusDesc, tag: 'Crew' }) }
-  for (const id of supportIds) { const s = getSupportById(id); if (s) effects.push({ source: s.name, desc: s.bonusDesc, tag: 'Support' }) }
+  const modDurability = applyPctFlat(ship.durability, d.durabilityPct, d.durability);
+  const modSpeed = applyPctFlat(ship.speed, d.speedPct, d.speedFlat);
+  const modManeuver = applyPctFlat(ship.maneuverability, d.maneuverPct, d.maneuverFlat);
+  const modArmor = applyPctFlat(ship.broadsideArmor, d.armorPct, d.armorFlat);
+  const modCrew = ship.crew + d.crewFlat;
+  const modHold = applyPctFlat(ship.hold, d.holdPct, d.holdFlat);
 
-  // Combat bonuses
-  let totalDmgBonus = 0, totalReloadBonus = 0
-  for (const id of attachmentIds) { const a = getAttachmentById(id); if (a) { totalDmgBonus += a.dmgBonus; totalReloadBonus += a.rateBonus } }
-  for (const id of crewIds) { const c = getCrewById(id); if (c) { totalDmgBonus += c.dmgBonus; totalReloadBonus += c.reloadBonus } }
-  for (const id of supportIds) { const s = getSupportById(id); if (s) { totalDmgBonus += s.dmgBonus; totalReloadBonus += s.reloadBonus } }
+  const ammo = getAmmoById(ammoId);
+
+  let totalDmgBonus = 0;
+  let totalReloadBonus = 0;
+
+  for (const id of attachmentIds) {
+    const a = getAttachmentById(id);
+    if (a) {
+      totalDmgBonus += a.dmgBonus;
+      totalReloadBonus += a.rateBonus;
+    }
+  }
+
+  for (const id of crewIds) {
+    const c = getCrewById(id);
+    if (c) {
+      totalDmgBonus += c.dmgBonus;
+      totalReloadBonus += c.reloadBonus;
+    }
+  }
+
+  for (const id of supportIds) {
+    const s = getSupportById(id);
+    if (s) {
+      totalDmgBonus += s.dmgBonus;
+      totalReloadBonus += s.reloadBonus;
+    }
+  }
+
+  const effects: { source: string; desc: string; tag: string }[] = [];
+
+  if (ammo && ammoId !== "round") {
+    effects.push({ source: ammo.name, desc: ammo.desc, tag: "Ammo" });
+  }
+
+  for (const id of attachmentIds) {
+    const a = getAttachmentById(id);
+    if (a) effects.push({ source: a.name, desc: a.desc, tag: "Attachment" });
+  }
+
+  for (const id of crewIds) {
+    const c = getCrewById(id);
+    if (c) effects.push({ source: c.name, desc: c.bonusDesc, tag: "Crew" });
+  }
+
+  for (const id of supportIds) {
+    const s = getSupportById(id);
+    if (s) effects.push({ source: s.name, desc: s.bonusDesc, tag: "Support" });
+  }
 
   return (
-    <div className="wsb-panel full-width">
-      <div className="wsb-panel-title">🚢 {ship.name} — Ship Overview</div>
-
-      <div className="wsb-ship-overview-grid">
-
-        {/* ── Left: Live stats ── */}
-        <div className="wsb-ship-stats-col">
-          <Section title="Combat Profile" />
-          <TextRow label="Rate"  value={`Rate ${ship.rate}`} />
-          <TextRow label="Type"  value={ship.shipType} />
-          <StatRow label="Durability"      base={ship.durability}      modified={modDurability} />
-          <StatRow label="Broadside Armor" base={ship.broadsideArmor}  modified={modArmor}      decimals={1} />
-          <TextRow label="Weapon Slots"    value={`${layout.bow}B / ${layout.broadside}×2 / ${layout.stern}S`} />
-          {ship.integrity   != null && <TextRow label="Integrity"   value={String(ship.integrity)} />}
-          {ship.swivelGuns > 0      && <TextRow label="Swivel Guns" value={String(ship.swivelGuns)} />}
-
-          <Section title="Handling" />
-          <StatRow label="Speed"           base={ship.speed}           modified={modSpeed}    unit=" knt" decimals={1} />
-          <StatRow label="Maneuverability" base={ship.maneuverability} modified={modManeuver} unit="%" />
-          <StatRow label="Crew"            base={ship.crew}            modified={modCrew} />
-          <StatRow label="Hold"            base={ship.hold}            modified={modHold}     unit=" t" />
-          <TextRow label="Hull Dims"    value={ship.hullDims} />
-          <TextRow label="Displacement" value={ship.displacement} />
-
-          <Section title="Combat Bonuses" />
-          <div className="wsb-statrow">
-            <span className="wsb-statrow-label">Damage Bonus</span>
-            <span className={`wsb-statrow-value ${totalDmgBonus > 0 ? 'positive' : totalDmgBonus < 0 ? 'negative' : ''}`}>
-              {totalDmgBonus >= 0 ? '+' : ''}{(totalDmgBonus * 100).toFixed(0)}%
-            </span>
-          </div>
-          <div className="wsb-statrow">
-            <span className="wsb-statrow-label">Reload Bonus</span>
-            <span className={`wsb-statrow-value ${totalReloadBonus > 0 ? 'positive' : totalReloadBonus < 0 ? 'negative' : ''}`}>
-              {totalReloadBonus >= 0 ? '+' : ''}{(totalReloadBonus * 100).toFixed(0)}%
-            </span>
-          </div>
+    <div className="calc-stats-panel">
+      <div className="calc-stats-head">
+        <div>
+          <div className="calc-select-label">Ship Stats</div>
+          <div className="calc-select-sub">{ship.name} live build preview</div>
         </div>
 
-        {/* ── Right: Loadout effects ── */}
-        <div className="wsb-ship-loadout-col">
-          <Section title="Active Loadout Effects" />
-          {effects.length > 0 ? (
-            <div className="wsb-effects-list">
-              {effects.map((e, i) => <EffectRow key={i} {...e} />)}
-            </div>
-          ) : (
-            <div className="wsb-no-loadout">
-              No attachments, crew, or support equipped.<br />
-              Add items above to see their effects here.
-            </div>
-          )}
+        <div className="calc-limit-badges">
+          <span className="calc-mini-pill">{ship.shipType}</span>
+          <span className="calc-mini-pill">Rate {ship.rate}</span>
         </div>
+      </div>
 
+      <div className="calc-stat-grid">
+        <StatTile label="Durability" base={ship.durability} modified={modDurability} />
+        <StatTile label="Speed" base={ship.speed} modified={modSpeed} unit=" knt" decimals={1} />
+        <StatTile label="Maneuver" base={ship.maneuverability} modified={modManeuver} />
+        <StatTile label="Armor" base={ship.broadsideArmor} modified={modArmor} decimals={1} />
+        <StatTile label="Crew" base={ship.crew} modified={modCrew} />
+        <StatTile label="Hold" base={ship.hold} modified={modHold} />
+      </div>
+
+      <div className="calc-ship-meta-grid">
+        <div className="calc-meta-row"><span>Hull</span><strong>{ship.hullDims}</strong></div>
+        <div className="calc-meta-row"><span>Displacement</span><strong>{ship.displacement}</strong></div>
+        <div className="calc-meta-row"><span>Weapons</span><strong>{ship.heavyWeapons}</strong></div>
+        <div className="calc-meta-row"><span>Layout</span><strong>{layout.bow}-{layout.broadside}-{layout.stern}</strong></div>
+        {ship.integrity != null && <div className="calc-meta-row"><span>Integrity</span><strong>{ship.integrity}</strong></div>}
+        {ship.swivelGuns > 0 && <div className="calc-meta-row"><span>Swivels</span><strong>{ship.swivelGuns}</strong></div>}
+      </div>
+
+      <div className="calc-bonus-grid">
+        <div className="calc-bonus-box">
+          <div className="calc-bonus-label">Damage Bonus</div>
+          <div className="calc-bonus-value">
+            {totalDmgBonus >= 0 ? "+" : ""}
+            {Math.round(totalDmgBonus * 100)}%
+          </div>
+        </div>
+        <div className="calc-bonus-box">
+          <div className="calc-bonus-label">Reload Bonus</div>
+          <div className="calc-bonus-value">
+            {totalReloadBonus >= 0 ? "+" : ""}
+            {Math.round(totalReloadBonus * 100)}%
+          </div>
+        </div>
+      </div>
+
+      <div className="calc-effects-list">
+        {effects.length > 0 ? (
+          effects.map((effect, i) => (
+            <div key={`${effect.source}-${i}`} className="calc-effect-card">
+              <div className="calc-effect-top">
+                <span className="calc-mini-pill">{effect.tag}</span>
+                <strong>{effect.source}</strong>
+              </div>
+              <p>{effect.desc}</p>
+            </div>
+          ))
+        ) : (
+          <div className="calc-empty-inline">
+            No extra effects yet. Add ammo, attachments, crew, or support items.
+          </div>
+        )}
       </div>
     </div>
-  )
+  );
 }
