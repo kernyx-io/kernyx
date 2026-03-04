@@ -127,15 +127,15 @@ export default function CalculatorShell() {
           </div>
         </div>
 
-        <div className="calc-two-col calc-top-align">
-          <div className="calc-panel-inner">
-            <AmmoPanel ammoTypes={AMMO_TYPES} />
-          </div>
+<div className="calc-step-stack">
+  <div className="calc-panel-inner">
+    <BroadsideConfig />
+  </div>
 
-          <div className="calc-panel-inner">
-            <BroadsideConfig />
-          </div>
-        </div>
+  <div className="calc-panel-inner">
+    <AmmoPanel ammoTypes={AMMO_TYPES} />
+  </div>
+</div>
       </section>
 
       <section className="calc-step-card">
