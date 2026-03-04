@@ -45,8 +45,8 @@ export default function SuggestPage() {
   if (sent) {
     return (
       <div style={{ maxWidth: 700 }}>
-        <h1 style={{ color: "#e8ecf2" }}>Thanks for the suggestion!</h1>
-        <p style={{ color: "#8892a4" }}>
+        <h1 className="pageTitle">Thanks for the suggestion!</h1>
+        <p className="pageSubtitle">
           I review every request for future game support.
         </p>
       </div>
@@ -55,23 +55,15 @@ export default function SuggestPage() {
 
   return (
     <div style={{ maxWidth: 700 }}>
-      <h1 style={{ color: "#e8ecf2", marginBottom: "0.5rem" }}>Suggest a Game</h1>
-      <p style={{ color: "#8892a4", marginBottom: "1.5rem" }}>
-        Tell me what game you want added next.
-      </p>
+      <h1 className="pageTitle">Suggest a Game</h1>
+      <p className="pageSubtitle">Tell me what game you want added next.</p>
 
       <div style={{ display: "grid", gap: "1rem" }}>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Your name (optional)"
-          style={{
-            padding: "0.75rem",
-            background: "#1a1e27",
-            border: "1px solid rgba(255,255,255,0.07)",
-            borderRadius: "6px",
-            color: "#e8ecf2",
-          }}
+          className="fieldInput"
         />
 
         <input
@@ -81,13 +73,7 @@ export default function SuggestPage() {
             setError("");
           }}
           placeholder="Game name *"
-          style={{
-            padding: "0.75rem",
-            background: "#1a1e27",
-            border: "1px solid rgba(255,255,255,0.07)",
-            borderRadius: "6px",
-            color: "#e8ecf2",
-          }}
+          className="fieldInput"
         />
 
         <textarea
@@ -95,33 +81,12 @@ export default function SuggestPage() {
           onChange={(e) => setReason(e.target.value)}
           placeholder="What tools or guides would you want?"
           rows={5}
-          style={{
-            padding: "0.75rem",
-            background: "#1a1e27",
-            border: "1px solid rgba(255,255,255,0.07)",
-            borderRadius: "6px",
-            color: "#e8ecf2",
-            resize: "vertical",
-          }}
+          className="fieldTextarea"
         />
 
-        {error && <div style={{ color: "#f87171" }}>{error}</div>}
+        {error && <div className="errorText">{error}</div>}
 
-        <button
-          onClick={handleSubmit}
-          disabled={sending}
-          style={{
-            width: "fit-content",
-            padding: "0.75rem 1.25rem",
-            background: "#00c8e8",
-            color: "#000",
-            border: "none",
-            borderRadius: "6px",
-            fontWeight: 700,
-            cursor: sending ? "not-allowed" : "pointer",
-            opacity: sending ? 0.6 : 1,
-          }}
-        >
+        <button onClick={handleSubmit} disabled={sending} className="primaryButton">
           {sending ? "Sending..." : "Submit Suggestion →"}
         </button>
       </div>
