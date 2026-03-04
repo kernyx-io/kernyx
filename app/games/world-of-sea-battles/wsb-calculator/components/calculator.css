@@ -187,4 +187,170 @@
   .calc-two-col {
     grid-template-columns: 1fr;
   }
+  .calc-ship-selector {
+  display: grid;
+  gap: 0.9rem;
 }
+
+.calc-selector-head {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.calc-selector-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: var(--calc-cream);
+}
+
+.calc-selector-icon {
+  font-size: 1rem;
+}
+
+.calc-selector-caption {
+  color: var(--calc-cream-dim);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.calc-selector-control {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.calc-selector-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--calc-gold);
+}
+
+.calc-selector-select {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  background: var(--calc-navy-mid);
+  color: var(--calc-cream);
+  border: 1px solid var(--calc-border);
+  border-radius: 8px;
+}
+
+.calc-ship-card {
+  display: grid;
+  gap: 0.85rem;
+  padding: 0.95rem;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+}
+
+.calc-ship-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.calc-ship-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--calc-cream);
+}
+
+.calc-ship-subline {
+  margin-top: 0.2rem;
+  color: var(--calc-cream-dim);
+  font-size: 0.88rem;
+}
+
+.calc-ship-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+.calc-ship-badge {
+  padding: 0.22rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  background: rgba(201, 168, 76, 0.06);
+  color: var(--calc-gold-bright);
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+}
+
+.calc-ship-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.calc-ship-stat {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.65rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+}
+
+.calc-ship-stat-label {
+  color: var(--calc-cream-dim);
+  font-size: 0.84rem;
+}
+
+.calc-ship-stat-value {
+  color: var(--calc-cream);
+  font-weight: 600;
+  font-size: 0.84rem;
+}
+
+.calc-ship-weapons {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.15rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.calc-ship-weapons-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--calc-gold);
+}
+
+.calc-ship-weapons-value {
+  color: var(--calc-cream);
+  font-weight: 600;
+}
+
+.calc-ship-description {
+  margin: 0;
+  color: var(--calc-cream-dim);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .calc-ship-card-top {
+    flex-direction: column;
+  }
+
+  .calc-ship-badges {
+    justify-content: flex-start;
+  }
+
+  .calc-ship-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
