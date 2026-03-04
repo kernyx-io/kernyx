@@ -1,107 +1,98 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import './calculator.css'
-import { useWsbStore } from '@/lib/wsb/store'
-import { SUPPORT_ITEMS, SUPPORT_GROUPS, getSupportById } from '@/lib/wsb/support'
+import "./calculator.css";
+import { useWsbStore } from "@/lib/wsb/store";
+import { SUPPORT_GROUPS, SUPPORT_ITEMS, getSupportById } from "@/lib/wsb/support";
+
+function MiniPill({ label }: { label: string }) {
+  return <span className="calc-mini-pill">{label}</span>;
+}
 
 export default function SupportPanel() {
-  const { supportIds, toggleSupport } = useWsbStore()
-  const [collapsed, setCollapsed] = useState(false)
-
-  const selectedItems = supportIds.map(id => getSupportById(id)).filter(Boolean)
+  const { supportIds, toggleSupport } = useWsbStore();
+  const selectedItems = supportIds.map((id) => getSupportById(id)).filter(Boolean);
 
   return (
-    <div className="wsb-panel full-width">
-      <div className="wsb-panel-title">
-        <div className="wsb-panel-title-row">
-          <span>
-            🧪 Support Items{' '}
-            <span style={{
-              fontFamily: "'IM Fell English', serif",
-              fontSize: '0.78rem',
-              fontStyle: 'italic',
-              color: 'var(--cream-dim)',
-              letterSpacing: 0,
-              textTransform: 'none',
-            }}>
-              — Select up to 3
-            </span>
-          </span>
-          <button className="wsb-toggle-btn" onClick={() => setCollapsed(c => !c)}>
-            {collapsed ? 'Expand' : 'Shrink'}
-          </button>
+    <div className="calc-select-panel">
+      <div className="calc-select-head">
+        <div>
+          <div className="calc-select-label">Support</div>
+          <div className="calc-select-sub">Select up to 3 support items.</div>
+        </div>
+
+        <div className="calc-limit-badges">
+          <MiniPill label={`${supportIds.length}/3 selected`} />
         </div>
       </div>
 
-      {/* Active items bar */}
-      <div className="wsb-selected-bar">
-        <span className="wsb-selected-label">Active Items</span>
+      <div className="calc-active-strip">
         {Array.from({ length: 3 }, (_, i) => {
-          const item = selectedItems[i]
+          const item = selectedItems[i];
           return (
-            <span
+            <button
               key={i}
-              className={`wsb-slot-pill${item ? ' filled' : ''}`}
+              type="button"
+              className={`calc-slot-chip ${item ? "calc-slot-chip-filled" : ""}`}
               onClick={() => item && toggleSupport(item.id)}
-              style={{ cursor: item ? 'pointer' : 'default' }}
+              disabled={!item}
               title={item ? `Remove ${item.name}` : undefined}
             >
-              {item ? item.name : 'Empty'}
-            </span>
-          )
+              {item ? item.name : "Empty"}
+            </button>
+          );
         })}
-        <span className="wsb-count-badge">{supportIds.length} / 3 slots filled</span>
       </div>
 
-      {!collapsed && (
-        <div className="wsb-items-grid">
-          {SUPPORT_GROUPS.map(group => {
-            const groupItems = SUPPORT_ITEMS.filter(s => s.group === group)
-            return (
-              <>
-                <div key={`label-${group}`} className="wsb-group-label">{group}</div>
-                {groupItems.map(item => {
-                  const isActive = supportIds.includes(item.id)
-                  const isDisabled = !isActive && supportIds.length >= 3
+      <div className="calc-catalog-stack">
+        {SUPPORT_GROUPS.map((group) => {
+          const groupItems = SUPPORT_ITEMS.filter((s) => s.group === group);
+
+          return (
+            <section key={group} className="calc-catalog-section">
+              <div className="calc-catalog-title">{group}</div>
+
+              <div className="calc-choice-grid">
+                {groupItems.map((item) => {
+                  const isActive = supportIds.includes(item.id);
+                  const isDisabled = !isActive && supportIds.length >= 3;
+
+                  const pills = [
+                    ...item.types,
+                    item.dmgBonus !== 0
+                      ? `${item.dmgBonus > 0 ? "+" : ""}${Math.round(item.dmgBonus * 100)}% dmg`
+                      : null,
+                    item.reloadBonus !== 0
+                      ? `${item.reloadBonus > 0 ? "+" : ""}${Math.round(item.reloadBonus * 100)}% reload`
+                      : null,
+                  ].filter(Boolean) as string[];
 
                   return (
-                    <div
+                    <button
                       key={item.id}
-                      className={`wsb-item-card${isActive ? ' active' : ''}${isDisabled ? ' disabled' : ''}`}
+                      type="button"
+                      className={`calc-choice-card ${isActive ? "calc-choice-card-active" : ""}`}
                       onClick={() => !isDisabled && toggleSupport(item.id)}
-                      role="button"
-                      tabIndex={isDisabled ? -1 : 0}
-                      onKeyDown={e => e.key === 'Enter' && !isDisabled && toggleSupport(item.id)}
-                      title={isDisabled ? 'Max 3 support slots reached' : undefined}
+                      disabled={isDisabled}
+                      title={isDisabled ? "Max 3 support slots reached" : undefined}
                     >
-                      <div className="wsb-item-name">{item.name}</div>
-
-                      <div className="wsb-item-tags">
-                        {item.types.map(t => (
-                          <span key={t} className="wsb-item-tag">{t}</span>
-                        ))}
-                        {item.dmgBonus !== 0 && (
-                          <span className="wsb-item-tag bonus-dmg">
-                            +{(item.dmgBonus * 100).toFixed(0)}% dmg
-                          </span>
-                        )}
-                        {item.reloadBonus !== 0 && (
-                          <span className="wsb-item-tag bonus-reload">
-                            {item.reloadBonus > 0 ? '+' : ''}{(item.reloadBonus * 100).toFixed(0)}% reload
-                          </span>
-                        )}
+                      <div className="calc-choice-top">
+                        <div className="calc-choice-name">{item.name}</div>
+                        {isActive && <span className="calc-choice-state">Selected</span>}
                       </div>
 
-                      <div className="wsb-item-desc">{item.bonusDesc}</div>
-                    </div>
-                  )
+                      <div className="calc-pill-row">
+                        {pills.length > 0 ? pills.map((pill) => <MiniPill key={pill} label={pill} />) : <MiniPill label="Support" />}
+                      </div>
+
+                      <p className="calc-choice-desc">{item.bonusDesc}</p>
+                    </button>
+                  );
                 })}
-              </>
-            )
-          })}
-        </div>
-      )}
+              </div>
+            </section>
+          );
+        })}
+      </div>
     </div>
-  )
+  );
 }
