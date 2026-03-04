@@ -154,7 +154,6 @@
   text-transform: uppercase;
 }
 
-/* Light normalization for inner controls without changing logic */
 .calc-page :is(input, select, textarea) {
   max-width: 100%;
   background: var(--calc-navy-mid);
@@ -173,21 +172,8 @@
   border-radius: 8px;
 }
 
-@media (max-width: 1000px) {
-  .calc-three-col {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 820px) {
-  .calc-page {
-    padding: 1rem;
-  }
-
-  .calc-two-col {
-    grid-template-columns: 1fr;
-  }
-  .calc-ship-selector {
+/* Ship selector */
+.calc-ship-selector {
   display: grid;
   gap: 0.9rem;
 }
@@ -340,6 +326,22 @@
   line-height: 1.5;
 }
 
+@media (max-width: 1000px) {
+  .calc-three-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .calc-page {
+    padding: 1rem;
+  }
+
+  .calc-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 640px) {
   .calc-ship-card-top {
     flex-direction: column;
@@ -353,4 +355,3 @@
     grid-template-columns: 1fr;
   }
 }
-
