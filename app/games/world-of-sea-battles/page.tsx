@@ -60,6 +60,13 @@ const TOOLS = [
     desc: "Configure your ship, cannons, crew, attachments, and ammo to calculate full volley damage, DPM, and per-side breakdowns.",
     tags: ["DAMAGE", "DPM", "CANNONS"],
   },
+  {
+    href: "/games/world-of-sea-battles/map",
+    icon: "🗺️",
+    title: "Interactive Map",
+    desc: "Browse the world map, toggle points of interest, and inspect marked locations across the sea chart.",
+    tags: ["MAP", "POI", "TOOLS"],
+  },
 ];
 
 const GUIDES: {
