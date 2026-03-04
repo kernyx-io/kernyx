@@ -1,90 +1,216 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import "./map.css";
 
-type MapItem = {
+type Marker = {
+  id: string;
+  name: string;
+  x: number; // percent from left
+  y: number; // percent from top
+};
+
+type MapLayer = {
   id: string;
   name: string;
   icon: string;
-  x: number;
-  y: number;
-  type: "boss" | "merchant" | "wreck" | "event" | "resource";
-  description: string;
+  markers: Marker[];
 };
 
-const MAP_ITEMS: MapItem[] = [
-  { id: "item-01", name: "City", icon: "⚔️", x: 12, y: 18, type: "boss", description: "Heavy patrol route in the north-west waters." },
-  { id: "item-02", name: "Pirate City", icon: "📦", x: 28, y: 22, type: "merchant", description: "Merchant convoy often carrying trade goods." },
-  { id: "item-03", name: "Port", icon: "💀", x: 41, y: 16, type: "wreck", description: "Possible wreck site with hidden loot." },
-  { id: "item-04", name: "Bay", icon: "⛈️", x: 58, y: 20, type: "event", description: "Frequent storm cell with dangerous visibility." },
-  { id: "item-05", name: "Fishing Village", icon: "🪵", x: 79, y: 19, type: "resource", description: "Floating supply resources and salvage." },
+type Viewport = {
+  scale: number;
+  x: number;
+  y: number;
+};
 
-  { id: "item-06", name: "Coal", icon: "⚔️", x: 18, y: 35, type: "boss", description: "Combat-heavy route with stronger enemy traffic." },
-  { id: "item-07", name: "Copper", icon: "📦", x: 34, y: 38, type: "merchant", description: "A reliable shipping lane for ambushes or escort." },
-  { id: "item-08", name: "Farm", icon: "💀", x: 52, y: 33, type: "wreck", description: "Damaged frigate remains scattered in shallow water." },
-  { id: "item-09", name: "Iron", icon: "⛈️", x: 67, y: 40, type: "event", description: "Hazardous current zone. Navigation risk is high." },
-  { id: "item-10", name: "Resin", icon: "🪵", x: 84, y: 43, type: "resource", description: "Good region for gathering shipbuilding materials." },
-
-  { id: "item-11", name: "Rum", icon: "⚔️", x: 13, y: 57, type: "boss", description: "Enemy fleet activity reported in this area." },
-  { id: "item-12", name: "Water", icon: "📦", x: 31, y: 55, type: "merchant", description: "High traffic lane with lighter escorts." },
-  { id: "item-13", name: "Wood", icon: "💀", x: 49, y: 58, type: "wreck", description: "Deepwater recovery point with possible rare loot." },
-  { id: "item-14", name: "Altar", icon: "⛈️", x: 63, y: 60, type: "event", description: "Dynamic skirmish zone that can escalate fast." },
-  { id: "item-15", name: "Fort", icon: "🪵", x: 78, y: 63, type: "resource", description: "Resource-rich area for crafting materials." },
-
-  { id: "item-16", name: "Personal Island", icon: "⚔️", x: 21, y: 78, type: "boss", description: "Late-route combat hotspot near the southern lanes." },
-  { id: "item-17", name: "Lighthouse", icon: "📦", x: 39, y: 80, type: "merchant", description: "Common stop for supply and commodity movement." },
-  { id: "item-18", name: "Print Shop", icon: "💀", x: 61, y: 81, type: "wreck", description: "Scattered cargo field from a destroyed convoy." },
-  { id: "item-19", name: "PvP Zone", icon: "🪵", x: 82, y: 84, type: "resource", description: "Dense salvage zone with frequent pickups." },
+const MAP_LAYERS: MapLayer[] = [
+  {
+    id: "cities",
+    name: "Cities",
+    icon: "🪙",
+    markers: [
+      { id: "city-assab", name: "Assab", x: 5.58, y: 78.26 },
+      { id: "city-sharhat", name: "Sharhat", x: 15.96, y: 72.09 },
+      { id: "city-al-khalif", name: "Al-Khalif", x: 6.41, y: 90.87 },
+    ],
+  },
 ];
 
+const MIN_SCALE = 1;
+const MAX_SCALE = 4;
+const ZOOM_STEP = 0.2;
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
 export default function WosbMapPage() {
-  const [visible, setVisible] = useState<Record<string, boolean>>(
-    Object.fromEntries(MAP_ITEMS.map((item) => [item.id, true]))
-  );
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [zoom, setZoom] = useState(1);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const dragState = useRef<{
+    dragging: boolean;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+  }>({
+    dragging: false,
+    startX: 0,
+    startY: 0,
+    originX: 0,
+    originY: 0,
+  });
 
-  const selectedItem = useMemo(
-    () => MAP_ITEMS.find((item) => item.id === selectedId) ?? null,
-    [selectedId]
+  const [activeLayers, setActiveLayers] = useState<Record<string, boolean>>({
+    cities: true,
+  });
+
+  const [viewport, setViewport] = useState<Viewport>({
+    scale: 1,
+    x: 0,
+    y: 0,
+  });
+
+  const visibleLayerCount = useMemo(
+    () => MAP_LAYERS.filter((layer) => activeLayers[layer.id]).length,
+    [activeLayers]
   );
 
-  function toggleItem(id: string) {
-    setVisible((prev) => ({ ...prev, [id]: !prev[id] }));
-    if (selectedId === id && visible[id]) {
-      setSelectedId(null);
+  const visibleMarkerCount = useMemo(
+    () =>
+      MAP_LAYERS.reduce((count, layer) => {
+        if (!activeLayers[layer.id]) return count;
+        return count + layer.markers.length;
+      }, 0),
+    [activeLayers]
+  );
+
+  function toggleLayer(layerId: string) {
+    setActiveLayers((prev) => ({
+      ...prev,
+      [layerId]: !prev[layerId],
+    }));
+  }
+
+  function showAllLayers() {
+    setActiveLayers(
+      Object.fromEntries(MAP_LAYERS.map((layer) => [layer.id, true]))
+    );
+  }
+
+  function hideAllLayers() {
+    setActiveLayers(
+      Object.fromEntries(MAP_LAYERS.map((layer) => [layer.id, false]))
+    );
+  }
+
+  function setZoomAroundPoint(nextScale: number, clientX?: number, clientY?: number) {
+    const boundedScale = clamp(nextScale, MIN_SCALE, MAX_SCALE);
+
+    if (!stageRef.current || clientX == null || clientY == null) {
+      setViewport((prev) => ({ ...prev, scale: boundedScale }));
+      return;
     }
-  }
 
-  function showAll() {
-    setVisible(Object.fromEntries(MAP_ITEMS.map((item) => [item.id, true])));
-  }
+    const rect = stageRef.current.getBoundingClientRect();
+    const pointX = clientX - rect.left;
+    const pointY = clientY - rect.top;
 
-  function hideAll() {
-    setVisible(Object.fromEntries(MAP_ITEMS.map((item) => [item.id, false])));
-    setSelectedId(null);
+    setViewport((prev) => {
+      const worldX = (pointX - prev.x) / prev.scale;
+      const worldY = (pointY - prev.y) / prev.scale;
+
+      const nextX = pointX - worldX * boundedScale;
+      const nextY = pointY - worldY * boundedScale;
+
+      return {
+        scale: boundedScale,
+        x: nextX,
+        y: nextY,
+      };
+    });
   }
 
   function zoomIn() {
-    setZoom((z) => Math.min(3, +(z + 0.2).toFixed(2)));
+    if (!stageRef.current) {
+      setViewport((prev) => ({
+        ...prev,
+        scale: clamp(prev.scale + ZOOM_STEP, MIN_SCALE, MAX_SCALE),
+      }));
+      return;
+    }
+
+    const rect = stageRef.current.getBoundingClientRect();
+    setZoomAroundPoint(
+      viewport.scale + ZOOM_STEP,
+      rect.left + rect.width / 2,
+      rect.top + rect.height / 2
+    );
   }
 
   function zoomOut() {
-    setZoom((z) => Math.max(1, +(z - 0.2).toFixed(2)));
+    if (!stageRef.current) {
+      setViewport((prev) => ({
+        ...prev,
+        scale: clamp(prev.scale - ZOOM_STEP, MIN_SCALE, MAX_SCALE),
+      }));
+      return;
+    }
+
+    const rect = stageRef.current.getBoundingClientRect();
+    setZoomAroundPoint(
+      viewport.scale - ZOOM_STEP,
+      rect.left + rect.width / 2,
+      rect.top + rect.height / 2
+    );
   }
 
-  function resetZoom() {
-    setZoom(1);
+  function resetView() {
+    setViewport({
+      scale: 1,
+      x: 0,
+      y: 0,
+    });
   }
 
   function handleWheel(e: React.WheelEvent<HTMLDivElement>) {
     e.preventDefault();
-    if (e.deltaY < 0) {
-      setZoom((z) => Math.min(3, +(z + 0.1).toFixed(2)));
-    } else {
-      setZoom((z) => Math.max(1, +(z - 0.1).toFixed(2)));
+
+    const delta = e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
+    setZoomAroundPoint(viewport.scale + delta, e.clientX, e.clientY);
+  }
+
+  function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    if (e.button !== 0) return;
+
+    dragState.current = {
+      dragging: true,
+      startX: e.clientX,
+      startY: e.clientY,
+      originX: viewport.x,
+      originY: viewport.y,
+    };
+
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }
+
+  function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!dragState.current.dragging) return;
+
+    const dx = e.clientX - dragState.current.startX;
+    const dy = e.clientY - dragState.current.startY;
+
+    setViewport((prev) => ({
+      ...prev,
+      x: dragState.current.originX + dx,
+      y: dragState.current.originY + dy,
+    }));
+  }
+
+  function handlePointerUp(e: React.PointerEvent<HTMLDivElement>) {
+    dragState.current.dragging = false;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
     }
   }
 
@@ -94,7 +220,7 @@ export default function WosbMapPage() {
         <div className="wosb-map-eyebrow">⚓ World of Sea Battle</div>
         <h1 className="wosb-map-title">Interactive Map</h1>
         <p className="wosb-map-subtitle">
-          Toggle points of interest and zoom the sea chart.
+          Toggle map layers, zoom in, and drag the chart to explore.
         </p>
       </header>
 
@@ -103,21 +229,24 @@ export default function WosbMapPage() {
           <div className="wosb-map-stage-head">
             <div>
               <div className="wosb-map-section-label">Sea Chart</div>
-              <div className="wosb-map-section-sub">19 map items placed on the world map</div>
+              <div className="wosb-map-section-sub">
+                {visibleLayerCount} active layer · {visibleMarkerCount} visible marker
+                {visibleMarkerCount === 1 ? "" : "s"}
+              </div>
             </div>
 
             <div className="wosb-map-actions">
-              <button type="button" className="wosb-map-action-btn" onClick={showAll}>
+              <button type="button" className="wosb-map-action-btn" onClick={showAllLayers}>
                 Show All
               </button>
-              <button type="button" className="wosb-map-action-btn" onClick={hideAll}>
+              <button type="button" className="wosb-map-action-btn" onClick={hideAllLayers}>
                 Hide All
               </button>
               <button type="button" className="wosb-map-action-btn" onClick={zoomOut}>
                 −
               </button>
-              <button type="button" className="wosb-map-action-btn" onClick={resetZoom}>
-                {Math.round(zoom * 100)}%
+              <button type="button" className="wosb-map-action-btn" onClick={resetView}>
+                {Math.round(viewport.scale * 100)}%
               </button>
               <button type="button" className="wosb-map-action-btn" onClick={zoomIn}>
                 +
@@ -125,73 +254,106 @@ export default function WosbMapPage() {
             </div>
           </div>
 
-          <div className="wosb-map-stage" onWheel={handleWheel}>
+          <div
+            ref={stageRef}
+            className={`wosb-map-stage ${
+              dragState.current.dragging ? "wosb-map-stage-dragging" : ""
+            }`}
+            onWheel={handleWheel}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+          >
             <div
-              className="wosb-map-zoom-layer"
-              style={{ transform: `scale(${zoom})` }}
+              className="wosb-map-canvas"
+              style={{
+                transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.scale})`,
+              }}
             >
-              <Image
-                src="/images/wosb-map.png"
-                alt="World of Sea Battle map"
-                fill
-                priority
-                className="wosb-map-image"
-                sizes="(max-width: 1100px) 100vw, 70vw"
-              />
+              <div className="wosb-map-artboard">
+                <Image
+                  src="/images/wosb-map.png"
+                  alt="World of Sea Battle map"
+                  fill
+                  priority
+                  className="wosb-map-image"
+                  sizes="(max-width: 1100px) 100vw, 70vw"
+                />
 
-              {MAP_ITEMS.map((item) =>
-                visible[item.id] ? (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className={`wosb-map-marker ${
-                      selectedId === item.id ? "wosb-map-marker-active" : ""
-                    }`}
-                    style={{ left: `${item.x}%`, top: `${item.y}%` }}
-                    onClick={() => setSelectedId(item.id)}
-                    title={item.name}
-                  >
-                    <span>{item.icon}</span>
-                  </button>
-                ) : null
-              )}
+                {MAP_LAYERS.map((layer) =>
+                  activeLayers[layer.id]
+                    ? layer.markers.map((marker) => (
+                        <div
+                          key={marker.id}
+                          className="wosb-map-labeled-marker"
+                          style={{
+                            left: `${marker.x}%`,
+                            top: `${marker.y}%`,
+                          }}
+                        >
+                          <button
+                            type="button"
+                            className="wosb-map-marker"
+                            title={marker.name}
+                          >
+                            <span>{layer.icon}</span>
+                          </button>
+                          <span className="wosb-map-marker-label">{marker.name}</span>
+                        </div>
+                      ))
+                    : null
+                )}
+              </div>
             </div>
           </div>
         </section>
 
         <aside className="wosb-map-sidebar">
           <section className="wosb-map-panel">
-            <div className="wosb-map-panel-title">Map Items</div>
-            <div className="wosb-map-item-list">
-              {MAP_ITEMS.map((item) => {
-                const isOn = visible[item.id];
+            <div className="wosb-map-panel-title">Layers</div>
+
+            <div className="wosb-map-layer-list">
+              {MAP_LAYERS.map((layer) => {
+                const isOn = !!activeLayers[layer.id];
+
                 return (
                   <button
-                    key={item.id}
+                    key={layer.id}
                     type="button"
-                    className={`wosb-map-item-row ${selectedId === item.id ? "wosb-map-item-row-active" : ""}`}
-                    onClick={() => {
-                      if (!isOn) {
-                        setVisible((prev) => ({ ...prev, [item.id]: true }));
-                      }
-                      setSelectedId(item.id);
-                    }}
+                    className={`wosb-map-layer-row ${
+                      isOn ? "wosb-map-layer-row-active" : ""
+                    }`}
+                    onClick={() => toggleLayer(layer.id)}
                   >
-                    <span className="wosb-map-item-icon">{item.icon}</span>
-                    <span className="wosb-map-item-name">{item.name}</span>
+                    <span className="wosb-map-layer-icon">{layer.icon}</span>
+
+                    <span className="wosb-map-layer-meta">
+                      <span className="wosb-map-layer-name">{layer.name}</span>
+                      <span className="wosb-map-layer-count">
+                        {layer.markers.length} marker
+                        {layer.markers.length === 1 ? "" : "s"}
+                      </span>
+                    </span>
 
                     <span
                       className={`wosb-map-toggle ${isOn ? "wosb-map-toggle-on" : ""}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleItem(item.id);
-                      }}
                     >
                       {isOn ? "ON" : "OFF"}
                     </span>
                   </button>
                 );
               })}
+            </div>
+          </section>
+
+          <section className="wosb-map-panel">
+            <div className="wosb-map-panel-title">How to Use</div>
+            <div className="wosb-map-help">
+              <p>• Drag the map to pan.</p>
+              <p>• Use your mouse wheel to zoom.</p>
+              <p>• Use the layer toggle to show or hide cities.</p>
+              <p>• More categories can be added later without changing the map system.</p>
             </div>
           </section>
         </aside>
