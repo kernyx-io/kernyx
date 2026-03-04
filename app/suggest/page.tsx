@@ -44,15 +44,17 @@ export default function SuggestPage() {
 
   if (sent) {
     return (
-      <main style={{ padding: "1.5rem 1.75rem", color: "#c0c8d8" }}>
+      <div style={{ maxWidth: 700 }}>
         <h1 style={{ color: "#e8ecf2" }}>Thanks for the suggestion!</h1>
-        <p style={{ color: "#8892a4" }}>I review every request for future game support.</p>
-      </main>
+        <p style={{ color: "#8892a4" }}>
+          I review every request for future game support.
+        </p>
+      </div>
     );
   }
 
   return (
-    <main style={{ padding: "1.5rem 1.75rem", color: "#c0c8d8", maxWidth: 700 }}>
+    <div style={{ maxWidth: 700 }}>
       <h1 style={{ color: "#e8ecf2", marginBottom: "0.5rem" }}>Suggest a Game</h1>
       <p style={{ color: "#8892a4", marginBottom: "1.5rem" }}>
         Tell me what game you want added next.
@@ -123,6 +125,6 @@ export default function SuggestPage() {
           {sending ? "Sending..." : "Submit Suggestion →"}
         </button>
       </div>
-    </main>
+    </div>
   );
 }
