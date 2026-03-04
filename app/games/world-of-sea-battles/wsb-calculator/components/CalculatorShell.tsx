@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useWsbStore } from "@/lib/wsb/store";
 import { calculateDamage } from "@/lib/wsb/calculator";
 import { SHIPS } from "@/lib/wsb/ships";
@@ -49,112 +49,48 @@ export default function CalculatorShell() {
     store.supportIds,
   ]);
 
-  const selectedShip = useMemo(
-    () => SHIPS.find((ship) => ship.id === store.shipId),
-    [store.shipId]
-  );
-
-  const targetShip = useMemo(
-    () => SHIPS.find((ship) => ship.id === store.targetShipId),
-    [store.targetShipId]
-  );
-
-  const selectedAmmo = useMemo(
-    () => AMMO_TYPES.find((ammo) => ammo.id === store.ammoId),
-    [store.ammoId]
-  );
-
   if (!mounted) return null;
 
   return (
     <div className="calc-page">
-      <header className="calc-hero">
-        <div className="calc-hero-copy">
-          <div className="calc-eyebrow">⚓ WORLD OF SEA BATTLE</div>
-          <h1 className="calc-title">Cannon DPS Calculator</h1>
-          <p className="calc-subtitle">
-            Configure your ship, battery, ammo, crew, and support loadout to
-            estimate broadside damage, DPS, and combat efficiency.
-          </p>
-        </div>
-
-        <div className="calc-hero-badge" aria-hidden>
-          💥
-        </div>
+      <header className="calc-header">
+        <div className="calc-eyebrow">⚓ World of Sea Battle</div>
+        <h1 className="calc-title">Cannon DPS Calculator</h1>
+        <p className="calc-subtitle">
+          Build your ship loadout step by step, then see how your base stats turn
+          into real broadside damage.
+        </p>
       </header>
 
-      <section className="calc-overview">
-        <div className="calc-overview-card">
-          <div className="calc-overview-label">Selected Ship</div>
-          <div className="calc-overview-value">
-            {selectedShip?.name ?? "No ship selected"}
-          </div>
-          <div className="calc-overview-meta">
-            {selectedShip
-              ? `${selectedShip.slots} slots · ${selectedShip.crew} crew`
-              : "Choose your flagship"}
+      <section className="calc-step-card">
+        <div className="calc-step-head">
+          <span className="calc-step-number">1</span>
+          <div>
+            <div className="calc-step-label">Ship Setup</div>
+            <h2 className="calc-step-title">Choose your ship and target</h2>
           </div>
         </div>
 
-        <div className="calc-overview-card">
-          <div className="calc-overview-label">Target</div>
-          <div className="calc-overview-value">
-            {targetShip?.name ?? "No target selected"}
-          </div>
-          <div className="calc-overview-meta">
-            {targetShip
-              ? `${targetShip.durability} durability · ${targetShip.broadsideArmor} armor`
-              : "Optional target comparison"}
-          </div>
-        </div>
-
-        <div className="calc-overview-card">
-          <div className="calc-overview-label">Ammo</div>
-          <div className="calc-overview-value">
-            {selectedAmmo?.name ?? "No ammo selected"}
-          </div>
-          <div className="calc-overview-meta">
-            Fine-tune your salvo profile
-          </div>
-        </div>
-
-        <div className="calc-overview-card">
-          <div className="calc-overview-label">Live Output</div>
-          <div className="calc-overview-value">
-            {report ? "Ready" : "Waiting"}
-          </div>
-          <div className="calc-overview-meta">
-            Results update as you change loadout
-          </div>
-        </div>
-      </section>
-
-      <div className="calc-grid">
-        <section className="calc-panel calc-span-2">
-          <div className="calc-panel-head">
-            <div>
-              <div className="calc-panel-label">Ship Setup</div>
-              <h2 className="calc-panel-title">Select your vessels</h2>
-            </div>
-          </div>
-
-          <div className="calc-panel-body calc-two-up">
+        <div className="calc-two-col">
+          <div className="calc-panel-inner">
             <ShipSelector
               label="Choose Your Ship"
               icon="🚢"
               title="Vessel Selection"
-              caption="Select your flagship to auto-build a valid battery layout and preview its command profile."
+              caption="Pick your ship first. This sets your battery layout and base stat profile."
               value={store.shipId}
               onChange={store.setShip}
               ships={SHIPS}
               variant="player"
             />
+          </div>
 
+          <div className="calc-panel-inner">
             <ShipSelector
               label="Enemy Vessel"
               icon="🎯"
               title="Target Ship"
-              caption="Choose a target to compare hull strength and see how much broadside armour your shots will lose per hit."
+              caption="Optional, but useful for comparing your shots against target durability and armor."
               value={store.targetShipId}
               onChange={store.setTargetShip}
               ships={[
@@ -182,96 +118,75 @@ export default function CalculatorShell() {
               variant="target"
             />
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="calc-panel">
-          <div className="calc-panel-head">
-            <div>
-              <div className="calc-panel-label">Battery</div>
-              <h2 className="calc-panel-title">Broadside config</h2>
-            </div>
+      <section className="calc-step-card">
+        <div className="calc-step-head">
+          <span className="calc-step-number">2</span>
+          <div>
+            <div className="calc-step-label">Loadout</div>
+            <h2 className="calc-step-title">Choose ammo and configure cannons</h2>
           </div>
-          <div className="calc-panel-body">
-            <BroadsideConfig />
-          </div>
-        </section>
+        </div>
 
-        <section className="calc-panel">
-          <div className="calc-panel-head">
-            <div>
-              <div className="calc-panel-label">Ammo</div>
-              <h2 className="calc-panel-title">Shot selection</h2>
-            </div>
-          </div>
-          <div className="calc-panel-body">
+        <div className="calc-two-col calc-top-align">
+          <div className="calc-panel-inner">
             <AmmoPanel ammoTypes={AMMO_TYPES} />
           </div>
-        </section>
 
-        <section className="calc-panel">
-          <div className="calc-panel-head">
-            <div>
-              <div className="calc-panel-label">Attachments</div>
-              <h2 className="calc-panel-title">Ship modifiers</h2>
-            </div>
+          <div className="calc-panel-inner">
+            <BroadsideConfig />
           </div>
-          <div className="calc-panel-body">
+        </div>
+      </section>
+
+      <section className="calc-step-card">
+        <div className="calc-step-head">
+          <span className="calc-step-number">3</span>
+          <div>
+            <div className="calc-step-label">Upgrades</div>
+            <h2 className="calc-step-title">Fit the ship with bonuses</h2>
+          </div>
+        </div>
+
+        <div className="calc-three-col">
+          <div className="calc-panel-inner">
             <AttachmentsPanel />
           </div>
-        </section>
 
-        <section className="calc-panel">
-          <div className="calc-panel-head">
-            <div>
-              <div className="calc-panel-label">Crew</div>
-              <h2 className="calc-panel-title">Crew bonuses</h2>
-            </div>
-          </div>
-          <div className="calc-panel-body">
+          <div className="calc-panel-inner">
             <CrewPanel />
           </div>
-        </section>
 
-        <section className="calc-panel">
-          <div className="calc-panel-head">
-            <div>
-              <div className="calc-panel-label">Support</div>
-              <h2 className="calc-panel-title">Support effects</h2>
-            </div>
-          </div>
-          <div className="calc-panel-body">
+          <div className="calc-panel-inner">
             <SupportPanel />
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="calc-panel">
-          <div className="calc-panel-head">
-            <div>
-              <div className="calc-panel-label">Ship Data</div>
-              <h2 className="calc-panel-title">Current stats</h2>
-            </div>
+      <section className="calc-step-card">
+        <div className="calc-step-head">
+          <span className="calc-step-number">4</span>
+          <div>
+            <div className="calc-step-label">Results</div>
+            <h2 className="calc-step-title">See what your final build becomes</h2>
           </div>
-          <div className="calc-panel-body">
+        </div>
+
+        <div className="calc-two-col calc-top-align">
+          <div className="calc-panel-inner">
             <ShipStats />
           </div>
-        </section>
 
-        <section className="calc-panel calc-span-3">
-          <div className="calc-panel-head">
-            <div>
-              <div className="calc-panel-label">Results</div>
-              <h2 className="calc-panel-title">Damage report</h2>
-            </div>
-          </div>
-          <div className="calc-panel-body">
+          <div className="calc-panel-inner calc-results-panel">
             <DamageReport report={report} />
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
       <footer className="calc-footer">
-        World of Sea Battle — Unofficial Calculator · Data saved locally ·
-        Results may vary with game updates
+        Unofficial calculator · values update live as you change your build
       </footer>
     </div>
   );
