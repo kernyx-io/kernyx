@@ -24,18 +24,15 @@ export default function Sidebar() {
 
       <div className="sidebarSection">
         <div className="sidebarLabel">Tools</div>
-        <Link
-          href="/games/world-of-sea-battles/wsb-calculator"
-          className={`sidebarLink ${isActive("/games/world-of-sea-battles/wsb-calculator") ? "sidebarItemActive" : ""}`}
-        >
-          💥 Cannon DPS Calc
-        </Link>
-        <Link
-          href="/games/world-of-sea-battles/ships"
-          className={`sidebarLink ${isActive("/games/world-of-sea-battles/ships") ? "sidebarItemActive" : ""}`}
-        >
-          🚢 Ship Guide
-        </Link>
+        <Link href="/games/world-of-sea-battles/wsb-calculator" className="sidebarLink">
+  💥 Cannon DPS Calc
+</Link>
+<Link href="/games/world-of-sea-battles/map" className="sidebarLink">
+  🗺️ Interactive Map
+</Link>
+<Link href="/games/world-of-sea-battles/ships" className="sidebarLink">
+  🚢 Ship Guide
+</Link>
       </div>
 
       <div className="sidebarSection">
