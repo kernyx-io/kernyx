@@ -1,147 +1,149 @@
-'use client'
+"use client";
 
-import './calculator.css'
-import type { Ship } from '@/lib/wsb/types'
-import { parseWeaponSlots } from '@/lib/wsb/ships'
+type Ship = {
+  id: string;
+  name: string;
+  shipType?: string;
+  type?: string;
+  rate: number;
+  slots: number;
+  durability: number;
+  speed: number;
+  maneuverability: number;
+  broadsideArmor: number;
+  hold: number;
+  crew: number;
+  heavyWeapons: string;
+  swivelGuns: number;
+  info?: string;
+};
 
-interface ShipSelectorProps {
-  label: string
-  icon: string
-  title: string
-  caption: string
-  value: string
-  onChange: (id: string) => void
-  ships: Ship[]
-  variant: 'player' | 'target'
-}
+type ShipSelectorProps = {
+  label: string;
+  icon: string;
+  title: string;
+  caption: string;
+  value: string;
+  onChange: (shipId: string) => void;
+  ships: Ship[];
+  variant?: "player" | "target";
+};
 
-const RATE_LABELS: Record<number, string> = {
-  1: 'Rate I', 2: 'Rate II', 3: 'Rate III', 4: 'Rate IV',
-  5: 'Rate V',  6: 'Rate VI', 7: 'Rate VII',
-}
-
-// Group ships by rate for optgroups
-function groupByRate(ships: Ship[]): Record<number, Ship[]> {
-  return ships.reduce<Record<number, Ship[]>>((acc, ship) => {
-    const r = ship.rate
-    if (!acc[r]) acc[r] = []
-    acc[r].push(ship)
-    return acc
-  }, {})
-}
-
-function ShipCard({ ship, variant }: { ship: Ship; variant: 'player' | 'target' }) {
-  const layout = parseWeaponSlots(ship.heavyWeapons)
-  const totalSlots = layout.bow + layout.broadside + layout.stern
-
-  return (
-    <div className="wsb-vessel-card">
-      <div className="wsb-vessel-card-name">{ship.name}</div>
-      <div className="wsb-vessel-tags">
-        <span className="wsb-tag wsb-tag-rate">Rate {ship.rate}</span>
-        <span className="wsb-tag wsb-tag-type">{ship.shipType}</span>
-        <span className="wsb-tag wsb-tag-slots">{totalSlots} weapon slots</span>
-      </div>
-      <div className="wsb-vessel-stats">
-        <div className="wsb-stat-row">
-          <span className="wsb-stat-key">Durability</span>
-          <span className="wsb-stat-val">{ship.durability.toLocaleString()}</span>
-        </div>
-        <div className="wsb-stat-row">
-          <span className="wsb-stat-key">Speed</span>
-          <span className="wsb-stat-val">{ship.speed} knt</span>
-        </div>
-        <div className="wsb-stat-row">
-          <span className="wsb-stat-key">Maneuverability</span>
-          <span className="wsb-stat-val">{ship.maneuverability}%</span>
-        </div>
-        <div className="wsb-stat-row">
-          <span className="wsb-stat-key">Broadside Armor</span>
-          <span className={`wsb-stat-val ${variant === 'target' ? 'negative' : 'gold'}`}>
-            {ship.broadsideArmor}
-          </span>
-        </div>
-        <div className="wsb-stat-row">
-          <span className="wsb-stat-key">Crew</span>
-          <span className="wsb-stat-val">{ship.crew}</span>
-        </div>
-        <div className="wsb-stat-row">
-          <span className="wsb-stat-key">Hold</span>
-          <span className="wsb-stat-val">{ship.hold.toLocaleString()}</span>
-        </div>
-      </div>
-      <div className="wsb-vessel-weapons">
-        <strong>Weapons:</strong>{' '}
-        {ship.heavyWeapons === '—' ? '—' : (
-          <>
-            {layout.bow > 0 && <span>{layout.bow} bow · </span>}
-            {layout.broadside > 0 && <span>{layout.broadside} broadside · </span>}
-            {layout.stern > 0 && <span>{layout.stern} stern</span>}
-          </>
-        )}
-        {ship.swivelGuns > 0 && <span> · {ship.swivelGuns} swivel</span>}
-      </div>
-      {ship.info && (
-        <div className="wsb-vessel-info">{ship.info}</div>
-      )}
-    </div>
-  )
+function formatRate(rate: number) {
+  return `Rate ${rate}`;
 }
 
 export default function ShipSelector({
-  label, icon, title, caption, value, onChange, ships, variant,
+  label,
+  icon,
+  title,
+  caption,
+  value,
+  onChange,
+  ships,
 }: ShipSelectorProps) {
-  const grouped = groupByRate(ships.filter(s => s.id !== 'none'))
-  const selected = ships.find(s => s.id === value)
+  const selectedShip =
+    ships.find((ship) => ship.id === value) ??
+    ships.find((ship) => ship.id !== "none") ??
+    ships[0];
+
+  const shipRole = selectedShip?.shipType || selectedShip?.type || "Balanced";
 
   return (
-    <div className="wsb-panel">
-      <div className="wsb-panel-title">
-        <span>{icon}</span> {title}
+    <div className="calc-ship-selector">
+      <div className="calc-selector-head">
+        <div className="calc-selector-title">
+          <span className="calc-selector-icon">{icon}</span>
+          <span>{title}</span>
+        </div>
+        <div className="calc-selector-caption">{caption}</div>
       </div>
 
-      <p style={{
-        fontSize: '0.72rem',
-        color: 'var(--cream-dim)',
-        fontStyle: 'italic',
-        marginBottom: '0.75rem',
-        lineHeight: 1.5,
-      }}>
-        {caption}
-      </p>
+      <div className="calc-selector-control">
+        <label className="calc-selector-label">{label}</label>
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="calc-selector-select"
+        >
+          {ships.map((ship) => (
+            <option key={ship.id} value={ship.id}>
+              {ship.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <label className="wsb-label" htmlFor={`ship-select-${variant}`}>{label}</label>
-      <select
-        id={`ship-select-${variant}`}
-        className="wsb-select"
-        value={value}
-        onChange={e => onChange(e.target.value)}
-      >
-        <option value="none">— Select a vessel —</option>
-        {Object.entries(grouped)
-          .sort(([a], [b]) => Number(a) - Number(b))
-          .map(([rate, rateShips]) => (
-            <optgroup key={rate} label={RATE_LABELS[Number(rate)] ?? `Rate ${rate}`}>
-              {rateShips.map(ship => (
-                <option key={ship.id} value={ship.id}>{ship.name}</option>
-              ))}
-            </optgroup>
-          ))
-        }
-      </select>
+      {selectedShip && (
+        <div className="calc-ship-card">
+          <div className="calc-ship-card-top">
+            <div>
+              <div className="calc-ship-name">{selectedShip.name}</div>
+              <div className="calc-ship-subline">
+                {formatRate(selectedShip.rate)} · {shipRole}
+              </div>
+            </div>
 
-      {selected && selected.id !== 'none' ? (
-        <ShipCard ship={selected} variant={variant} />
-      ) : (
-        <div className="wsb-vessel-card">
-          <div className="wsb-vessel-empty">
-            {variant === 'player'
-              ? '⚓ Select a vessel to preview its class, broadside profile, and base handling stats.'
-              : '⚓ Select an enemy ship to compare its broadside armour, durability, speed, and crew profile.'
-            }
+            <div className="calc-ship-badges">
+              <span className="calc-ship-badge">{selectedShip.slots} slots</span>
+              <span className="calc-ship-badge">
+                {selectedShip.swivelGuns} swivels
+              </span>
+            </div>
           </div>
+
+          <div className="calc-ship-stats-grid">
+            <div className="calc-ship-stat">
+              <span className="calc-ship-stat-label">Durability</span>
+              <span className="calc-ship-stat-value">
+                {selectedShip.durability.toLocaleString()}
+              </span>
+            </div>
+
+            <div className="calc-ship-stat">
+              <span className="calc-ship-stat-label">Speed</span>
+              <span className="calc-ship-stat-value">{selectedShip.speed}</span>
+            </div>
+
+            <div className="calc-ship-stat">
+              <span className="calc-ship-stat-label">Maneuver</span>
+              <span className="calc-ship-stat-value">
+                {selectedShip.maneuverability}
+              </span>
+            </div>
+
+            <div className="calc-ship-stat">
+              <span className="calc-ship-stat-label">Armor</span>
+              <span className="calc-ship-stat-value">
+                {selectedShip.broadsideArmor}
+              </span>
+            </div>
+
+            <div className="calc-ship-stat">
+              <span className="calc-ship-stat-label">Crew</span>
+              <span className="calc-ship-stat-value">{selectedShip.crew}</span>
+            </div>
+
+            <div className="calc-ship-stat">
+              <span className="calc-ship-stat-label">Hold</span>
+              <span className="calc-ship-stat-value">
+                {selectedShip.hold.toLocaleString()}
+              </span>
+            </div>
+          </div>
+
+          <div className="calc-ship-weapons">
+            <span className="calc-ship-weapons-label">Weapons</span>
+            <span className="calc-ship-weapons-value">
+              {selectedShip.heavyWeapons}
+            </span>
+          </div>
+
+          {selectedShip.info && (
+            <p className="calc-ship-description">{selectedShip.info}</p>
+          )}
         </div>
       )}
     </div>
-  )
+  );
 }
