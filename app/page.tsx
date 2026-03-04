@@ -47,7 +47,7 @@ function timeAgo(isoDate: string): string {
 
 function NewsCard({ item, featured }: { item: NewsItem; featured?: boolean }) {
   return (
-    <a
+    
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
@@ -194,159 +194,130 @@ export default function HomePage() {
   const rest      = news.slice(3);
 
   return (
-    <div className={styles.page}>
+    <div className={styles.body}>
 
-      {/* ── Top nav ── */}
-      <nav className={styles.topNav}>
-        <div className={styles.topNavLogo}>
-          <span className={styles.logoMark}>K</span>
-          <span className={styles.logoText}>ERNYX</span>
+      {/* Sidebar */}
+      <aside className={styles.sidebar}>
+
+        <div className={styles.sidebarSection}>
+          <div className={styles.sidebarLabel}>Current Game</div>
+          <Link href={WOSB.href} className={styles.sidebarGame}>
+            <span style={{ color: WOSB.color }}>{WOSB.icon}</span>
+            <span>{WOSB.name}</span>
+          </Link>
         </div>
-        <div className={styles.topNavLinks}>
-          {(['news', 'store', 'suggest'] as const).map(tab => (
-            <button
-              key={tab}
-              className={`${styles.topNavLink} ${activeTab === tab ? styles.topNavLinkActive : ''}`}
-              onClick={() => setTab(tab)}
-            >
-              {tab === 'news' ? 'News' : tab === 'store' ? 'Store' : 'Suggest a Game'}
-            </button>
+
+        <div className={styles.sidebarSection}>
+          <div className={styles.sidebarLabel}>Tools</div>
+          {TOOLS.map(t => (
+            <Link key={t.href} href={t.href} className={styles.sidebarLink}>
+              <span style={{ color: WOSB.color }}>{t.label}</span>
+            </Link>
           ))}
         </div>
-        <div className={styles.topNavTag}>Unofficial Fan Tools</div>
-      </nav>
 
-      {/* ── Body ── */}
-      <div className={styles.body}>
+        <div className={styles.sidebarSection}>
+          <div className={styles.sidebarLabel}>Coming Soon</div>
+          {COMING_SOON_GAMES.map(g => (
+            <div key={g.name} className={styles.sidebarComingSoonGame}>
+              <span>{g.icon}</span>
+              <span>{g.name}</span>
+            </div>
+          ))}
+          <button className={styles.sidebarSuggestBtn} onClick={() => setTab('suggest')}>
+            + Suggest a game
+          </button>
+        </div>
 
-        {/* Sidebar */}
-        <aside className={styles.sidebar}>
+        <div className={styles.sidebarSection}>
+          <div className={styles.sidebarLabel}>Quick Store</div>
+          <a href={WOSB.storeUrl} target="_blank" rel="noopener noreferrer" className={styles.sidebarStoreLink}>
+            <span style={{ color: WOSB.color }}>{WOSB.icon}</span>
+            <span>{WOSB.name}</span>
+            <span className={styles.sidebarStoreLinkArrow}>↗</span>
+          </a>
+        </div>
 
-          <div className={styles.sidebarSection}>
-            <div className={styles.sidebarLabel}>Current Game</div>
-            <Link href={WOSB.href} className={styles.sidebarGame}>
-              <span style={{ color: WOSB.color }}>{WOSB.icon}</span>
-              <span>{WOSB.name}</span>
-            </Link>
-          </div>
+      </aside>
 
-          <div className={styles.sidebarSection}>
-            <div className={styles.sidebarLabel}>Tools</div>
-            {TOOLS.map(t => (
-              <Link key={t.href} href={t.href} className={styles.sidebarLink}>
-                <span style={{ color: WOSB.color }}>{t.label}</span>
-              </Link>
-            ))}
-          </div>
+      {/* Main */}
+      <main className={styles.main}>
 
-          <div className={styles.sidebarSection}>
-            <div className={styles.sidebarLabel}>Coming Soon</div>
-            {COMING_SOON_GAMES.map(g => (
-              <div key={g.name} className={styles.sidebarComingSoonGame}>
-                <span>{g.icon}</span>
-                <span>{g.name}</span>
+        {activeTab === 'news' && (
+          <>
+            {loading && (
+              <div className={styles.loadingState}>
+                <div className={styles.loadingDots}><span /><span /><span /></div>
+                <span>Fetching latest updates…</span>
               </div>
-            ))}
-            <button className={styles.sidebarSuggestBtn} onClick={() => setTab('suggest')}>
-              + Suggest a game
-            </button>
-          </div>
-
-          <div className={styles.sidebarSection}>
-            <div className={styles.sidebarLabel}>Quick Store</div>
-            <a href={WOSB.storeUrl} target="_blank" rel="noopener noreferrer" className={styles.sidebarStoreLink}>
-              <span style={{ color: WOSB.color }}>{WOSB.icon}</span>
-              <span>{WOSB.name}</span>
-              <span className={styles.sidebarStoreLinkArrow}>↗</span>
-            </a>
-          </div>
-
-        </aside>
-
-        {/* Main */}
-        <main className={styles.main}>
-
-          {activeTab === 'news' && (
-            <>
-              {loading && (
-                <div className={styles.loadingState}>
-                  <div className={styles.loadingDots}><span /><span /><span /></div>
-                  <span>Fetching latest updates…</span>
+            )}
+            {!loading && news.length === 0 && (
+              <div className={styles.emptyState}>No news found right now — check back shortly.</div>
+            )}
+            {!loading && news.length > 0 && (
+              <>
+                <div className={styles.newsHero}>
+                  {featured && <NewsCard item={featured} featured />}
+                  <div className={styles.newsSecondary}>
+                    {secondary.map(item => <NewsCard key={item.id} item={item} />)}
+                  </div>
                 </div>
-              )}
-              {!loading && news.length === 0 && (
-                <div className={styles.emptyState}>No news found right now — check back shortly.</div>
-              )}
-              {!loading && news.length > 0 && (
-                <>
-                  <div className={styles.newsHero}>
-                    {featured && <NewsCard item={featured} featured />}
-                    <div className={styles.newsSecondary}>
-                      {secondary.map(item => <NewsCard key={item.id} item={item} />)}
+                {rest.length > 0 && (
+                  <div className={styles.newsList}>
+                    <div className={styles.newsListHeader}>
+                      <span>More Updates</span>
+                      <span className={styles.newsListCount}>{rest.length} items</span>
+                    </div>
+                    <div className={styles.newsGrid}>
+                      {rest.map(item => <NewsCard key={item.id} item={item} />)}
                     </div>
                   </div>
-                  {rest.length > 0 && (
-                    <div className={styles.newsList}>
-                      <div className={styles.newsListHeader}>
-                        <span>More Updates</span>
-                        <span className={styles.newsListCount}>{rest.length} items</span>
-                      </div>
-                      <div className={styles.newsGrid}>
-                        {rest.map(item => <NewsCard key={item.id} item={item} />)}
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </>
-          )}
+                )}
+              </>
+            )}
+          </>
+        )}
 
-          {activeTab === 'store' && (
-            <div className={styles.storePage}>
-              <div className={styles.storeHeader}>
-                <h2 className={styles.storeTitle}>Game Store</h2>
-                <p className={styles.storeSubtitle}>Official store link for World of Sea Battle.</p>
-              </div>
-              <div className={styles.storeGrid}>
-                <a href={WOSB.storeUrl} target="_blank" rel="noopener noreferrer" className={styles.storeCard}>
-                  <span className={styles.storeIcon} style={{ color: WOSB.color }}>{WOSB.icon}</span>
-                  <div className={styles.storeBody}>
-                    <div className={styles.storeName}>{WOSB.name}</div>
-                    <div className={styles.storeLabel}>{WOSB.storeLabel}</div>
-                  </div>
-                  <span className={styles.storeArrow}>↗</span>
-                </a>
-              </div>
-              <div className={styles.storeComingSoon}>
-                <div className={styles.storeComingSoonLabel}>More Games Coming Soon</div>
-                <div className={styles.storeComingSoonGrid}>
-                  {COMING_SOON_GAMES.map(g => (
-                    <div key={g.name} className={styles.storeComingSoonCard}>
-                      <span className={styles.storeComingSoonIcon}>{g.icon}</span>
-                      <div>
-                        <div className={styles.storeComingSoonName}>{g.name}</div>
-                        <div className={styles.storeComingSoonNote}>{g.note}</div>
-                      </div>
-                      <span className={styles.storeComingSoonBadge}>SOON</span>
-                    </div>
-                  ))}
+        {activeTab === 'store' && (
+          <div className={styles.storePage}>
+            <div className={styles.storeHeader}>
+              <h2 className={styles.storeTitle}>Game Store</h2>
+              <p className={styles.storeSubtitle}>Official store link for World of Sea Battle.</p>
+            </div>
+            <div className={styles.storeGrid}>
+              <a href={WOSB.storeUrl} target="_blank" rel="noopener noreferrer" className={styles.storeCard}>
+                <span className={styles.storeIcon} style={{ color: WOSB.color }}>{WOSB.icon}</span>
+                <div className={styles.storeBody}>
+                  <div className={styles.storeName}>{WOSB.name}</div>
+                  <div className={styles.storeLabel}>{WOSB.storeLabel}</div>
                 </div>
-              </div>
-              <div className={styles.storeDisclaimer}>
-                Kernyx is an unofficial fan site. We are not affiliated with, endorsed by, or connected to any game developers.
+                <span className={styles.storeArrow}>↗</span>
+              </a>
+            </div>
+            <div className={styles.storeComingSoon}>
+              <div className={styles.storeComingSoonLabel}>More Games Coming Soon</div>
+              <div className={styles.storeComingSoonGrid}>
+                {COMING_SOON_GAMES.map(g => (
+                  <div key={g.name} className={styles.storeComingSoonCard}>
+                    <span className={styles.storeComingSoonIcon}>{g.icon}</span>
+                    <div>
+                      <div className={styles.storeComingSoonName}>{g.name}</div>
+                      <div className={styles.storeComingSoonNote}>{g.note}</div>
+                    </div>
+                    <span className={styles.storeComingSoonBadge}>SOON</span>
+                  </div>
+                ))}
               </div>
             </div>
-          )}
+            <div className={styles.storeDisclaimer}>
+              Kernyx is an unofficial fan site. We are not affiliated with, endorsed by, or connected to any game developers.
+            </div>
+          </div>
+        )}
 
-          {activeTab === 'suggest' && <SuggestTab />}
+        {activeTab === 'suggest' && <SuggestTab />}
 
-        </main>
-      </div>
-
-      <footer className={styles.footer}>
-        <span>Kernyx © {new Date().getFullYear()}</span>
-        <span>Unofficial fan tools · Not affiliated with any game developer</span>
-      </footer>
+      </main>
     </div>
   );
 }
