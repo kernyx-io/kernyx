@@ -1,123 +1,114 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import './calculator.css'
-import { useWsbStore } from '@/lib/wsb/store'
-import type { AmmoType } from '@/lib/wsb/types'
+import { useMemo } from "react";
+import "./calculator.css";
+import { useWsbStore } from "@/lib/wsb/store";
+import type { AmmoType } from "@/lib/wsb/types";
 
 const AMMO_ICONS: Record<string, string> = {
-  round:  '🔵',
-  heated: '🔥',
-  bar:    '⛓️',
-  grape:  '💀',
-  heavy:  '⚫',
-  saxon:  '💠',
-}
+  round: "🔵",
+  heated: "🔥",
+  bar: "⛓️",
+  grape: "☠️",
+  heavy: "⚫",
+  saxon: "🔷",
+};
 
 const SPECIAL_LABELS: Record<string, string> = {
-  fire:   '🔥 Fire',
-  slow:   '⚓ Slow',
-  pierce: '➤ Pierce',
+  fire: "Fire",
+  slow: "Slow",
+  pierce: "Pierce",
+};
+
+function LevelDots({ value }: { value: number }) {
+  return (
+    <div className="calc-ammo-dots" aria-hidden>
+      {[1, 2, 3].map((n) => (
+        <span
+          key={n}
+          className={`calc-ammo-dot ${value >= n ? "calc-ammo-dot-active" : ""}`}
+        />
+      ))}
+    </div>
+  );
 }
 
 interface AmmoPanelProps {
-  ammoTypes: AmmoType[]
+  ammoTypes: AmmoType[];
 }
 
 export default function AmmoPanel({ ammoTypes }: AmmoPanelProps) {
-  const { ammoId, setAmmo } = useWsbStore()
-  const [collapsed, setCollapsed] = useState(false)
+  const { ammoId, setAmmo } = useWsbStore();
+
+  const activeAmmo = useMemo(
+    () => ammoTypes.find((ammo) => ammo.id === ammoId) ?? ammoTypes[0],
+    [ammoId, ammoTypes]
+  );
 
   return (
-    <div className="wsb-panel full-width">
-      <div className="wsb-panel-title">
-        <div className="wsb-panel-title-row">
-          <span>🎯 Ammunition Type</span>
-          <button className="wsb-toggle-btn" onClick={() => setCollapsed(c => !c)}>
-            {collapsed ? 'Expand' : 'Shrink'}
-          </button>
+    <div className="calc-ammo-panel">
+      <div className="calc-ammo-head">
+        <div>
+          <div className="calc-ammo-label">Ammunition Type</div>
+          <div className="calc-ammo-sub">
+            Pick the shot type that matches your damage goal.
+          </div>
         </div>
+
+        {activeAmmo && (
+          <div className="calc-ammo-current-badge">
+            {AMMO_ICONS[activeAmmo.id] ?? "•"} {activeAmmo.name}
+          </div>
+        )}
       </div>
 
-      {!collapsed && (
-        <div className="wsb-ammo-grid">
-          {ammoTypes.map(ammo => {
-            const isActive = ammoId === ammo.id
-            const hullPct = Math.round(ammo.hullDmgPct * 100)
+      <div className="calc-ammo-grid">
+        {ammoTypes.map((ammo) => {
+          const isActive = ammoId === ammo.id;
+          const hullPct = Math.round(ammo.hullDmgPct * 100);
 
-            return (
-              <div
-                key={ammo.id}
-                className={`wsb-ammo-card${isActive ? ' active' : ''}`}
-                onClick={() => setAmmo(ammo.id)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={e => e.key === 'Enter' && setAmmo(ammo.id)}
-              >
-                <div className="wsb-ammo-icon">{AMMO_ICONS[ammo.id] ?? '💣'}</div>
-                <div className="wsb-ammo-name">{ammo.name}</div>
-                <div
-                  className="wsb-ammo-pct"
-                  style={{
-                    color: hullPct >= 100
-                      ? 'var(--gold-bright)'
-                      : hullPct >= 80
-                      ? 'var(--cream)'
-                      : 'var(--cream-dim)',
-                  }}
-                >
-                  {hullPct}% hull dmg
+          return (
+            <button
+              key={ammo.id}
+              type="button"
+              onClick={() => setAmmo(ammo.id)}
+              className={`calc-ammo-card ${isActive ? "calc-ammo-card-active" : ""}`}
+            >
+              <div className="calc-ammo-card-top">
+                <div className="calc-ammo-title-wrap">
+                  <span className="calc-ammo-icon">{AMMO_ICONS[ammo.id] ?? "•"}</span>
+                  <span className="calc-ammo-name">{ammo.name}</span>
                 </div>
-
-                <div className="wsb-ammo-bars">
-                  <div className="wsb-ammo-bar-row">
-                    <span style={{ width: '2.5rem' }}>Sails</span>
-                    <div className="wsb-ammo-bar-track">
-                      <div
-                        className="wsb-ammo-bar-fill"
-                        style={{
-                          width: `${(ammo.sailsDmg / 3) * 100}%`,
-                          background:
-                            ammo.sailsDmg >= 3
-                              ? 'var(--red-light)'
-                              : ammo.sailsDmg >= 2
-                              ? 'var(--gold-dim)'
-                              : 'var(--navy-light)',
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="wsb-ammo-bar-row">
-                    <span style={{ width: '2.5rem' }}>Crew</span>
-                    <div className="wsb-ammo-bar-track">
-                      <div
-                        className="wsb-ammo-bar-fill"
-                        style={{
-                          width: `${(ammo.crewDmg / 3) * 100}%`,
-                          background:
-                            ammo.crewDmg >= 3
-                              ? 'var(--red-light)'
-                              : ammo.crewDmg >= 2
-                              ? 'var(--gold-dim)'
-                              : 'var(--navy-light)',
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="wsb-ammo-desc">{ammo.desc}</div>
 
                 {ammo.special && (
-                  <div className="wsb-ammo-special">
+                  <span className="calc-ammo-special">
                     {SPECIAL_LABELS[ammo.special] ?? ammo.special}
-                  </div>
+                  </span>
                 )}
               </div>
-            )
-          })}
-        </div>
-      )}
+
+              <div className="calc-ammo-hull-row">
+                <span className="calc-ammo-hull-label">Hull Damage</span>
+                <strong className="calc-ammo-hull-value">{hullPct}%</strong>
+              </div>
+
+              <div className="calc-ammo-meters">
+                <div className="calc-ammo-meter">
+                  <span>Sails</span>
+                  <LevelDots value={ammo.sailsDmg} />
+                </div>
+
+                <div className="calc-ammo-meter">
+                  <span>Crew</span>
+                  <LevelDots value={ammo.crewDmg} />
+                </div>
+              </div>
+
+              <p className="calc-ammo-desc">{ammo.desc}</p>
+            </button>
+          );
+        })}
+      </div>
     </div>
-  )
+  );
 }
