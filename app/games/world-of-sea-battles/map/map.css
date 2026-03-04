@@ -327,3 +327,51 @@
     font-size: 0.82rem;
   }
 }
+.wosb-map-marker-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.wosb-map-labeled-marker {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.wosb-map-marker {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.wosb-map-marker-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  image-rendering: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.65));
+}
+
+.wosb-map-marker-label {
+  color: var(--map-gold-bright);
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.95),
+    0 0 8px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
